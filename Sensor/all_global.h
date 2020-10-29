@@ -20,7 +20,7 @@ typedef struct packet_t
 bool setSensorId();
 packet_t *getSenorReading();
 
-bool sendDataToBs(
+bool sendDataToBs();
 extern MQ mq4;
 //extern DHT dht;  
 #endif 

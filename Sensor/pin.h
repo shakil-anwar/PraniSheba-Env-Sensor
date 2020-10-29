@@ -8,10 +8,10 @@
 
 ///Shift Resigter PIN diagram 
 #define TOTAL_SR  3
-#define SR_DATA   2
-#define SR_CLOCK  5
-#define SR_LATCH  4
-#define SR_PWM    6
+#define SR_DATA   7
+#define SR_CLOCK  6
+#define SR_LATCH  5
+#define SR_PWM    4
 
 ///MQ Pin diagram 
 #define MQ4_PIN   A0
@@ -20,7 +20,7 @@
 ///NRF PIN Diagram 
 
 ///DHT Sensor 
-#define DHTPIN 7     // Digital pin connected to the DHT sensor
+#define DHTPIN A6     // Digital pin connected to the DHT sensor
 #define DHTTYPE DHT11   // DHT 11
 //#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 //#define DHTTYPE DHT21   // DHT 21 (AM2301)

@@ -9,12 +9,12 @@ void col_three(uint8_t level);
 void col_four(uint8_t level);
 
 // parameters: (number of shift registers, data pin, clock pin, latch pin)
-ShiftRegister74HC595 sr(TOTAL_SR, SR_DATA, SR_CLOCK, SR_LATCH);
+ShiftRegister74HC595<TOTAL_SR> sr(SR_DATA, SR_CLOCK, SR_LATCH);
 
-#define COL1_START  7
-#define COL1_END    3
-#define COL3_START  9
-#define COL3_END    13
+#define COL1_START  1
+#define COL1_END    5
+#define COL3_START  11
+#define COL3_END    15
 
 
 
@@ -52,7 +52,7 @@ void col_two(uint8_t level)
   //  led 4 -> 1
   //  led 4 -> 2
 
-  uint8_t led_array[5] = {14, 15, 0, 1, 2};
+  uint8_t led_array[5] = {6, 7, 8, 9, 10};
   for (uint8_t i = 0; i < 5; i++)
   {
     if (i < level)
@@ -90,7 +90,7 @@ void col_four(uint8_t level)
   //  led 4 -> 23
   //  led 4 -> 8
 
-  uint8_t led_array[5] = {20, 21, 22, 23, 8};
+  uint8_t led_array[5] = {16,17,18,19,20};
   for (uint8_t i = 0; i < 5; i++)
   {
     if (i < level)
@@ -134,13 +134,12 @@ void led_blink()
 
   //  sr.setAllLow(); // set all pins LOW
   //  delay(500);
-  for (int i = 1; i < 20; i++)
+  for (int i = 0; i < 21; i++)
   {
     sr.set(i, HIGH);
-    delay(2000);
+    delay(1000);
     sr.set(i, LOW);
   }
   //   sr.set(15, HIGH);
 
 }
-
