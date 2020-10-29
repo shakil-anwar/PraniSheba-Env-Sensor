@@ -13,8 +13,12 @@ ShiftRegister74HC595<TOTAL_SR> sr(SR_DATA, SR_CLOCK, SR_LATCH);
 
 #define COL1_START  1
 #define COL1_END    5
+#define COL2_START  6
+#define COL2_END    10
 #define COL3_START  11
 #define COL3_END    15
+#define COL4_START  16
+#define COL4_END    20
 
 
 
@@ -28,9 +32,9 @@ void led_begin()
 
 void col_one(uint8_t level)
 {
-  for (uint8_t i = COL1_START; i >= COL1_END ; i--)
+  for (uint8_t i = COL1_START; i <= COL1_END ; i++)
   {
-    if ((i > (COL1_START - level)))
+    if ((i < (COL1_START + level)))
     {
       sr.set(i, HIGH);
     }
@@ -51,17 +55,15 @@ void col_two(uint8_t level)
   //  led 3 -> 0
   //  led 4 -> 1
   //  led 4 -> 2
-
-  uint8_t led_array[5] = {6, 7, 8, 9, 10};
-  for (uint8_t i = 0; i < 5; i++)
+  for (uint8_t i = COL2_START; i <= COL2_END ; i++)
   {
-    if (i < level)
+    if ((i < (COL2_START + level)))
     {
-      sr.set(led_array[i], HIGH);
+      sr.set(i, HIGH);
     }
     else
     {
-      sr.set(led_array[i], LOW);
+      sr.set(i, LOW);
     }
   }
 }
@@ -83,23 +85,15 @@ void col_three(uint8_t level)
 
 void col_four(uint8_t level)
 {
-  //  column 2 pin sequence
-  //  led 1 -> 20
-  //  led 2 -> 21
-  //  led 3 -> 22
-  //  led 4 -> 23
-  //  led 4 -> 8
-
-  uint8_t led_array[5] = {16,17,18,19,20};
-  for (uint8_t i = 0; i < 5; i++)
+  for (uint8_t i = COL4_START ; i <= COL4_END; i++)
   {
-    if (i < level)
+    if (i < (COL4_START + level))
     {
-      sr.set(led_array[i], HIGH);
+      sr.set(i, HIGH);
     }
     else
     {
-      sr.set(led_array[i], LOW);
+      sr.set(i, LOW);
     }
   }
 }
