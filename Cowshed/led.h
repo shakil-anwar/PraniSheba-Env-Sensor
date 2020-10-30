@@ -4,6 +4,7 @@
 
 void led_begin();
 void led_blink();
-void set_led_level(uint8_t col,uint8_t level);
+void led_set_level(uint8_t col,uint8_t level);
+void ledTestAll();
 
 #endif

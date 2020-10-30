@@ -2,12 +2,15 @@
 #include "MQ.h"
 #include "param.h"
 #include "pin.h"
+#include <SHT21.h> 
+SHT21 sht; 
 
 MQ mq4(MQ4_PIN);
 MQ mq135(MQ135_PIN);
 
 void mqBegin()
 {
+  Wire.begin();    // begin Wire(I2C)
   mq4.setGraphPoints(1000, 5000, 0.1, 0.04);
   mq4.setRl(1000);
   
@@ -32,20 +35,20 @@ void humSensorBegin()
 }
 float getHum()
 {
-  return random(20,100)*1.00;
+  return sht.getHumidity();
 }
 
 float getTemp()
 {
-  return random(20,100)*1.00;
+  return sht.getTemperature(); 
 }
 
 float getAmmonia()
 {
-  return random(20,100)*1.00;
+  return (float)(random(10,50)*1.00);
 }
 
 float getMethane()
 {
-  return random(20,100)*1.00;
+  return (float)(random(10,50)*1.00);
 }

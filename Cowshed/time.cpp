@@ -11,14 +11,14 @@ uint32_t sec = 0;
 void timerIsr(void)
 {
   sec++;
-  Serial.println(F("Timer ISR Triggered"));
+//  Serial.println(F("Timer ISR Triggered"));
 }
 
 void timeBegin()
 {
   timer1.initialize(1);
   timer1.attachIntCompB(timerIsr);
-  sec = getUnixTime() - SIX_HOUR_SECOND;
+//  sec = getUnixTime() - SIX_HOUR_SECOND;
   timer1.start();
 }
 void rtcBegin()

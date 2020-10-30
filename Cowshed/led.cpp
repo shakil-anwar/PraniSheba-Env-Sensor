@@ -105,7 +105,7 @@ void col_four(uint8_t level)
 
 
 
-void set_led_level(uint8_t col,uint8_t level)
+void led_set_level(uint8_t col,uint8_t level)
 {
 
   switch(col)
@@ -140,5 +140,16 @@ void led_blink()
     sr.set(i, LOW);
   }
   //   sr.set(15, HIGH);
+}
 
+void ledTestAll()
+{
+    for (int i = 1; i < 5; i++)
+  {
+    for (int j = 1; j <= 5; j++)
+    {
+      led_set_level(i, j);
+      delay(1000);
+    }
+  }
 }
