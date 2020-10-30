@@ -1,6 +1,15 @@
 #include "all_global.h"
 #include "pin.h"
-#include "param.h" 
+#include "param.h"
+#include "tScheduler.h"
+#include "time.h"
+
+
+void sendPayload();
+
+Task task1(5, &sendPayload);
+Scheduler scheduler;
+
 
 //This will store all the sensor variables and function 
 //returns the address of it.
@@ -27,11 +36,12 @@ void system_setup(void)
   float mq135_R0 = mq135.calculateR0(MQ135_AIR_RS_R0_RATIO);
   Serial.print(F("MQ135 | R0 : ")); Serial.println(R0);
 
-  //begin DHT Temperature and humidity 
-//  dht.begin();
-  //begin communication setup
+
   radio_begin();
   setSensorId();
+
+  scheduler.addTask(&task1);
+  scheduler.begin(second);
   Serial.print(F("Sensor Id: "));Serial.println(packet.sid);
   Serial.println("Setup Done");
 }
@@ -49,3 +59,7 @@ packet_t *getSenorReading()
   return &packet;
 }
 
+void sendPayload()
+{
+  Serial.println(F("Payload sending.."));
+}

@@ -1,12 +1,15 @@
 #include "all_global.h"
 
+
+
+
+
 void setup()
 {
   Serial.begin(9600);
   system_setup();
 //  led_begin();
 }
-
 void loop()
 {
 //  Serial.print(F("MQ4 | Rs: ")); Serial.print(mq4.Rs);
