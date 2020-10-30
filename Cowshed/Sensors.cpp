@@ -17,11 +17,13 @@ void mqBegin()
 }
 void mqCalibrate()
 {
+  Serial.println(F("Calibrating MQ Sensors.."));
   float R0 = mq4.calculateR0(MQ4_AIR_RS_R0_RATIO);//Call this function in the fresh air. This will set R0
   Serial.print(F("MQ4 | R0 : ")); Serial.println(R0);
 
   float mq135_R0 = mq135.calculateR0(MQ135_AIR_RS_R0_RATIO);
   Serial.print(F("MQ135 | R0 : ")); Serial.println(R0);
+  delay(2000);
 }
 
 void humSensorBegin()

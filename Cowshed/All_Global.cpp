@@ -7,7 +7,7 @@
 
 void sendPayload();
 
-Task task1(5, &sendPayload);
+Task task1(5, &sendPayload); //send payload triggers after 5 second interval
 Scheduler scheduler;
 
 
@@ -31,5 +31,8 @@ void system_setup(void)
 void sendPayload()
 {
   Serial.println(F("Payload sending.."));
+  sensor_t *sensorPtr = getSensorsData();
+  printSensor(sensorPtr);
+  //handle nrf data sending here 
   
 }
