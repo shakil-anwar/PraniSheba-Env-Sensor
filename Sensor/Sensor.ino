@@ -18,6 +18,15 @@ void loop()
 //  Serial.print(F("Humidity: "));Serial.println(getSenorReading() -> hum);
 //  set_led_level(3, 3);
 //  delay(1000);
-  led_blink();
+//  led_blink();
+
+  for(int i=1;i<5;i++)
+  {
+    for(int j=1;j<=5;j++)
+    {
+      set_led_level(i,j);
+      delay(1000);
+    }
+  }
 
 }

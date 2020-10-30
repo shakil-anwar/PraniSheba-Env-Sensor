@@ -11,14 +11,14 @@ void col_four(uint8_t level);
 // parameters: (number of shift registers, data pin, clock pin, latch pin)
 ShiftRegister74HC595<TOTAL_SR> sr(SR_DATA, SR_CLOCK, SR_LATCH);
 
-#define COL1_START  1
-#define COL1_END    5
-#define COL2_START  6
-#define COL2_END    10
-#define COL3_START  11
-#define COL3_END    15
-#define COL4_START  16
-#define COL4_END    20
+#define COL1_START  5
+#define COL1_END    1
+#define COL2_START  10
+#define COL2_END    6
+#define COL3_START  15
+#define COL3_END    11
+#define COL4_START  20
+#define COL4_END    16
 
 
 
@@ -32,9 +32,9 @@ void led_begin()
 
 void col_one(uint8_t level)
 {
-  for (uint8_t i = COL1_START; i <= COL1_END ; i++)
+  for (uint8_t i = COL1_START; i >= COL1_END ; i--)
   {
-    if ((i < (COL1_START + level)))
+    if ((i > (COL1_START - level)))
     {
       sr.set(i, HIGH);
     }
@@ -42,7 +42,6 @@ void col_one(uint8_t level)
     {
       sr.set(i, LOW);
     }
-
   }
 }
 
@@ -55,9 +54,9 @@ void col_two(uint8_t level)
   //  led 3 -> 0
   //  led 4 -> 1
   //  led 4 -> 2
-  for (uint8_t i = COL2_START; i <= COL2_END ; i++)
+  for (uint8_t i = COL2_START; i >= COL2_END ; i--)
   {
-    if ((i < (COL2_START + level)))
+    if ((i > (COL2_START - level)))
     {
       sr.set(i, HIGH);
     }
@@ -70,9 +69,9 @@ void col_two(uint8_t level)
 
 void col_three(uint8_t level)
 {
-  for (uint8_t i = COL3_START ; i <= COL3_END; i++)
+  for (uint8_t i = COL3_START; i >= COL3_END ; i--)
   {
-    if (i < (COL3_START + level))
+    if ((i > (COL3_START - level)))
     {
       sr.set(i, HIGH);
     }
@@ -85,9 +84,15 @@ void col_three(uint8_t level)
 
 void col_four(uint8_t level)
 {
-  for (uint8_t i = COL4_START ; i <= COL4_END; i++)
+  //  column 2 pin sequence
+  //  led 1 -> 20
+  //  led 2 -> 21
+  //  led 3 -> 22
+  //  led 4 -> 23
+  //  led 4 -> 8
+  for (uint8_t i = COL4_START; i >= COL4_END ; i--)
   {
-    if (i < (COL4_START + level))
+    if ((i > (COL4_START - level)))
     {
       sr.set(i, HIGH);
     }
