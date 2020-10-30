@@ -1,5 +1,7 @@
 #include "dataSchema.h"
 #include "MQ.h"
+#include "param.h"
+#include "pin.h"
 
 MQ mq4(MQ4_PIN);
 MQ mq135(MQ135_PIN);
@@ -28,10 +30,20 @@ void humSensorBegin()
 }
 float getHum()
 {
-  
+  return random(20,100)*1.00;
 }
 
 float getTemp()
 {
-  
+  return random(20,100)*1.00;
+}
+
+float getAmmonia()
+{
+  return random(20,100)*1.00;
+}
+
+float getMethane()
+{
+  return random(20,100)*1.00;
 }

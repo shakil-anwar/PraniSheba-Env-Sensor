@@ -1,17 +1,12 @@
-#include "all_global.h"
-
-
-
-
+#include "All_Global.h"
 
 void setup()
 {
-  Serial.begin(9600);
   system_setup();
-//  led_begin();
 }
 void loop()
 {
+  
 //  Serial.print(F("MQ4 | Rs: ")); Serial.print(mq4.Rs);
 //  Serial.print(F(" | PPM: ")); Serial.println(mq4.getPPM());
   //Send message to receiver

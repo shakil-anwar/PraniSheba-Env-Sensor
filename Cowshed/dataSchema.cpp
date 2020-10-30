@@ -4,14 +4,22 @@ sensor_t sensor; //global variable for sensor data handling.
 
 void dataSchemaBegin()
 {
+  //Initialise sensor constant parameter
   sensor.type  = SENSOR_TYPE;
   sensor.id = COWSHED_ID;
+//  //initialize all sensors
+//  humSensorBegin();
+//  mqBegin();
+//  mqCalibrate();
 }
 
-
-sensor_t *getSensor()
+sensor_t *getSensorsData()
 {
-  
+  sensor.temp = getTemp();
+  sensor.hum = getHum();
+  sensor.ammonia = getAmmonia();
+  sensor.methane = getMethane();
+  return &sensor;
 }
 void printSensor(sensor_t *sensor)
 {
