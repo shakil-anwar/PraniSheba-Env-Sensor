@@ -11,10 +11,11 @@ MQ mq135(MQ135_PIN);
 void mqBegin()
 {
   Wire.begin();    // begin Wire(I2C)
-  mq4.setGraphPoints(1000, 5000, 0.1, 0.04);
+//  mq4.setGraphPoints(1000, 5000, 1, 0.57);
+  mq4.setGraphPoints(1, 0.57, 1000, 5000);
   mq4.setRl(1000);
   
-  mq135.setGraphPoints(200, 40, 0.8, 1.5);
+  mq135.setGraphPoints( 2.65, 1,10, 100);
   mq135.setRl(1000);
   
 }
@@ -45,10 +46,14 @@ float getTemp()
 
 float getAmmonia()
 {
-  return (float)(random(10,50)*1.00);
+//  return (float)(random(10,50)*1.00);
+//  return (float)analogRead(A0);
+  return mq4.getPPM();
 }
 
 float getMethane()
 {
-  return (float)(random(10,50)*1.00);
+//  return (float)(random(10,50)*1.00);
+//  return (float)analogRead(A1);
+  return mq135.getPPM();
 }
