@@ -18,7 +18,7 @@ void system_setup(void)
 //  rtcBegin();
   led_begin();
 
-  humSensorBegin();
+//  humSensorBegin();
   mqBegin();
   mqCalibrate();
   radio_begin();
