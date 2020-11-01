@@ -6,5 +6,6 @@ void led_begin();
 void led_blink();
 void led_set_level(uint8_t col,uint8_t level);
 void ledTestAll();
+void rf_led(bool state);
 
 #endif

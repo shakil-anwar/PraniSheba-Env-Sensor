@@ -142,6 +142,11 @@ void led_blink()
   //   sr.set(15, HIGH);
 }
 
+void rf_led(bool state)
+{
+  sr.set(0,state);
+}
+
 void ledTestAll()
 {
     for (int i = 1; i < 5; i++)

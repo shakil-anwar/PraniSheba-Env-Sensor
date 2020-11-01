@@ -3,8 +3,12 @@
 #include "dataSchema.h"
 #include "radio.h"
 
+#define PAYLOAD_LENGTH 32
+uint8_t payload[PAYLOAD_LENGTH];
+
 void updateDisplay();
 void sendPayload();
+
 
 Task task1(5, &sendPayload); //send payload triggers after 5 second interval
 Task task2(2, &updateDisplay);
@@ -34,6 +38,17 @@ void sendPayload()
 {
   Serial.print(F("Payload sending:  "));Serial.println(second());
   sensor_t *sensorPtr = getSensorsData();
+  memset(payload,'\0',PAYLOAD_LENGTH);
+  memcpy(payload,(uint8_t*)sensorPtr,sizeof(sensor_t));
+  Serial.println("");
+  for(int j=0;j<PAYLOAD_LENGTH ; j++){
+    Serial.print((char)payload[j], HEX);
+    Serial.print(" ");
+  }
+  Serial.println("");
+
+  nrf_send(payload);
+
 //  printSensor(sensorPtr);
   //handle nrf data sending here 
 }
