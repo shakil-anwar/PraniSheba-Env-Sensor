@@ -12,7 +12,7 @@ void mqBegin()
 {
   Wire.begin();    // begin Wire(I2C)
 //  mq4.setGraphPoints(1000, 5000, 1, 0.57);
-  mq4.setGraphPoints(1, 0.57, 1000, 5000);
+  mq4.setGraphPoints(1, 1.82, 1000, 200);
   mq4.setRl(1000);
   
   mq135.setGraphPoints( 2.65, 1,10, 100);

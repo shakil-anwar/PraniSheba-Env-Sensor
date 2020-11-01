@@ -2,9 +2,11 @@
 
 
 /*****************NRF24L01 PINOUT*****************************/
-#define NRF_CE 
-#define NRF_CSN 
-#define NRF_IRQ 
+#define NRF_CE    10
+#define NRF_CSN   9
+#define NRF_IRQ   3
+/**************** FLASH PINOUT ******************/
+#define FLASH_CS  8
 
 ///Shift Resigter PIN diagram 
 #define TOTAL_SR  3
@@ -20,7 +22,7 @@
 ///NRF PIN Diagram 
 
 ///DHT Sensor 
-#define DHTPIN A6     // Digital pin connected to the DHT sensor
-#define DHTTYPE DHT11   // DHT 11
-//#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
-//#define DHTTYPE DHT21   // DHT 21 (AM2301)
+#define DHTPIN A6           // Digital pin connected to the DHT sensor
+#define DHTTYPE DHT11       // DHT 11
+//#define DHTTYPE DHT22     // DHT 22  (AM2302), AM2321
+//#define DHTTYPE DHT21     // DHT 21 (AM2301)

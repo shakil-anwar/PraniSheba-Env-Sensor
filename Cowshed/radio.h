@@ -3,8 +3,7 @@
 #include "Arduino.h"
 #include <SPI.h>
 #include <nRF24L01.h>
-#include <RF24.h>
+#include <nRF24.h>
 
 void radio_begin(void);
-extern RF24 radio;
 #endif
