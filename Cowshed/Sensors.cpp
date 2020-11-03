@@ -15,7 +15,7 @@ void mqBegin()
   mq4.setGraphPoints(1, 1.82, 1000, 200);
   mq4.setRl(1000);
   
-  mq135.setGraphPoints( 2.65, 1,10, 100);
+  mq135.setGraphPoints(2.65, 1, 10, 100);
   mq135.setRl(1000);
   
 }
