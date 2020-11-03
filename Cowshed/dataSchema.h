@@ -1,6 +1,7 @@
 #ifndef _DATA_SCHEMA_H_
 #define _DATA_SCHEMA_H_
 #include <Arduino.h>
+#include "time.h"
 
 /*********************Global Dataschema Parameters***************/
 #define FLASH_MEM_PAGE_BYTES        256
@@ -70,6 +71,7 @@ float getTemp();
 float getHum();
 float getAmmonia();
 float getMethane();
+void readPayload();
 void updateDisplay();
 
 extern volatile buffer_t buffer;

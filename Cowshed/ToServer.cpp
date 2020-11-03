@@ -73,6 +73,7 @@ void dataSendStateMachine()
         Serial.println(F("S_STATE: WAIT"));
         if (nrf_send_success == true)
         {
+          nrf_send_success = false;
           packetCounter++;
           dataXferState = SUCCESSFUL;
           prevSendMillis = millis();
