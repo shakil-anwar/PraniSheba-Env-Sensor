@@ -4,6 +4,7 @@
 
 Flash flash(FLASH_CS);
 
+int retryCount;
 
 RingEEPROM myeepRom(0x00);
 
@@ -20,6 +21,7 @@ void radio_begin()
   memQ.attachEEPRom(&myeepRom, 4);
   memQ.reset();
   nrf_send_success = false;
+  retryCount = 0;
 
   
   if(!buffer.nrfPtr)
@@ -51,6 +53,7 @@ void IsrNrf()
     rf_led(rf_led_state = !rf_led_state);
     nrf_send_success = true;
   }else  {
+    retryCount = 16;
     Serial.println("NRF Send Failed");
   }
   write_register(RF24_STATUS,rfStatus | TX_DS | MAX_RT);

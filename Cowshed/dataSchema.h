@@ -35,6 +35,8 @@ typedef struct bolus_t
 typedef struct sensor_t
 {
   uint8_t type;
+  uint8_t reserve;
+  
   uint16_t id;
   uint32_t unixTime;
   float ammonia;

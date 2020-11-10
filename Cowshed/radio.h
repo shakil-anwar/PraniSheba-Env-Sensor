@@ -13,4 +13,5 @@ void radio_begin(void);
 extern MemQ memQ;
 
 extern bool rf_send_success;
+extern int retryCount;
 #endif

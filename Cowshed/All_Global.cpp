@@ -11,7 +11,7 @@ void updateDisplay();
 
 
 //Task task1(5, &sendPayload); //send payload triggers after 5 second interval
-Task task2(5, &updateDisplay);
+Task task2(2, &updateDisplay);
 Scheduler scheduler;
 
 
@@ -35,7 +35,7 @@ void system_setup(void)
   scheduler.begin(&second);
   Serial.println("Setup Done");
   pinMode(FLASH_CS, OUTPUT);
-//  FLASH_DIS();
+  pinMode(FLASH_CS, HIGH);
   
 }
 

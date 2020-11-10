@@ -7,7 +7,7 @@
 #define TOTAL_BYTES_IN_JSON         (PAYLOAD_IN_A_PACKET*MAX_PAYLOAD_BYTES)
 #define TOTAL_JSON_PACKET_IN_PAGE   (FLASH_MEM_PAGE_BYTES/TOTAL_BYTES_IN_JSON)
 #define DATA_SEND_OP_CODE           10
-#define MAX_RETRY                   5
+#define MAX_RETRY                   15
 
 payload_t payload1;
 
@@ -20,7 +20,7 @@ char pipeBuf[256];
 uint8_t packetCounter;
 char *json;
 int radioAck;
-int retryCount;
+
 
 dataXferState_t dataXferState;
 pipestate_t radioState;
@@ -80,7 +80,7 @@ void dataSendStateMachine()
         }
         else
         {
-          retryCount++;
+//          retryCount++;
           if (retryCount < MAX_RETRY)
           {
             dataXferState = SEND;
