@@ -18,24 +18,25 @@ Scheduler scheduler;
 void system_setup(void)
 {
   Serial.begin(9600);
-  dataSchemaBegin();
+//  dataSchemaBegin();
 //  rtcBegin();
   led_begin();
 
   humSensorBegin();
-  mqBegin();
-  mqCalibrate();
-  radio_begin();
+//  mqBegin();
+//  mqCalibrate();
+//  radio_begin();
   
 //  scheduler.addTask(&task1);
-  scheduler.addTask(&task2);
-  timeBegin();
-  toSetverBegin();
-  
-  scheduler.begin(&second);
+//  scheduler.addTask(&task2);
+//  timeBegin();
+//  toSetverBegin();
+//  
+//  scheduler.begin(&second);
   Serial.println("Setup Done");
   pinMode(FLASH_CS, OUTPUT);
   pinMode(FLASH_CS, HIGH);
+
   
 }
 
