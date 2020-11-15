@@ -75,6 +75,7 @@ float getAmmonia();
 float getMethane();
 void readPayload();
 void updateDisplay();
+char *toJson( uint8_t *payloadP, char *buffer, uint8_t totalPayload = 1);
 
 extern volatile buffer_t buffer;
 

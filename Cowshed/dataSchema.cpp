@@ -107,7 +107,7 @@ void updateDisplay()
 
   //Methane
   level = (uint8_t)sensorPtr -> methane;
-  level = level/10;
+  level = level/5;
   led_set_level(3, level);
 
   //Ammonia
@@ -115,4 +115,9 @@ void updateDisplay()
   level = level/10;
   led_set_level(4, level);
   readPayload();
+}
+
+char *toJson( uint8_t *payloadP, char *buffer, uint8_t totalPayload)
+{
+  return (char*)payloadP;
 }

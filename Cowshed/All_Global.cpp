@@ -1,4 +1,5 @@
 #include "All_Global.h"
+#include "obj.h"
 #include "time.h"
 #include "dataSchema.h"
 #include "radio.h"
@@ -18,6 +19,10 @@ Scheduler scheduler;
 void system_setup(void)
 {
   Serial.begin(9600);
+  pinMode(FLASH_CS, OUTPUT);
+  pinMode(FLASH_CS, HIGH);
+  radio_begin();
+  objectsBegin();
   dataSchemaBegin();
 //  rtcBegin();
   led_begin();
@@ -30,17 +35,16 @@ void system_setup(void)
 //  scheduler.addTask(&task1);
   scheduler.addTask(&task2);
   timeBegin();
-  toSetverBegin();
+//  toSetverBegin();
   
   scheduler.begin(&second);
   Serial.println("Setup Done");
-  pinMode(FLASH_CS, OUTPUT);
-  pinMode(FLASH_CS, HIGH);
+  
   
 }
 
 void payloadStateMachine()
 {
   memQ.saveLoop();
-  dataSendStateMachine();
+  server.sendLoop(1);
 }

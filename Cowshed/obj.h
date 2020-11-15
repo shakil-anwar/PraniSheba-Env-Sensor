@@ -7,6 +7,7 @@
 
 void objectsBegin();
 void pipeSendServer(const char *data);
+char *toJson( uint8_t *payloadP, char *buffer, uint8_t totalPayload = 1);
 
 //extern Pipe pipe;
 extern Flash flash;       //CS PIN = 5
