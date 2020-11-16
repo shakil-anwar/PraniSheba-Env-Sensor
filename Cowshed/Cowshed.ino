@@ -9,8 +9,10 @@ void loop()
 {
 
 //  delay(2000);
-//Serial.println("sv");
+//  Serial.println("sv");
+  wdtReset();
   scheduler.run();
   payloadStateMachine();
+  
   
 }

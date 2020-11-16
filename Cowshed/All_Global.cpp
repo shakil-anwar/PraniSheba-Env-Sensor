@@ -12,24 +12,26 @@ void updateDisplay();
 
 
 //Task task1(5, &sendPayload); //send payload triggers after 5 second interval
-Task task2(2, &updateDisplay);
+Task task2(5, &updateDisplay);
 Scheduler scheduler;
 
 
 void system_setup(void)
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
   pinMode(FLASH_CS, OUTPUT);
   pinMode(FLASH_CS, HIGH);
-  radio_begin();
-  objectsBegin();
-  dataSchemaBegin();
+  
+
+//  radio_begin();
 //  rtcBegin();
   led_begin();
 
   humSensorBegin();
   mqBegin();
   mqCalibrate();
+  objectsBegin();
+  dataSchemaBegin();
   radio_begin();
   
 //  scheduler.addTask(&task1);
@@ -39,8 +41,10 @@ void system_setup(void)
   
   scheduler.begin(&second);
   Serial.println("Setup Done.");
-  
-  
+//  memQ.saveLoop();
+  wdtEnable(2000);
+  wdtStart();
+
 }
 
 void payloadStateMachine()

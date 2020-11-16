@@ -5,6 +5,7 @@
 #include "led.h"
 #include "pin.h"
 #include "radio.h"
+#include "watchdog.h"
 
 
 void system_setup(void);

@@ -32,16 +32,17 @@ void objectsBegin()
   /*********Server begin********************/
   server.setServerCbs(pipeSendServer, ackWait);
   server.setSchema(sizeof(payload_t), 1);
-  server.setJson(toJson, 256);
+//  server.setJson(toJson, 256);
   server.start();
 }
 
 
-void pipeSendServer(const char *data)
+void pipeSendServer(const uint8_t *data, const uint8_t len)
 {
   rf_send_success = false;
   retryCount = 0;
-  nrf_send((uint8_t*)data);
+//  nrf_send((uint8_t*)data);
+  nrf_send_byte(data, len);
 }
 
 int ackWait()
