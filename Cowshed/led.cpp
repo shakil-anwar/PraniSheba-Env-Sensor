@@ -28,6 +28,7 @@ void led_begin()
   digitalWrite(SR_PWM, LOW);
   //analogWrite(SR_PWM,230);
   sr.setAllLow(); // set all pins LOW
+  rf_led(true);
 }
 
 void col_one(uint8_t level)
