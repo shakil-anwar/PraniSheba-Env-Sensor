@@ -48,14 +48,14 @@ float getTemp()
 
 float getAmmonia()
 {
-//  return (float)(random(10,50)*1.00);
+  return (float)(random(10,50)*1.00);
 //  return (float)analogRead(A0);
-  return mq4.getPPM();
+//  return mq4.getPPM();
 }
 
 float getMethane()
 {
-//  return (float)(random(10,50)*1.00);
+  return (float)(random(10,50)*1.00);
 //  return (float)analogRead(A1);
-  return mq135.getPPM();
+//  return mq135.getPPM();
 }

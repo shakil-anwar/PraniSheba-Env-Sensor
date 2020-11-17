@@ -6,10 +6,8 @@
 
 #define PIPE_SERVER_SEND_CODE       10
 
-//void pipeSendServer(const char *data);
+void pipeSendServer(const uint8_t *data, const uint8_t len);
 int ackWait();
-//void nrf_ce_enable();
-//void nrf_ce_disable();
 
 /*********Flash & MemQ Library**********************/
 Flash flash(FLASH_CS);
@@ -27,44 +25,38 @@ void objectsBegin()
   memQ.attachFlash(&flash, (void**)&buffer.flashPtr, sizeof(payload_t), TOTAL_PAYLOAD_BUFFERS / 2);
   memQ.attachEEPRom(&myeepRom, 4);
   
-  memQ.attachSafetyFuncs(ce_enable,ce_disable);
+  memQ.attachSafetyFuncs(nrfEnable,nrfDisable);
 //  memQ.reset();
   /*********Server begin********************/
   server.setServerCbs(pipeSendServer, ackWait);
   server.setSchema(sizeof(payload_t), 1);
-//  server.setJson(toJson, 256);
   server.start();
 }
 
 
 void pipeSendServer(const uint8_t *data, const uint8_t len)
 {
-  rf_send_success = false;
-  retryCount = 0;
-//  nrf_send((uint8_t*)data);
-  nrf_send_byte(data, len);
+  nrf_flush_tx();
+  nrfWrite(data,len);
+  nrfStartTransmit();
 }
 
 int ackWait()
 {
-  if(retryCount == 16)
+  int waitCount = 2;
+  nrf_irq_state_t irqState;
+  do
   {
-    return 404;
-  }
-  else if(retryCount != 16 && rf_send_success == true)
-  {
-    return 200;
-  }else{
-    return -1;
-  }
+    irqState = waitAck();
+    if(irqState == NRF_SUCCESS)
+    {
+      return 200;
+    }
+    else if(irqState == NRF_FAIL)
+    {
+      break;
+    }
+   delay(1);
+  }while(--waitCount);
+  return -1;
 }
-
-//void nrf_ce_enable()
-//{
-//  CE_ENABLE();
-//}
-//
-//void nrf_ce_disable()
-//{
-//  CE_DISBLE();
-//}

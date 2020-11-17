@@ -18,7 +18,7 @@ Scheduler scheduler;
 
 void system_setup(void)
 {
-  Serial.begin(115200);
+  Serial.begin(9600);
   pinMode(FLASH_CS, OUTPUT);
   pinMode(FLASH_CS, HIGH);
   
@@ -42,7 +42,7 @@ void system_setup(void)
   scheduler.begin(&second);
   Serial.println("Setup Done.");
 //  memQ.saveLoop();
-  wdtEnable(2000);
+  wdtEnable(3000);
   wdtStart();
 
 }

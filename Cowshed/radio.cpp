@@ -3,63 +3,69 @@
 #include "dataSchema.h"
 #include "Obj.h"
 
-//Flash flash(FLASH_CS);
-
-int retryCount;
-bool rf_send_success;
-
-//RingEEPROM myeepRom(0x00);
-
-//MemQ memQ(256, 1000);
-
-uint8_t buf2[5];
+#define QUERY_PIPE 5
+void txIsr(void);
+void rxIsr(void);
+void maxRtIsr(void);
 void IsrNrf();
-bool rf_led_state =HIGH;
+bool rf_led_state = HIGH;
 
-
+uint8_t pipeAddr[6][5] =
+{
+  {1, 2, 3, 4, 5},
+  {2, 2, 3, 4, 5},
+  {3, 2, 3, 4, 5},
+  {4, 2, 3, 4, 5},
+  {5, 2, 3, 4, 5},
+  {6, 2, 3, 4, 5}
+};
 void radio_begin()
 {
-//  memQ.attachFlash(&flash, (void**)&buffer.flashPtr, sizeof(payload_t),TOTAL_PAYLOAD_BUFFERS/2);
-//  memQ.attachEEPRom(&myeepRom, 4);
-//  memQ.reset();
-  rf_send_success = false;
-  nrf_send_success = false;
-  retryCount = 0;
+  nrfBegin(SPEED_2MB, POWER_ZERO_DBM);
+  nrfSetTx(pipeAddr[1], true);
+  nrfTXMode();
+  nrfPowerUp();
 
-  
-  if(!buffer.nrfPtr)
-  {
-    Serial.println(F("Buf Ptr not Initializer"));
-  }
-  
-  nrf_begin();
-  nrf_common_begin();
-  nrf_tx_begin();
-  attachInterrupt(digitalPinToInterrupt(3), IsrNrf, FALLING );
-  read_bytes_in_register(RF24_TX_ADDR, buf2, 5);
-  Serial.print("RX Address");
-  Serial.println((char)buf2, HEX);
-//  printBuffer(buf2, 5);
-  nrfConfigPrint();
-
-  write_register(RF24_STATUS, RX_DR);
+  nrfSetQuery(QUERY_PIPE, pipeAddr[QUERY_PIPE]);
+  nrfSetIrqs(txIsr, rxIsr, maxRtIsr);
+  pinMode(3, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(3), nrfIrq, FALLING );
 }
+
+void txIsr(void)
+{
+  nrfClearTxDs();
+}
+
+void rxIsr(void)
+{
+  uint8_t pipe = pipeAvailFast();
+  nrfClearRxDr();
+}
+
+void maxRtIsr(void)
+{
+  nrfClearMaxRt();
+//  nrf_flush_rx();
+  nrf_flush_tx();
+}
+
 
 
 void IsrNrf()
 {
   Serial.println("=====>NRF IRQ Triggered");
   uint8_t rfStatus  = read_register(RF24_STATUS);
-  if(rfStatus && TX_DS)
+  if (rfStatus && TX_DS)
   {
     Serial.println("NRF Send Success");
     rf_led(rf_led_state = !rf_led_state);
     rf_send_success = true;
-  }else  {
+  } else  {
     retryCount = 16;
     Serial.println("NRF Send Failed");
     rf_led(LOW);
   }
-  write_register(RF24_STATUS,rfStatus | TX_DS | MAX_RT);
-//  rf_led(HIGH);
+  write_register(RF24_STATUS, rfStatus | TX_DS | MAX_RT);
+  //  rf_led(HIGH);
 }
