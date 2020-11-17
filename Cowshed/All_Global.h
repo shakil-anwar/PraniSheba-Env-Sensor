@@ -3,8 +3,15 @@
 #include <Arduino.h>
 #include "tScheduler.h"
 #include "led.h"
+#include "pin.h"
+#include "radio.h"
+#include "watchdog.h"
+
 
 void system_setup(void);
+void test_flash(void);
+void payloadStateMachine();
+void dataSendStateMachine();
 
 
 extern Scheduler scheduler;
