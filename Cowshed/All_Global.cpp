@@ -12,7 +12,7 @@ void updateDisplay();
 
 
 //Task task1(5, &sendPayload); //send payload triggers after 5 second interval
-Task task2(5, &updateDisplay);
+Task task2(30, &updateDisplay);
 Scheduler scheduler;
 
 
