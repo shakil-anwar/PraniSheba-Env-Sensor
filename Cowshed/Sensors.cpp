@@ -36,14 +36,12 @@ void humSensorBegin()
 }
 float getHum()
 {
-//  return sht.getHumidity();
-  return (float)(random(10,90)*1.00);
+  return sht.getHumidity();
 }
 
 float getTemp()
 {
-//  return sht.getTemperature(); 
-  return (float)(random(10,50)*1.00);
+  return sht.getTemperature(); 
 }
 
 float getAmmonia()
