@@ -18,6 +18,11 @@ Scheduler scheduler;
 
 void system_setup(void)
 {
+  delay(5000);
+  delay(5000);
+  delay(5000);
+  delay(5000);
+  
   Serial.begin(115200);
   pinMode(FLASH_CS, OUTPUT);
   pinMode(FLASH_CS, HIGH);
