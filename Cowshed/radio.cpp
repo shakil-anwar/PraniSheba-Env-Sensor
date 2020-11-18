@@ -25,8 +25,7 @@ void radio_begin()
   nrfBegin(SPEED_2MB, POWER_ZERO_DBM);
   nrfSetTx(pipeAddr[1], true);
   nrfTXMode();
-  nrfPowerUp();
-
+  
   nrfSetQuery(QUERY_PIPE, pipeAddr[QUERY_PIPE]);
   nrfSetIrqs(txIsr, rxIsr, maxRtIsr);
   pinMode(3, INPUT_PULLUP);

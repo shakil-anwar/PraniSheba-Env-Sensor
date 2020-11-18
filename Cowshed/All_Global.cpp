@@ -42,6 +42,7 @@ void system_setup(void)
   scheduler.begin(&second);
   Serial.println("Setup Done.");
 //  memQ.saveLoop();
+delay(2000);
   wdtEnable(3000);
   wdtStart();
 

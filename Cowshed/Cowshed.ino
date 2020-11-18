@@ -12,10 +12,10 @@ void setup()
 }
 void loop()
 {
-//  getRtcTime();
-//  delay(2000);
-  scheduler.run();
-  payloadStateMachine();
+  getRtcTime();
+  delay(2000);
+//  scheduler.run();
+//  payloadStateMachine();
   wdtReset();
 }
 
