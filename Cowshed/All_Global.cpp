@@ -3,7 +3,7 @@
 #include "time.h"
 #include "dataSchema.h"
 #include "radio.h"
-
+#include "realTime.h"
 
 uint8_t buff[256];
 
@@ -22,9 +22,6 @@ void system_setup(void)
   pinMode(FLASH_CS, OUTPUT);
   pinMode(FLASH_CS, HIGH);
   
-
-//  radio_begin();
-//  rtcBegin();
   led_begin();
 
   humSensorBegin();
@@ -36,13 +33,15 @@ void system_setup(void)
   
 //  scheduler.addTask(&task1);
   scheduler.addTask(&task2);
-  timeBegin();
-//  toSetverBegin();
-  
+//  timeBegin();
+   realTimeBegin(getRtcTime);
+
+
+  delay(2000);
+  realTimeStart();
   scheduler.begin(&second);
   Serial.println("Setup Done.");
-//  memQ.saveLoop();
-delay(2000);
+
   wdtEnable(3000);
   wdtStart();
 
