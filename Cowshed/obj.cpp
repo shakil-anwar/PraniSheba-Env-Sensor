@@ -43,7 +43,7 @@ void pipeSendServer(const uint8_t *data, const uint8_t len)
 
 int ackWait()
 {
-  int waitCount = 2;
+  int waitCount = 10;
   nrf_irq_state_t irqState;
   do
   {

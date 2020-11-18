@@ -1,6 +1,7 @@
 #include "radio.h"
 #include "pin.h"
 #include "dataSchema.h"
+#include "querySchema.h"
 #include "Obj.h"
 
 #define QUERY_PIPE 5
@@ -50,7 +51,22 @@ void maxRtIsr(void)
   nrf_flush_tx();
 }
 
-
+uint32_t getRtcTime()
+{
+  unixTime_t *uTimePtr = (unixTime_t*)&queryBuffer;
+  uTimePtr -> type = 0;
+  uTimePtr -> opCode = 1;
+  uTimePtr -> time = 0;
+  uTimePtr = (unixTime_t*)nrfQuery((void*)&queryBuffer,sizeof(queryData_t));
+  if(uTimePtr != NULL)
+  {
+    Serial.print(F("Received Time : "));Serial.println(uTimePtr -> time);
+  }
+  else
+  {
+    Serial.println(F("Query falied"));
+  }
+}
 
 void IsrNrf()
 {

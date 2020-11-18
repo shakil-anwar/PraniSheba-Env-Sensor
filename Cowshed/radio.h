@@ -9,6 +9,7 @@
 
 
 void radio_begin(void);
+uint32_t getRtcTime();
 extern MemQ memQ;
 
 extern bool rf_send_success;
