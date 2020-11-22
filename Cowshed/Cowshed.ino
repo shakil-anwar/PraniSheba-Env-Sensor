@@ -14,8 +14,11 @@ void loop()
 {
 //  getRtcTime();
 //  delay(2000);
-  scheduler.run();
-  payloadStateMachine();
+  sampleSendNrf();
+//  scheduler.run();
+//  payloadStateMachine();
+
+//  delay(2000);
   wdtReset();
 }
 
@@ -43,6 +46,6 @@ void sampleSendNrf()
     } while (irqState != NRF_SUCCESS && irqState != NRF_FAIL);
     //currentMillis - prevMillis < 1000
   } while (0);
-  delay(3000);
+//  delay(3000);
 
 }

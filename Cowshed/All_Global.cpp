@@ -34,15 +34,15 @@ void system_setup(void)
 //  scheduler.addTask(&task1);
   scheduler.addTask(&task2);
 //  timeBegin();
-   realTimeBegin(getRtcTime);
+//   realTimeBegin(getRtcTime);
 
 
   delay(2000);
-  realTimeStart();
+//  realTimeStart();
   scheduler.begin(&second);
   Serial.println("Setup Done.");
 
-  wdtEnable(3000);
+  wdtEnable(8000);
   wdtStart();
 
 }
