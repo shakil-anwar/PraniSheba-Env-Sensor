@@ -4,7 +4,7 @@
 #include "radio.h"
 #include "dataSchema.h"
 
-uint32_t waitPrevMillis = 0;
+
 
 void setup()
 {
@@ -12,40 +12,43 @@ void setup()
 }
 void loop()
 {
-//  getRtcTime();
-//  delay(2000);
-  sampleSendNrf();
-//  scheduler.run();
-//  payloadStateMachine();
+    getRtcTime();
+    delay(2000);
 
-//  delay(2000);
+  //  scheduler.run();
+  //  payloadStateMachine();
+//  sampleSendNrf();
+//  delay(100);
   wdtReset();
 }
 
 void sampleSendNrf()
 {
-  uint32_t currentMillis = millis();
-  uint32_t prevMillis = currentMillis;
+  Serial.print(F("Sending data.."));
+  
+  payload_t *pld = (payload_t*)getSensorsData();
+  nrfWrite((uint8_t*)pld, sizeof(payload_t));
+  nrfStartTransmit();
+  
+ 
+  uint8_t currentMillis = millis();
+  uint32_t waitPrevMillis = currentMillis;
   nrf_irq_state_t irqState;
   do
   {
-    Serial.println(F("Sending data.."));
-    payload_t *pld = (payload_t*)getSensorsData();
-    nrfWrite((uint8_t*)pld, sizeof(payload_t));
-    nrfStartTransmit();
-    waitPrevMillis = millis();
-    do
+    irqState = waitAck();
+    Serial.print(F("IRQ STATE: "));Serial.println(irqState);
+    if (irqState == NRF_SUCCESS)
     {
-
-      irqState = waitAck();
-      currentMillis = millis();
-      if (currentMillis - waitPrevMillis > 15)
-      {
-        break;
-      }
-    } while (irqState != NRF_SUCCESS && irqState != NRF_FAIL);
-    //currentMillis - prevMillis < 1000
-  } while (0);
-//  delay(3000);
-
+      Serial.println(F("Success"));
+      break;
+    }
+    else if (irqState == NRF_FAIL)
+    {
+      Serial.println(F("MAX_RT Failed"));
+      break;
+    }
+   currentMillis = millis();
+  } while ((currentMillis - waitPrevMillis)<10);
+  Serial.println();
 }

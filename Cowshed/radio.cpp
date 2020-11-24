@@ -4,8 +4,8 @@
 #include "querySchema.h"
 #include "Obj.h"
 
-#define TX_PIPE      1
-#define QUERY_PIPE   5
+#define TX_PIPE      5
+#define QUERY_PIPE   1
 
 void txIsr(void);
 void rxIsr(void);
@@ -24,16 +24,22 @@ uint8_t pipeAddr[6][5] =
 };
 void radio_begin()
 {
-  nrfBegin(SPEED_2MB, POWER_ZERO_DBM);
+  nrfBegin(SPEED_2MB, POWER_ZERO_DBM); //radio in power down mode
   
   nrfSetIrqs(txIsr, rxIsr, maxRtIsr);
-  nrfSetQueryClient(QUERY_PIPE, pipeAddr[TX_PIPE], pipeAddr[QUERY_PIPE]);
-  nrfSetTx(pipeAddr[TX_PIPE], true);
+  nrfQueryClientSet(QUERY_PIPE,pipeAddr[TX_PIPE], pipeAddr[QUERY_PIPE]);
   
+  nrfSetTx(pipeAddr[TX_PIPE], true);
+  nrfStandby1();
+  Serial.println(F("Radio setup done"));
+}
+
+void radioStart()
+{
+  nrfTXStart(); //nrf goes standby-1
   pinMode(3, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(3), nrfIrq, FALLING );
 }
-
 void txIsr(void)
 {
   nrfClearTxDs();

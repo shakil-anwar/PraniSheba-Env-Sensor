@@ -16,7 +16,7 @@
 #define BOLUS_ID_PREFIX             'S'
 /*********************Gas Sensor Parameters**********************/
 #define SENSOR_TYPE 2
-#define COWSHED_ID 100
+#define COWSHED_ID 150
 
 typedef struct bolus_t
 {

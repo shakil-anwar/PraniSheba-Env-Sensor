@@ -9,6 +9,7 @@
 
 
 void radio_begin(void);
+void radioStart();
 uint32_t getRtcTime();
 extern MemQ memQ;
 

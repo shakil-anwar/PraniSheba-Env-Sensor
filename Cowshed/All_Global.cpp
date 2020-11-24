@@ -43,8 +43,8 @@ void system_setup(void)
   Serial.println("Setup Done.");
 
   wdtEnable(8000);
+  radioStart();
   wdtStart();
-
 }
 
 void payloadStateMachine()

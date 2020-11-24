@@ -25,7 +25,8 @@ void objectsBegin()
   memQ.attachFlash(&flash, (void**)&buffer.flashPtr, sizeof(payload_t), TOTAL_PAYLOAD_BUFFERS / 2);
   memQ.attachEEPRom(&myeepRom, 4);
   
-  memQ.attachSafetyFuncs(nrfEnable,nrfDisable);
+//  memQ.attachSafetyFuncs(nrfRestorToRxTx,nrfRxTxToStandy1);
+  memQ.attachSafetyFuncs(NULL,nrfRxTxToStandy1);
 //  memQ.reset();
   /*********Server begin********************/
   server.setServerCbs(pipeSendServer, ackWait);
