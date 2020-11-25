@@ -74,4 +74,5 @@ uint32_t getRtcTime()
   {
     Serial.println(F("RTC Query falied"));
   }
+  return (uTimePtr -> time);
 }

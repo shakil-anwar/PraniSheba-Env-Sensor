@@ -37,7 +37,7 @@ void objectsBegin()
 
 void pipeSendServer(const uint8_t *data, const uint8_t len)
 {
-  nrf_flush_tx();
+//  nrf_flush_tx();
   nrfWrite(data,len);
   nrfStartTransmit();
 }

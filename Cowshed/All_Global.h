@@ -6,13 +6,25 @@
 #include "pin.h"
 #include "radio.h"
 #include "watchdog.h"
+#include "realTime.h"
 
+typedef enum mainState_t
+{
+  CHECK_HARDWARE,
+  START_DEVICE,
+  SYNCHRONIZE,
+  DEVICE_RUN,
+  STOP
+};
 
 void system_setup(void);
 void test_flash(void);
 void payloadStateMachine();
 void dataSendStateMachine();
 
+bool isHardwareOk();
+void startDevice();
+void deviceRunSM();
 
 extern Scheduler scheduler;
 #endif 
