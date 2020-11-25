@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include "tScheduler.h"
 #include "led.h"
-#include "pin.h"
+#include "param.h"
 #include "radio.h"
 #include "watchdog.h"
 #include "realTime.h"

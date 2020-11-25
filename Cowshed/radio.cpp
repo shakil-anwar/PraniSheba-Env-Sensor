@@ -1,5 +1,5 @@
 #include "radio.h"
-#include "pin.h"
+#include "param.h"
 #include "dataSchema.h"
 #include "querySchema.h"
 #include "Obj.h"
@@ -30,12 +30,13 @@ void radio_begin()
   nrfQueryClientSet(QUERY_PIPE,pipeAddr[TX_PIPE], pipeAddr[QUERY_PIPE]);
   
   nrfSetTx(pipeAddr[TX_PIPE], true);
-  nrfStandby1();
+  nrfPowerDown();
   Serial.println(F("Radio setup done"));
 }
 
 void radioStart()
 {
+  nrfStandby1();
   nrfTXStart(); //nrf goes standby-1
   pinMode(3, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(3), nrfIrq, FALLING );
@@ -65,6 +66,8 @@ uint32_t getRtcTime()
   uTimePtr -> type = 0;
   uTimePtr -> opCode = 1;
   uTimePtr -> time = 0;
+  
+  nrfStandby1();
   uTimePtr = (unixTime_t*)nrfQuery((void*)&queryBuffer,sizeof(queryData_t));
   if(uTimePtr != NULL)
   {
@@ -74,5 +77,6 @@ uint32_t getRtcTime()
   {
     Serial.println(F("RTC Query falied"));
   }
+  nrfPowerDown();
   return (uTimePtr -> time);
 }

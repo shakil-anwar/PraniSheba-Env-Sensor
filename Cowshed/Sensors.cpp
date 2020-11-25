@@ -1,7 +1,6 @@
 #include "dataSchema.h"
 #include "MQ.h"
 #include "param.h"
-#include "pin.h"
 #include <SHT21.h> 
 SHT21 sht; 
 

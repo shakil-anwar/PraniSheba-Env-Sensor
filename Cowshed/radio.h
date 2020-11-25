@@ -7,7 +7,6 @@
 #include "MemQ.h"
 
 
-
 void radio_begin(void);
 void radioStart();
 uint32_t getRtcTime();

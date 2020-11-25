@@ -35,6 +35,7 @@ void loop()
       Serial.println(F("m_STATE: SYNCHRONIZE"));
       realTimeStart();
       mainState = DEVICE_RUN;
+      nrfStandby1();
       break;
     case DEVICE_RUN:
       deviceRunSM();

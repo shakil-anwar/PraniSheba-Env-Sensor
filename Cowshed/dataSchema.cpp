@@ -1,6 +1,6 @@
 #include "dataSchema.h"
 #include "led.h"
-#include "pin.h"
+#include "param.h"
 #include "realTime.h"
 
 sensor_t sensor; //global variable for sensor data handling.

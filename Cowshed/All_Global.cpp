@@ -20,6 +20,8 @@ void system_setup(void)
 {
   Serial.begin(250000);
   radio_begin();
+  radioStart();
+  
   pinMode(FLASH_CS, OUTPUT);
   pinMode(FLASH_CS, HIGH);
   
@@ -30,21 +32,15 @@ void system_setup(void)
   mqCalibrate();
   objectsBegin();
   dataSchemaBegin();
-  
- 
+
   scheduler.addTask(&task2);
-
-  
-  
   scheduler.begin(&second);
-  Serial.println("Setup Done.");
-
+  
   wdtEnable(8000);
-  
   realTimeBegin(getRtcTime);
-  
   delay(2000);
   
+  Serial.println("Setup Done.");
 }
 
 bool isHardwareOk()
@@ -54,7 +50,7 @@ bool isHardwareOk()
 
 void startDevice()
 {
-  radioStart();
+//  radioStart();
   wdtStart();
 }
 
