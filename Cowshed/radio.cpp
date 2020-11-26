@@ -45,7 +45,6 @@ void txIsr(void)
 
 void rxIsr(void)
 {
-  uint8_t pipe = pipeAvailFast();
   nrf_flush_rx();
   nrfClearRxDr();
 }
@@ -55,6 +54,7 @@ void maxRtIsr(void)
   nrfClearMaxRt();
   nrf_flush_rx();
   nrf_flush_tx();
+  
 }
 
 uint32_t getRtcTime()

@@ -13,6 +13,9 @@
 #include "realTime.h"
 #include "ramQ.h"
 #include "MQ.h"
+#include "FlashMemory.h"
+#include "RingEEPROM.h"
+#include "AVR_Timer1.h"
 
 /*********Common Library for all files**********/
 #include "param.h"
