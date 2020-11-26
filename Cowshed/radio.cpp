@@ -66,17 +66,21 @@ uint32_t getRtcTime()
   
   nrfStandby1();
   uTimePtr = (unixTime_t*)nrfQuery((void*)&queryBuffer,sizeof(queryData_t));
+  nrfPowerDown();
   Serial.print(F("Type : "));Serial.print(uTimePtr -> type);
   Serial.print(F(" Opcode: "));Serial.println(uTimePtr -> opCode);
+  delay(2000);
   if(uTimePtr != NULL)
   {
-//    Serial.print(F("Received Time : "));Serial.println(uTimePtr -> time);
+    if(uTimePtr -> type == 0 && uTimePtr -> opCode == 1)
+    {
+      Serial.print(F("Received Time : "));Serial.println(uTimePtr -> time);
+      return (uTimePtr -> time);
+    }
   }
   else
   {
     Serial.println(F("RTC Query falied"));
+    return 0;
   }
-  Serial.print(F("Received Time : "));Serial.println(uTimePtr -> time);
-  nrfPowerDown();
-  return (uTimePtr -> time);
 }
