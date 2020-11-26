@@ -56,7 +56,9 @@ void sampleSendNrf()
 {
   Serial.print(F("Sending data.."));
 
-  payload_t *pld = (payload_t*)getSensorsData();
+//  payload_t *pld = (payload_t*)getSensorsData();
+  sensor_t sensor;
+  payload_t *pld = (payload_t*)getSensorsData(&sensor);
   nrfWrite((uint8_t*)pld, sizeof(payload_t));
   nrfStartTransmit();
 

@@ -22,6 +22,8 @@ void test_flash(void);
 void payloadStateMachine();
 void dataSendStateMachine();
 
+
+
 bool isHardwareOk();
 void startDevice();
 void deviceRunSM();

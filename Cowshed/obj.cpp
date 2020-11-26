@@ -3,6 +3,7 @@
 #include <SoftwareSerial.h>
 #include "dataSchema.h"
 #include "radio.h"
+#include "ramQ.h"
 
 #define PIPE_SERVER_SEND_CODE       10
 
@@ -22,7 +23,8 @@ void objectsBegin()
 {
 //  espSerial.begin(9600);
   /**********MemQ and Flash Begin************/
-  memQ.attachFlash(&flash, (void**)&buffer.flashPtr, sizeof(payload_t), TOTAL_PAYLOAD_BUFFERS / 2);
+//  memQ.attachFlash(&flash, (void**)&buffer.flashPtr, sizeof(payload_t), TOTAL_PAYLOAD_BUFFERS / 2);
+  memQ.attachFlash(&flash,&_ramQFlash, sizeof(payload_t), TOTAL_PAYLOAD_BUFFER / 2);
   memQ.attachEEPRom(&myeepRom, 4);
   
 //  memQ.attachSafetyFuncs(nrfRestorToRxTx,nrfRxTxToStandy1);
