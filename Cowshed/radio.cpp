@@ -1,8 +1,5 @@
 #include "radio.h"
-#include "param.h"
-#include "dataSchema.h"
-#include "querySchema.h"
-#include "Obj.h"
+#include "Schema.h"
 
 #define TX_PIPE      5
 #define QUERY_PIPE   1
@@ -69,14 +66,17 @@ uint32_t getRtcTime()
   
   nrfStandby1();
   uTimePtr = (unixTime_t*)nrfQuery((void*)&queryBuffer,sizeof(queryData_t));
+  Serial.print(F("Type : "));Serial.print(uTimePtr -> type);
+  Serial.print(F(" Opcode: "));Serial.println(uTimePtr -> opCode);
   if(uTimePtr != NULL)
   {
-    Serial.print(F("Received Time : "));Serial.println(uTimePtr -> time);
+//    Serial.print(F("Received Time : "));Serial.println(uTimePtr -> time);
   }
   else
   {
     Serial.println(F("RTC Query falied"));
   }
+  Serial.print(F("Received Time : "));Serial.println(uTimePtr -> time);
   nrfPowerDown();
   return (uTimePtr -> time);
 }

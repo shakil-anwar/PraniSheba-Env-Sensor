@@ -1,10 +1,10 @@
-#include "dataSchema.h"
+#include "Schema.h"
+#include "IoT.h"
 #include "led.h"
-#include "param.h"
-#include "realTime.h"
-#include "ramQ.h"
+
 
 volatile payload_t  payload[TOTAL_PAYLOAD_BUFFER];
+queryData_t queryBuffer;
 
 sensor_t sensor;
 

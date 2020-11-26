@@ -1,17 +1,14 @@
-#include "All_Global.h"
-#include "obj.h"
-#include "time.h"
-#include "dataSchema.h"
-#include "radio.h"
+#include "All.h"
+#include "Schema.h"
 
-
+#define DATA_ACQUIRE_INTERVAL   5
 uint8_t buff[256];
 
 void updateDisplay();
 //void sendPayload();
 
 
-Task task1(3, &dataAcquisition); //send payload triggers after 5 second interval
+Task task1(DATA_ACQUIRE_INTERVAL, &dataAcquisition); //send payload triggers after 5 second interval
 Task task2(10, &updateDisplay);
 Scheduler scheduler;
 

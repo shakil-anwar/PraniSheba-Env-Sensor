@@ -1,8 +1,6 @@
-#include "All_Global.h"
-#include "time.h"
-
+#include "All.h"
 #include "radio.h"
-#include "dataSchema.h"
+#include "Schema.h"
 
 mainState_t mainState;
 void setup()

@@ -1,7 +1,8 @@
-#include "dataSchema.h"
-#include "MQ.h"
-#include "param.h"
+#include "Schema.h"
+#include "IoT.h"
 #include <SHT21.h> 
+
+
 SHT21 sht; 
 
 MQ mq4(MQ4_PIN);

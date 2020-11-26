@@ -1,9 +1,6 @@
-#include "Obj.h"
-#include "param.h"
-#include <SoftwareSerial.h>
-#include "dataSchema.h"
+#include "IoT.h"
+#include "Schema.h"
 #include "radio.h"
-#include "ramQ.h"
 
 #define PIPE_SERVER_SEND_CODE       10
 
