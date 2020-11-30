@@ -22,9 +22,11 @@ void dataSendStateMachine();
 
 
 
+void syncTime();
 bool isHardwareOk();
 void startDevice();
 void deviceRunSM();
+
 
 extern Scheduler scheduler;
 #endif 

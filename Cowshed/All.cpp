@@ -18,10 +18,10 @@ void system_setup(void)
   Serial.begin(250000);
   radio_begin();
   radioStart();
-  
+
   pinMode(FLASH_CS, OUTPUT);
   pinMode(FLASH_CS, HIGH);
-  
+
   led_begin();
 
   humSensorBegin();
@@ -33,11 +33,12 @@ void system_setup(void)
   scheduler.addTask(&task1);
   scheduler.addTask(&task2);
   scheduler.begin(&second);
-  
+
   wdtEnable(8000);
-  realTimeBegin(getRtcTime);
+  //  realTimeBegin(getRtcTime);
+  rtBegin();
   delay(2000);
-  
+
   Serial.println("Setup Done.");
 }
 
@@ -48,7 +49,7 @@ bool isHardwareOk()
 
 void startDevice()
 {
-//  radioStart();
+  //  radioStart();
   wdtStart();
 }
 
@@ -57,4 +58,32 @@ void deviceRunSM()
   memQ.saveLoop();
   server.sendLoop(1);
   realTimeSync();
+}
+
+void syncTime()
+{
+  uint8_t maxCount = 5;
+  uint32_t uTime;
+  do
+  {
+    uTime = getRtcTime();
+    if (uTime)
+    {
+      Serial.print(F("Got NTP Time"));
+      break;
+    }
+    else
+    {
+      Serial.print(F("Try count :")); Serial.println(maxCount);
+    }
+    delay(1000);
+  } while (--maxCount);
+
+  Serial.println(uTime);
+  if(uTime)
+  {
+    Serial.println(F("Setting Time"));
+    rtSync(uTime);
+  }
+  
 }

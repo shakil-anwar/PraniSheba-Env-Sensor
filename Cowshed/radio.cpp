@@ -33,8 +33,8 @@ void radio_begin()
 
 void radioStart()
 {
-  nrfStandby1();
-  nrfTXStart(); //nrf goes standby-1
+//  nrfStandby1();
+//  nrfTXStart(); //nrf goes standby-1
   pinMode(3, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(3), nrfIrq, FALLING );
 }
@@ -65,6 +65,7 @@ uint32_t getRtcTime()
   uTimePtr -> time = 0;
   
   nrfStandby1();
+  nrfTXStart();
   uTimePtr = (unixTime_t*)nrfQuery((void*)&queryBuffer,sizeof(queryData_t));
   nrfPowerDown();
   Serial.print(F("Type : "));Serial.print(uTimePtr -> type);
