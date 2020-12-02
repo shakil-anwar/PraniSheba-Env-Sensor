@@ -60,30 +60,57 @@ void deviceRunSM()
   realTimeSync();
 }
 
-void syncTime()
-{
-  uint8_t maxCount = 5;
-  uint32_t uTime;
-  do
-  {
-    uTime = getRtcTime();
-    if (uTime)
-    {
-      Serial.print(F("Got NTP Time"));
-      break;
-    }
-    else
-    {
-      Serial.print(F("Try count :")); Serial.println(maxCount);
-      delay(1000);
-    }
-  } while (--maxCount);
 
-  Serial.println(uTime);
-  if(uTime)
-  {
-    Serial.println(F("Setting Time"));
-    rtSync(uTime);
-  }
+bool setDeviceConf()
+{
+  query_t query;
+  query.type = 0;
+  query.opCode = 3;
   
+//  confPacket_t *confPtr = (confPacket_t*)&queryBuffer;
+//  memset(confPtr,0, sizeof(confPacket_t));
+//  confPtr -> type = 0;
+//  uTimePtr -> opCode = 1;
+//  uTimePtr -> utime = 0;
+}
+
+bool syncTime()
+{
+  uint32_t uTime = getRtcTime();
+  if (uTime)
+  {
+    Serial.print(F("Got NTP Time : "));Serial.println(uTime);
+    rtSync(uTime);
+    return true;
+  }
+  else
+  {
+    Serial.println(F("NTP Parse Failed"));
+    delay(1000);
+    return false;
+  }
+
+
+  //  do
+  //  {
+  //    uTime = getRtcTime();
+  //    if (uTime)
+  //    {
+  //      Serial.print(F("Got NTP Time"));
+  //      break;
+  //    }
+  //    else
+  //    {
+  //      Serial.print(F("Try count :")); Serial.println(maxCount);
+  //      delay(1000);
+  //    }
+  //  } while (--maxCount);
+  //
+  //  Serial.println(uTime);
+  //  if(uTime)
+  //  {
+  //    Serial.println(F("Setting Time"));
+  //    rtSync(uTime);
+  //  }
+
 }

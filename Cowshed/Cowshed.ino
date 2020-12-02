@@ -31,9 +31,11 @@ void loop()
       break;
     case SYNCHRONIZE:
       Serial.println(F("m_STATE: SYNCHRONIZE"));
-      syncTime();
-      mainState = DEVICE_RUN;
-      nrfStandby1();
+      if (syncTime())
+      {
+        mainState = DEVICE_RUN;
+        nrfStandby1();
+      }
       break;
     case DEVICE_RUN:
       deviceRunSM();
@@ -54,7 +56,7 @@ void sampleSendNrf()
 {
   Serial.print(F("Sending data.."));
 
-//  payload_t *pld = (payload_t*)getSensorsData();
+  //  payload_t *pld = (payload_t*)getSensorsData();
   sensor_t sensor;
   payload_t *pld = (payload_t*)getSensorsData(&sensor);
   nrfWrite((uint8_t*)pld, sizeof(payload_t));

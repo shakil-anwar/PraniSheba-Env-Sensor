@@ -22,7 +22,7 @@ void dataSendStateMachine();
 
 
 
-void syncTime();
+bool syncTime();
 bool isHardwareOk();
 void startDevice();
 void deviceRunSM();

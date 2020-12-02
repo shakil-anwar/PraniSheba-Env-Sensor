@@ -30,6 +30,16 @@ typedef union payload_t
 };
 /*************************Query Schema*****************************/
 
+
+typedef struct confPacket_t
+{
+  uint8_t type;
+  uint8_t opCode;
+  uint8_t pipeByte;
+  uint32_t uTime;
+};
+
+
 typedef struct unixTime_t
 {
   uint8_t type;
@@ -56,6 +66,7 @@ typedef struct bolus_config_t
 
 typedef union queryData_t
 {
+  confPacket_t confPacket;
   unixTime_t unixTime;
   shedulePacket_t schedulePacket;
   bolus_config_t bolusConfig;
