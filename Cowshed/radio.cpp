@@ -60,23 +60,26 @@ void maxRtIsr(void)
 uint32_t getRtcTime()
 {
   unixTime_t *uTimePtr = (unixTime_t*)&queryBuffer;
+  memset(&queryBuffer,0, sizeof(queryData_t));
   uTimePtr -> type = 0;
   uTimePtr -> opCode = 1;
-  uTimePtr -> time = 0;
+  uTimePtr -> utime = 0;
   
   nrfStandby1();
   nrfTXStart();
-  uTimePtr = (unixTime_t*)nrfQuery((void*)&queryBuffer,sizeof(queryData_t));
+  uTimePtr = (unixTime_t*)nrfQuery((void*)uTimePtr,sizeof(queryData_t));
   nrfPowerDown();
   Serial.print(F("Type : "));Serial.print(uTimePtr -> type);
   Serial.print(F(" Opcode: "));Serial.println(uTimePtr -> opCode);
-  delay(2000);
+//  delay(2000);
   if(uTimePtr != NULL)
   {
+    flash.printBytes((byte*)uTimePtr,sizeof(unixTime_t));
     if(uTimePtr -> type == 0 && uTimePtr -> opCode == 1)
     {
-      Serial.print(F("Received Time : "));Serial.println(uTimePtr -> time);
-      return (uTimePtr -> time);
+      Serial.print(F("Received Time : "));Serial.println(uTimePtr -> utime);
+//      Serial.print(F("padding :"));      Serial.println(uTimePtr -> padding);
+      return (uTimePtr -> utime);
     }
   }
   else

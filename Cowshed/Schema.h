@@ -34,7 +34,7 @@ typedef struct unixTime_t
 {
   uint8_t type;
   uint8_t opCode;
-  uint32_t time;
+  uint32_t utime;
 };
 
 typedef struct shedulePacket_t

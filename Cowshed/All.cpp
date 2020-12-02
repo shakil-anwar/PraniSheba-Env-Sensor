@@ -75,8 +75,8 @@ void syncTime()
     else
     {
       Serial.print(F("Try count :")); Serial.println(maxCount);
+      delay(1000);
     }
-    delay(1000);
   } while (--maxCount);
 
   Serial.println(uTime);
