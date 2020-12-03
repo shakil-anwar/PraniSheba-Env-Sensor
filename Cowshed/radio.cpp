@@ -25,9 +25,10 @@ void radio_begin()
   nrfBegin(SPEED_2MB, POWER_ZERO_DBM); //radio in power down mode
   
   nrfSetIrqs(txIsr, rxIsr, maxRtIsr);
-  nrfQueryClientSet(QUERY_PIPE,pipeAddr[QUERY_PIPE]);
-//  nrfQueryClientSet(QUERY_PIPE,commonAddr);
+//  nrfQueryClientSet(QUERY_PIPE,pipeAddr[QUERY_PIPE]);
+  nrfQueryClientSet(QUERY_PIPE,commonAddr);
   nrfQueryBufferSet((uint8_t*)&queryBuffer, sizeof(queryData_t));
+  
 //  nrfSetTx(pipeAddr[TX_PIPE], true);
   nrfPowerDown();
   Serial.println(F("Radio setup done"));
