@@ -35,7 +35,7 @@ typedef struct confPacket_t
 {
   uint8_t type;
   uint8_t opCode;
-  uint8_t pipeByte;
+  uint8_t txAddrByte;
   uint32_t uTime;
 };
 
@@ -62,6 +62,7 @@ typedef struct bolus_config_t
   uint8_t opCode;//device opcode
   uint16_t interval;
   uint32_t dataStartTime;
+   uint32_t test;
 };
 
 typedef union queryData_t

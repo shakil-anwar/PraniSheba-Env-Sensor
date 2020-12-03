@@ -21,7 +21,7 @@ void payloadStateMachine();
 void dataSendStateMachine();
 
 
-
+bool setDeviceConf();
 bool syncTime();
 bool isHardwareOk();
 void startDevice();

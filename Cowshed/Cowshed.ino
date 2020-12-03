@@ -31,7 +31,7 @@ void loop()
       break;
     case SYNCHRONIZE:
       Serial.println(F("m_STATE: SYNCHRONIZE"));
-      if (syncTime())
+      if (setDeviceConf())
       {
         mainState = DEVICE_RUN;
         nrfStandby1();

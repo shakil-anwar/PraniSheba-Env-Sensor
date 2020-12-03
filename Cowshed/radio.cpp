@@ -25,9 +25,9 @@ void radio_begin()
   nrfBegin(SPEED_2MB, POWER_ZERO_DBM); //radio in power down mode
   
   nrfSetIrqs(txIsr, rxIsr, maxRtIsr);
-//  nrfQueryClientSet(QUERY_PIPE,pipeAddr[TX_PIPE], pipeAddr[QUERY_PIPE]);
-  nrfQueryClientSet(QUERY_PIPE,commonAddr);
-  nrfQueryBufferSet(queryBuffer, sizeof(queryData_t));
+  nrfQueryClientSet(QUERY_PIPE,pipeAddr[QUERY_PIPE]);
+//  nrfQueryClientSet(QUERY_PIPE,commonAddr);
+  nrfQueryBufferSet((uint8_t*)&queryBuffer, sizeof(queryData_t));
 //  nrfSetTx(pipeAddr[TX_PIPE], true);
   nrfPowerDown();
   Serial.println(F("Radio setup done"));
@@ -47,7 +47,6 @@ void txIsr(void)
 
 void rxIsr(void)
 {
-  nrf_flush_rx();
   nrfClearRxDr();
 }
 
@@ -62,33 +61,33 @@ void maxRtIsr(void)
 
 uint32_t getRtcTime()
 {
-//  unixTime_t *uTimePtr = (unixTime_t*)&queryBuffer;
-//  memset(&queryBuffer,0, sizeof(queryData_t));
+  unixTime_t *uTimePtr = (unixTime_t*)&queryBuffer;
+  memset(&queryBuffer,0, sizeof(queryData_t));
 //  uTimePtr -> type = 0;
 //  uTimePtr -> opCode = 1;
 //  uTimePtr -> utime = 0;
-//  
-//  nrfStandby1();
-//  nrfTXStart();
-//  uTimePtr = (unixTime_t*)nrfQuery((uint8_t*)uTimePtr,sizeof(queryData_t));
-//  flash.printBytes((byte*)uTimePtr,sizeof(unixTime_t));
-//  nrfPowerDown();
-//  Serial.print(F("Type : "));Serial.print(uTimePtr -> type);
-//  Serial.print(F(" Opcode: "));Serial.println(uTimePtr -> opCode);
-////  delay(2000);
-//  if(uTimePtr != NULL)
-//  {
-//    
-//    if(uTimePtr -> type == 0 && uTimePtr -> opCode == 1)
-//    {
-//      Serial.print(F("Received Time : "));Serial.println(uTimePtr -> utime);
-////      Serial.print(F("padding :"));      Serial.println(uTimePtr -> padding);
-//      return (uTimePtr -> utime);
-//    }
-//  }
-//  else
-//  {
-//    Serial.println(F("RTC Query falied"));
-//    return 0;
-//  }
+  
+  nrfStandby1();
+  nrfTXStart();
+  uTimePtr = (unixTime_t*)nrfQuery(0,1);
+  flash.printBytes((byte*)uTimePtr,sizeof(unixTime_t));
+  nrfPowerDown();
+  Serial.print(F("Type : "));Serial.print(uTimePtr -> type);
+  Serial.print(F(" Opcode: "));Serial.println(uTimePtr -> opCode);
+//  delay(2000);
+  if(uTimePtr != NULL)
+  {
+    
+    if(uTimePtr -> type == 0 && uTimePtr -> opCode == 1)
+    {
+      Serial.print(F("Received Time : "));Serial.println(uTimePtr -> utime);
+//      Serial.print(F("padding :"));      Serial.println(uTimePtr -> padding);
+      return (uTimePtr -> utime);
+    }
+  }
+  else
+  {
+    Serial.println(F("RTC Query falied"));
+    return 0;
+  }
 }

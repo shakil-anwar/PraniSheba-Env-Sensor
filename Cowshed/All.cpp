@@ -63,15 +63,21 @@ void deviceRunSM()
 
 bool setDeviceConf()
 {
-  query_t query;
-  query.type = 0;
-  query.opCode = 3;
-  
-//  confPacket_t *confPtr = (confPacket_t*)&queryBuffer;
-//  memset(confPtr,0, sizeof(confPacket_t));
-//  confPtr -> type = 0;
-//  uTimePtr -> opCode = 1;
-//  uTimePtr -> utime = 0;
+//  memset(&queryBuffer, 0, sizeof(queryData_t));
+  nrfStandby1();
+  nrfTXStart();
+  confPacket_t *confPtr = (confPacket_t*)nrfQuery(0, 3);
+  nrfPowerDown();
+  Serial.print(F("\r\nType : ")); Serial.print(confPtr -> type);
+  Serial.print(F(" Opcode: ")); Serial.println(confPtr -> opCode);
+  if (confPtr != NULL)
+  {
+    Serial.print(F("Device addr :")); Serial.println(confPtr -> txAddrByte);
+    Serial.print(F("Time :"));Serial.println(confPtr -> uTime);
+    flash.printBytes((byte*)confPtr, sizeof(confPacket_t));
+  }
+  delay(3000);
+  return false;
 }
 
 bool syncTime()
@@ -79,7 +85,7 @@ bool syncTime()
   uint32_t uTime = getRtcTime();
   if (uTime)
   {
-    Serial.print(F("Got NTP Time : "));Serial.println(uTime);
+    Serial.print(F("Got NTP Time : ")); Serial.println(uTime);
     rtSync(uTime);
     return true;
   }
