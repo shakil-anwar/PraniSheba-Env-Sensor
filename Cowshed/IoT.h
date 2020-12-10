@@ -23,7 +23,7 @@
 void objectsBegin();
 
 
-extern Flash flash;       //CS PIN = 5
+extern Flash flash;       
 extern RingEEPROM myeepRom;
 extern MemQ memQ;
 extern AsyncServer server;

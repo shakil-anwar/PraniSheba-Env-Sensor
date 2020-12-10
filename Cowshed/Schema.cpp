@@ -1,7 +1,5 @@
 #include "Schema.h"
-#include "IoT.h"
 #include "led.h"
-
 
 volatile payload_t  payload[TOTAL_PAYLOAD_BUFFER];
 queryData_t queryBuffer;

@@ -5,8 +5,24 @@
 /*********************************************************
  *                     Device Parameter
  ********************************************************/
+
+/******************Device Identifier********************/
+#define SENSOR_TYPE 2
+#define COWSHED_ID 150
+
+/******************Buffer Parameters*********************/
+#define TOTAL_PAYLOAD_BUFFER 2
+
+/*****************Gas Sensor Parameter******************/
 #define MQ4_AIR_RS_R0_RATIO 1.0f
 #define MQ135_AIR_RS_R0_RATIO 3.7f
+
+/****************Interval Parameter********************/
+#define DATA_ACQUIRE_INTERVAL   20
+
+
+
+
 
 
 /*******************************************************
@@ -32,13 +48,7 @@
 #define MQ4_PIN   A0
 #define MQ135_PIN A1
 
-///NRF PIN Diagram 
 
-///DHT Sensor 
-#define DHTPIN A6           // Digital pin connected to the DHT sensor
-#define DHTTYPE DHT11       // DHT 11
-//#define DHTTYPE DHT22     // DHT 22  (AM2302), AM2321
-//#define DHTTYPE DHT21     // DHT 21 (AM2301)
 
 
 #endif

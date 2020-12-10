@@ -1,7 +1,7 @@
 #include "All.h"
 #include "Schema.h"
 
-#define DATA_ACQUIRE_INTERVAL   5
+
 uint8_t buff[256];
 
 void updateDisplay();
