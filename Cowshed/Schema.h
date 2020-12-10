@@ -3,6 +3,10 @@
 #include <Arduino.h>
 #include "IoT.h"
 
+typedef struct dummy_t
+{
+  uint8_t temp[32];
+};
 
 typedef struct sensor_t
 {
@@ -20,6 +24,7 @@ typedef struct sensor_t
 typedef union payload_t
 {
   sensor_t gasSensor;
+  dummy_t dummy; 
 };
 /*************************Query Schema*****************************/
 

@@ -18,7 +18,7 @@
 #define MQ135_AIR_RS_R0_RATIO 3.7f
 
 /****************Interval Parameter********************/
-#define DATA_ACQUIRE_INTERVAL   20
+#define DATA_ACQUIRE_INTERVAL  20
 
 
 
