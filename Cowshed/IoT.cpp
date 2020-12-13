@@ -12,6 +12,8 @@ Flash flash(FLASH_CS);
 RingEEPROM myeepRom(0x00);
 MemQ memQ(256, 1000);
 
+uint8_t temp[32];
+void printBuffer(byte *buf, byte len);
 /**********Async Server Objects*********************/
 AsyncServer server(&memQ);
 
@@ -38,6 +40,8 @@ void pipeSendServer(const uint8_t *data, const uint8_t len)
 {
 //  nrf_flush_tx();
   nrfWrite(data,len);
+//  nrfReadTxPayload(temp,sizeof(temp));
+//  printBuffer(temp,sizeof(temp));
   nrfStartTransmit();
 }
 
@@ -59,4 +63,14 @@ int ackWait()
    delay(1);
   }while(--waitCount);
   return -1;
+}
+
+void printBuffer(byte *buf, byte len)
+{
+  Serial.print(F("Buffer: "));
+  for (byte i = 0; i < len; i++)
+  {
+    Serial.print(buf[i]); Serial.print(" ");
+  }
+  Serial.println();
 }
