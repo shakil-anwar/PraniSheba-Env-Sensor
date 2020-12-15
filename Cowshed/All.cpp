@@ -10,6 +10,7 @@ void updateDisplay();
 
 Task task1(DATA_ACQUIRE_INTERVAL, &dataAcquisition); //send payload triggers after 5 second interval
 Task task2(10, &updateDisplay);
+
 Scheduler scheduler;
 
 
@@ -54,6 +55,7 @@ void startDevice()
 
 void deviceRunSM()
 {
+//  nrfDebugPrint();
   memQ.saveLoop();
   server.sendLoop(1);
   realTimeSync();

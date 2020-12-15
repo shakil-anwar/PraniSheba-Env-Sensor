@@ -4,7 +4,7 @@
 
 #define PIPE_SERVER_SEND_CODE       10
 
-void pipeSendServer(const uint8_t *data, const uint8_t len);
+void pipeSendServer(const uint8_t *data, uint8_t len);
 int ackWait();
 
 /*********Flash & MemQ Library**********************/
@@ -17,6 +17,7 @@ void printBuffer(byte *buf, byte len);
 /**********Async Server Objects*********************/
 AsyncServer server(&memQ);
 
+uint8_t payloadBuffer[sizeof(payload_t)];
 
 void objectsBegin()
 {
@@ -31,18 +32,20 @@ void objectsBegin()
 //  memQ.reset();
   /*********Server begin********************/
   server.setServerCbs(pipeSendServer, ackWait);
-  server.setSchema(sizeof(payload_t), 1);
+//  server.setSchema(sizeof(payload_t), 1);
+  server.setSchema(payloadBuffer,sizeof(payload_t), 1);
   server.start();
 }
 
 
-void pipeSendServer(const uint8_t *data, const uint8_t len)
+void pipeSendServer(const uint8_t *data, uint8_t len)
 {
 //  nrf_flush_tx();
   nrfWrite(data,len);
 //  nrfReadTxPayload(temp,sizeof(temp));
 //  printBuffer(temp,sizeof(temp));
   nrfStartTransmit();
+  nrfDebugPrint();
 }
 
 int ackWait()
