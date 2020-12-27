@@ -53,6 +53,8 @@ void dataAcquisition()
   printSensor(senPtr);
   Serial.print(F("ramQ Counter :"));Serial.println(ramQCounter);
   
+  nrfSend((const uint8_t*)senPtr,sizeof(payload_t));
+  server.printPayload((byte*)senPtr,sizeof(payload_t));
   ramQUpdateHead();
 }
 

@@ -18,7 +18,7 @@ void system_setup(void)
 {
   Serial.begin(250000);
   radio_begin();
-  radioStart();
+//  radioStart();
 
   pinMode(FLASH_CS, OUTPUT);
   pinMode(FLASH_CS, HIGH);
@@ -49,7 +49,7 @@ bool isHardwareOk()
 
 void startDevice()
 {
-  //  radioStart();
+  radioStart();
   wdtStart();
 }
 
@@ -57,7 +57,7 @@ void deviceRunSM()
 {
 //  nrfDebugPrint();
   memQ.saveLoop();
-  server.sendLoop(1);
+//  server.sendLoop(1);
   realTimeSync();
 }
 

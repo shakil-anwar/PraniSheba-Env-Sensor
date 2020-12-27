@@ -45,7 +45,7 @@ void pipeSendServer(const uint8_t *data, uint8_t len)
 //  nrfReadTxPayload(temp,sizeof(temp));
 //  printBuffer(temp,sizeof(temp));
   nrfStartTransmit();
-  nrfDebugPrint();
+//  nrfDebugPrint();
 }
 
 int ackWait()

@@ -22,7 +22,8 @@ uint8_t pipeAddr[6][5] =
 };
 void radio_begin()
 {
-  nrfBegin(SPEED_2MB, POWER_ZERO_DBM); //radio in power down mode
+  nrfSetPin(&PORTB,2, &PORTB, 1);
+  nrfBegin(SPEED_2MB, POWER_ZERO_DBM, 1000000);
   
   nrfSetIrqs(txIsr, rxIsr, maxRtIsr);
 //  nrfQueryClientSet(QUERY_PIPE,pipeAddr[QUERY_PIPE]);
