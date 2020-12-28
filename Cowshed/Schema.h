@@ -2,6 +2,7 @@
 #define _DATA_SCHEMA_H_
 #include <Arduino.h>
 #include "IoT.h"
+#include "Sensors.h"
 
 typedef struct dummy_t
 {
@@ -81,14 +82,17 @@ void dataSchemaBegin();
 sensor_t *getSensorsData(sensor_t *senPtr);
 void printSensor(sensor_t *sensor);
 
-void mqBegin();
-void mqCalibrate();
-void humSensorBegin();
+//void mqBegin();
+//void mqCalibrate();
+//void humSensorBegin();
+//
+//float getTemp();
+//float getHum();
+//float getAmmonia();
+//float getMethane();
 
-float getTemp();
-float getHum();
-float getAmmonia();
-float getMethane();
+//bool sensorBegin();
+//bool sensorCalibrate();
 
 void updateDisplay();
 

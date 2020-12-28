@@ -18,16 +18,19 @@ void system_setup(void)
 {
   Serial.begin(250000);
   radio_begin();
-//  radioStart();
+  //  radioStart();
 
   pinMode(FLASH_CS, OUTPUT);
   pinMode(FLASH_CS, HIGH);
 
   led_begin();
 
-  humSensorBegin();
-  mqBegin();
-  mqCalibrate();
+  //  humSensorBegin();
+  //  mqBegin();
+  //  mqCalibrate();
+  sensorBegin();
+  sensorCalibrate();
+
   objectsBegin();
   dataSchemaBegin();
 
@@ -55,9 +58,9 @@ void startDevice()
 
 void deviceRunSM()
 {
-//  nrfDebugPrint();
+  //  nrfDebugPrint();
   memQ.saveLoop();
-//  server.sendLoop(1);
+  server.sendLoop(1);
   realTimeSync();
 }
 
@@ -75,13 +78,13 @@ bool setDeviceConf()
     Serial.print(F(" Opcode: ")); Serial.println(confPtr -> opCode);
     Serial.print(F("Device addr :")); Serial.println(confPtr -> txAddrByte);
     Serial.print(F("Time :")); Serial.println(confPtr -> uTime);
-//    flash.printBytes((byte*)confPtr, sizeof(confPacket_t));
+    //    flash.printBytes((byte*)confPtr, sizeof(confPacket_t));
     if (confPtr -> type == 0 && confPtr -> opCode == 3)
     {
       Serial.println(F("Setting Node as TX"));
       nrfTxAddrRestore(confPtr -> txAddrByte);
       rtSync(confPtr -> uTime);
-      
+
       nrfStandby1();
       nrfTXStart();
     }

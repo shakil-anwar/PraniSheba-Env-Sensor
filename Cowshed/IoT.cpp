@@ -31,7 +31,7 @@ void objectsBegin()
   memQ.attachSafetyFuncs(NULL,nrfRxTxToStandy1);
 //  memQ.reset();
   /*********Server begin********************/
-  server.setServerCbs(pipeSendServer, ackWait);
+  server.setServerCbs(nrfSend, ackWait);
 //  server.setSchema(sizeof(payload_t), 1);
   server.setSchema(payloadBuffer,sizeof(payload_t), 1);
   server.start();
@@ -40,32 +40,30 @@ void objectsBegin()
 
 void pipeSendServer(const uint8_t *data, uint8_t len)
 {
-//  nrf_flush_tx();
   nrfWrite(data,len);
-//  nrfReadTxPayload(temp,sizeof(temp));
-//  printBuffer(temp,sizeof(temp));
   nrfStartTransmit();
-//  nrfDebugPrint();
 }
 
 int ackWait()
 {
-  int waitCount = 10;
-  nrf_irq_state_t irqState;
-  do
-  {
-    irqState = waitAck();
-    if(irqState == NRF_SUCCESS)
-    {
-      return 200;
-    }
-    else if(irqState == NRF_FAIL)
-    {
-      break;
-    }
-   delay(1);
-  }while(--waitCount);
-  return -1;
+  if(nrfAck()) return 200; 
+  else return -1;
+//  int waitCount = 10;
+//  nrf_irq_state_t irqState;
+//  do
+//  {
+//    irqState = waitAck();
+//    if(irqState == NRF_SUCCESS)
+//    {
+//      return 200;
+//    }
+//    else if(irqState == NRF_FAIL)
+//    {
+//      break;
+//    }
+//   delay(1);
+//  }while(--waitCount);
+//  return -1;
 }
 
 void printBuffer(byte *buf, byte len)

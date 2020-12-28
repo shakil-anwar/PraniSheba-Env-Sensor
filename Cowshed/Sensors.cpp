@@ -1,23 +1,38 @@
-#include "Schema.h"
-#include "IoT.h"
-#include <SHT21.h> 
+#include "Sensors.h"
+//#include "Schema.h"
+#include <SHT21.h>
+
+void mqBegin();
+void mqCalibrate();
+void humSensorBegin();
 
 
-SHT21 sht; 
+SHT21 sht;
 
 MQ mq4(MQ4_PIN);
 MQ mq135(MQ135_PIN);
 
+
+bool sensorBegin()
+{
+  humSensorBegin();
+  mqBegin();
+}
+bool sensorCalibrate()
+{
+  mqCalibrate();
+}
+
 void mqBegin()
 {
   Wire.begin();    // begin Wire(I2C)
-//  mq4.setGraphPoints(1000, 5000, 1, 0.57);
+  //  mq4.setGraphPoints(1000, 5000, 1, 0.57);
   mq4.setGraphPoints(1, 1.82, 1000, 200);
   mq4.setRl(1000);
-  
+
   mq135.setGraphPoints(2.65, 1, 10, 100);
   mq135.setRl(1000);
-  
+
 }
 void mqCalibrate()
 {
@@ -32,28 +47,43 @@ void mqCalibrate()
 
 void humSensorBegin()
 {
-  
+  Wire.begin();    // begin Wire(I2C)
 }
+
 float getHum()
 {
+#if defined(DEV)
+  return 1.0;
+#else
   return sht.getHumidity();
+#endif
 }
 
 float getTemp()
 {
-  return sht.getTemperature(); 
+#if defined(DEV)
+  return 1.0;
+#else
+  return sht.getTemperature();
+#endif
 }
 
 float getAmmonia()
 {
-  return (float)(random(10,50)*1.00);
-//  return (float)analogRead(A0);
-//  return mq4.getPPM();
+#if defined(DEV)
+  return 1.0;
+  //  return (float)(random(10,50)*1.00);
+#else
+  return mq4.getPPM();
+#endif
 }
 
 float getMethane()
 {
-  return (float)(random(10,50)*1.00);
-//  return (float)analogRead(A1);
-//  return mq135.getPPM();
+#if defined(DEV)
+  return 1.0;
+  //  return (float)(random(10,50)*1.00);
+#else
+  return mq135.getPPM();
+#endif
 }
