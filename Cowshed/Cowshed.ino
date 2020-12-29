@@ -5,6 +5,8 @@
 mainState_t mainState;
 void setup()
 {
+  delay(10000);
+  delay(10000);
   system_setup();
   mainState = CHECK_HARDWARE;
 }
@@ -31,6 +33,7 @@ void loop()
       break;
     case SYNCHRONIZE:
       Serial.println(F("m_STATE: SYNCHRONIZE"));
+      
       if (setDeviceConf())
       {
         mainState = DEVICE_RUN;
