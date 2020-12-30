@@ -62,6 +62,13 @@ void deviceRunSM()
   memQ.saveLoop();
   server.sendLoop(1);
   realTimeSync();
+  
+  static uint32_t prevModeMillis;
+  if (millis() - prevModeMillis > 2000)
+  {
+    nrfWhichMode();
+    prevModeMillis = millis();
+  }
 }
 
 
