@@ -2,7 +2,7 @@
 #include "Schema.h"
 #include "radio.h"
 
-uint8_t *readMemQ();
+uint8_t *readMem();
 void sendNrf(uint8_t *data);
 int ackWait();
 void printBuffer(byte *buf, byte len);
@@ -35,11 +35,11 @@ void objectsBegin()
 //  server.setSchema(payloadBuffer,sizeof(payload_t), 1);
 //  server.start();
 
-  xferBegin(readMemQ,sendNrf,ackWait);
+  xferBegin(readMem,sendNrf,ackWait);
   xferReady();
 }
 
-uint8_t *readMemQ()
+uint8_t *readMem()
 {
 //  Serial.println(F("Reading mem"));
   uint8_t *p = memQ.read((uint8_t*)&pldBuf, payloadCount);
