@@ -2,22 +2,21 @@
 #include "Schema.h"
 #include "radio.h"
 
-#define PIPE_SERVER_SEND_CODE       10
-
-void pipeSendServer(const uint8_t *data, uint8_t len);
+uint8_t *readMemQ();
+void sendNrf(uint8_t *data);
 int ackWait();
+void printBuffer(byte *buf, byte len);
 
-/*********Flash & MemQ Library**********************/
+/*********Flash & MemQ variables**********************/
 Flash flash(FLASH_CS);
 RingEEPROM myeepRom(0x00);
 MemQ memQ(256, 1000);
 
-uint8_t temp[32];
-void printBuffer(byte *buf, byte len);
 /**********Async Server Objects*********************/
-AsyncServer server(&memQ);
+//AsyncServer server(&memQ);
+payload_t pldBuf;
+uint8_t payloadCount = 1;
 
-uint8_t payloadBuffer[sizeof(payload_t)];
 
 void objectsBegin()
 {
@@ -31,39 +30,35 @@ void objectsBegin()
   memQ.attachSafetyFuncs(NULL,nrfRxTxToStandy1);
 //  memQ.reset();
   /*********Server begin********************/
-  server.setServerCbs(nrfSend, ackWait);
-//  server.setSchema(sizeof(payload_t), 1);
-  server.setSchema(payloadBuffer,sizeof(payload_t), 1);
-  server.start();
+//  server.setServerCbs(nrfSend, ackWait);
+////  server.setSchema(sizeof(payload_t), 1);
+//  server.setSchema(payloadBuffer,sizeof(payload_t), 1);
+//  server.start();
+
+  xferBegin(readMemQ,sendNrf,ackWait);
+  xferReady();
 }
 
-
-void pipeSendServer(const uint8_t *data, uint8_t len)
+uint8_t *readMemQ()
 {
-  nrfWrite(data,len);
+//  Serial.println(F("Reading mem"));
+  uint8_t *p = memQ.read((uint8_t*)&pldBuf, payloadCount);
+  if (p !=NULL) printBuffer(p, sizeof(payload_t));
+  return p;
+}
+
+void sendNrf(uint8_t *data)
+{
+  Serial.println(F("Sending Via nrf"));
+  nrfWrite(data,sizeof(payload_t));
   nrfStartTransmit();
 }
 
 int ackWait()
 {
+  Serial.println(F("Ack wait"));
   if(nrfAck()) return 200; 
   else return -1;
-//  int waitCount = 10;
-//  nrf_irq_state_t irqState;
-//  do
-//  {
-//    irqState = waitAck();
-//    if(irqState == NRF_SUCCESS)
-//    {
-//      return 200;
-//    }
-//    else if(irqState == NRF_FAIL)
-//    {
-//      break;
-//    }
-//   delay(1);
-//  }while(--waitCount);
-//  return -1;
 }
 
 void printBuffer(byte *buf, byte len)

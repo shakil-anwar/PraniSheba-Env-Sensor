@@ -60,7 +60,12 @@ void deviceRunSM()
 {
   //  nrfDebugPrint();
   memQ.saveLoop();
-  server.sendLoop(1);
+//  server.sendLoop(1);
+  bool nrfsendok = xferSendLoop();
+  if(nrfsendok == false)
+  {
+    Serial.print(F("==>send ok :"));Serial.println(nrfsendok);
+  }
   realTimeSync();
   
   static uint32_t prevModeMillis;

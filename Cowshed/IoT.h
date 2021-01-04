@@ -5,7 +5,8 @@
 
 /**********Used Library*************/
 #include "MemQ.h"
-#include "asyncServer.h"
+//#include "asyncServer.h"
+#include "asyncXfer.h"
 #include "nRF24.h"
 #include "nRF24_Query.h"
 #include "tScheduler.h"
@@ -26,5 +27,5 @@ void objectsBegin();
 extern Flash flash;       
 extern RingEEPROM myeepRom;
 extern MemQ memQ;
-extern AsyncServer server;
+//extern AsyncServer server;
 #endif
