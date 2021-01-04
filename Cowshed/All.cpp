@@ -65,6 +65,7 @@ void deviceRunSM()
   if(nrfsendok == false)
   {
     Serial.print(F("==>send ok :"));Serial.println(nrfsendok);
+    
   }
   realTimeSync();
   
