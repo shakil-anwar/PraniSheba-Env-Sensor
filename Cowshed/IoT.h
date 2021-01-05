@@ -18,11 +18,16 @@
 #include "RingEEPROM.h"
 #include "AVR_Timer1.h"
 
+/*********Third Party Library******************/
+#include <ShiftRegister74HC595.h>
+
 /*********Common Library for all files**********/
 #include "param.h"
+#include "./src/pin.h"
+#include "./src/Schema.h"
+
 
 void objectsBegin();
-
 
 extern Flash flash;       
 extern RingEEPROM myeepRom;

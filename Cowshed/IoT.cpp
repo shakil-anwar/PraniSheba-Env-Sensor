@@ -1,5 +1,5 @@
 #include "IoT.h"
-#include "Schema.h"
+#include "./src/Schema.h"
 #include "radio.h"
 
 uint8_t *readMem();

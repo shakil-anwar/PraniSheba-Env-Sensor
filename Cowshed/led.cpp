@@ -1,7 +1,5 @@
 #include "led.h"
-#include "param.h"
 
-#include <ShiftRegister74HC595.h>
 
 void col_one(uint8_t level);
 void col_two(uint8_t level);
@@ -158,4 +156,32 @@ void ledTestAll()
       delay(1000);
     }
   }
+}
+
+
+void updateDisplay()
+{
+  sensor_t *sensorPtr = getSensorsData(&sensor);
+//  printSensor(sensorPtr);
+  uint8_t level;
+  //humidity
+  level = (uint8_t)sensorPtr -> hum;
+  level = level / 20;
+  led_set_level(1, level) ;
+
+  //Temperature
+  level = (uint8_t)sensorPtr -> temp;
+  level = level / 10;
+  led_set_level(2, level);
+
+  //Methane
+  level = (uint8_t)sensorPtr -> methane;
+  level = level / 5;
+  led_set_level(3, level);
+
+  //Ammonia
+  level = (uint8_t)sensorPtr -> ammonia;
+  level = level / 10;
+  led_set_level(4, level);
+//  readPayload();
 }

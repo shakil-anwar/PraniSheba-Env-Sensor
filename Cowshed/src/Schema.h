@@ -1,7 +1,7 @@
 #ifndef _DATA_SCHEMA_H_
 #define _DATA_SCHEMA_H_
 #include <Arduino.h>
-#include "IoT.h"
+#include "../IoT.h"
 #include "Sensors.h"
 
 typedef struct dummy_t
@@ -94,11 +94,12 @@ void printSensor(sensor_t *sensor);
 //bool sensorBegin();
 //bool sensorCalibrate();
 
-void updateDisplay();
+
 
 void dataAcquisition();
 
 extern volatile payload_t  payload[TOTAL_PAYLOAD_BUFFER];
 extern queryData_t queryBuffer;
+extern sensor_t sensor;
 
 #endif 
