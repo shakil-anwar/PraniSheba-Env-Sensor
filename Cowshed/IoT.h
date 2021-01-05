@@ -25,7 +25,7 @@
 #include "param.h"
 #include "./src/pin.h"
 #include "./src/Schema.h"
-
+#include "./src/led.h"
 
 void objectsBegin();
 

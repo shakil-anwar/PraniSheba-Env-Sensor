@@ -1,8 +1,6 @@
 #ifndef _ALL_GLOBAL_H
 #define _ALL_GLOBAL_H
-
 #include "IoT.h"
-#include "led.h"
 #include "radio.h"
 
 
