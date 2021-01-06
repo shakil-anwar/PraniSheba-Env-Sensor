@@ -58,9 +58,7 @@ void startDevice()
 
 void deviceRunSM()
 {
-  //  nrfDebugPrint();
   memQ.saveLoop();
-//  server.sendLoop(1);
   bool nrfsendok = xferSendLoop();
   if(nrfsendok == false)
   {
@@ -75,6 +73,9 @@ void deviceRunSM()
     nrfWhichMode();
     prevModeMillis = millis();
   }
+//  Serial.print(F("Time: "));Serial.println(rtMs());
+//  delay(1000);
+
 }
 
 

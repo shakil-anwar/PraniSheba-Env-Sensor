@@ -1,5 +1,6 @@
 #include "Sensors.h"
-//#include "Schema.h"
+#include "pin.h"
+#include "MQ.h"
 #include <SHT21.h>
 
 void mqBegin();

@@ -1,8 +1,8 @@
 #ifndef _DATA_SCHEMA_H_
 #define _DATA_SCHEMA_H_
 #include <Arduino.h>
-#include "../IoT.h"
-#include "Sensors.h"
+// #include "../IoT.h"
+// #include "Sensors.h"
 
 typedef struct dummy_t
 {
@@ -71,35 +71,5 @@ typedef union queryData_t
   shedulePacket_t schedulePacket;
   bolus_config_t bolusConfig;
 };
-
-/******************************Public API**************************/
-
-
-
-
-
-void dataSchemaBegin();
-sensor_t *getSensorsData(sensor_t *senPtr);
-void printSensor(sensor_t *sensor);
-
-//void mqBegin();
-//void mqCalibrate();
-//void humSensorBegin();
-//
-//float getTemp();
-//float getHum();
-//float getAmmonia();
-//float getMethane();
-
-//bool sensorBegin();
-//bool sensorCalibrate();
-
-
-
-void dataAcquisition();
-
-extern volatile payload_t  payload[TOTAL_PAYLOAD_BUFFER];
-extern queryData_t queryBuffer;
-extern sensor_t sensor;
 
 #endif 
