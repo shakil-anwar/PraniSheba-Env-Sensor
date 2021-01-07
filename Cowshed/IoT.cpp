@@ -20,44 +20,49 @@ uint8_t payloadCount = 1;
 
 void objectsBegin()
 {
-//  espSerial.begin(9600);
+  //  espSerial.begin(9600);
   /**********MemQ and Flash Begin************/
-//  memQ.attachFlash(&flash, (void**)&buffer.flashPtr, sizeof(payload_t), TOTAL_PAYLOAD_BUFFERS / 2);
-  memQ.attachFlash(&flash,&_ramQFlash, sizeof(payload_t), TOTAL_PAYLOAD_BUFFER / 2);
+  //  memQ.attachFlash(&flash, (void**)&buffer.flashPtr, sizeof(payload_t), TOTAL_PAYLOAD_BUFFERS / 2);
+  memQ.attachFlash(&flash, &_ramQFlash, sizeof(payload_t), TOTAL_PAYLOAD_BUFFER / 2);
   memQ.attachEEPRom(&myeepRom, 4);
-  
-//  memQ.attachSafetyFuncs(nrfRestorToRxTx,nrfRxTxToStandy1);
-  memQ.attachSafetyFuncs(NULL,nrfRxTxToStandy1);
-//  memQ.reset();
-  /*********Server begin********************/
-//  server.setServerCbs(nrfSend, ackWait);
-////  server.setSchema(sizeof(payload_t), 1);
-//  server.setSchema(payloadBuffer,sizeof(payload_t), 1);
-//  server.start();
 
-  xferBegin(readMem,sendNrf,ackWait);
+  //  memQ.attachSafetyFuncs(nrfRestorToRxTx,nrfRxTxToStandy1);
+  memQ.attachSafetyFuncs(NULL, nrfRxTxToStandy1);
+  //  memQ.reset();
+  /*********Server begin********************/
+  //  server.setServerCbs(nrfSend, ackWait);
+  ////  server.setSchema(sizeof(payload_t), 1);
+  //  server.setSchema(payloadBuffer,sizeof(payload_t), 1);
+  //  server.start();
+
+  xferBegin(readMem, sendNrf, ackWait);
   xferReady();
 }
 
 uint8_t *readMem()
 {
-//  Serial.println(F("Reading mem"));
-  uint8_t *p = memQ.read((uint8_t*)&pldBuf, payloadCount);
-  if (p !=NULL) printBuffer(p, sizeof(payload_t));
+  //  Serial.println(F("Reading mem"));
+  /**********Read from Flash****************/
+  //  uint8_t *p = memQ.read((uint8_t*)&pldBuf, payloadCount);// Read from flash
+  /**********Read from Flash Memory*********/
+  uint8_t *p = ramQRead();
+  ramQUpdateTail();
+  
+  if (p != NULL) printBuffer(p, sizeof(payload_t));
   return p;
 }
 
 void sendNrf(uint8_t *data)
 {
   Serial.println(F("Sending Via nrf"));
-  nrfWrite(data,sizeof(payload_t));
+  nrfWrite(data, sizeof(payload_t));
   nrfStartTransmit();
 }
 
 int ackWait()
 {
   Serial.println(F("Ack wait"));
-  if(nrfAck()) return 200; 
+  if (nrfAck()) return 200;
   else return -1;
 }
 
