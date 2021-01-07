@@ -6,9 +6,19 @@
 
  
 /*****************NRF24L01 PINOUT*****************************/
+
+
+/*****************NRF24L01 PINOUT*****************************/
+/*Arduino pinout
 #define NRF_CE    10
 #define NRF_CSN   9
 #define NRF_IRQ   3
+*/
+#define NRF_CE_PORT   PORTB
+#define NRF_CE_PIN    PB2 
+#define NRF_CSN_PORT  PORTB
+#define NRF_CSN_PIN   PB1
+#define NRF_IRQ   	  3
 /**************** FLASH PINOUT ******************/
 #define FLASH_CS  8
 

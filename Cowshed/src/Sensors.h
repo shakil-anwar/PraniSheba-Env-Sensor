@@ -1,6 +1,6 @@
 #ifndef _SENSORS_H_
 #define _SENSORS_H_
-// #include "../IoT.h"
+#include "../IoT.h"
 
 /*****************Gas Sensor Parameter******************/
 #define MQ4_AIR_RS_R0_RATIO 		1.0f
