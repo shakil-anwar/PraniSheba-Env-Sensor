@@ -43,10 +43,12 @@ uint8_t *readMem()
 {
   //  Serial.println(F("Reading mem"));
   /**********Read from Flash****************/
-  //  uint8_t *p = memQ.read((uint8_t*)&pldBuf, payloadCount);// Read from flash
+//    uint8_t *p = memQ.read((uint8_t*)&pldBuf, payloadCount);// Read from flash
   /**********Read from Flash Memory*********/
   uint8_t *p = ramQRead();
   ramQUpdateTail();
+//  Serial.print(F("RamQ Head Counter : "));Serial.println(ramQCounter);
+//  Serial.print(F("RamQ Tail Counter : "));Serial.println(ramQTailCounter);
   
   if (p != NULL) printBuffer(p, sizeof(payload_t));
   return p;
