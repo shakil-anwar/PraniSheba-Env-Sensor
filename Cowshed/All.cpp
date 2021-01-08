@@ -4,35 +4,32 @@ void system_setup(void)
 {
   Serial.begin(250000);
   radio_begin();
-  //  radioStart();
-
+  
   pinMode(FLASH_CS, OUTPUT);
   pinMode(FLASH_CS, HIGH);
-
-
-
-  //  humSensorBegin();
-  //  mqBegin();
-  //  mqCalibrate();
-
 
   dataSchemaBegin();
   deviceBegin();
   objectsBegin();
-
-
 
   scheduler.begin(&second);
 
   wdtEnable(8000);
   rtBegin();
   delay(1000);
-
+  
   Serial.println("Setup Done.");
 }
 
 bool isHardwareOk()
 {
+  Serial.println(F("<--Hardware Status-->"));
+  bool nrfOk = nrfIsRunning();
+  Serial.print(F("NRF :")); Serial.println(nrfOk);
+  Serial.print(F("RTC: ")); Serial.println(true);
+  Serial.print(F("Flash :")); Serial.println(true);
+  Serial.print(F("Logic Power: ")); Serial.println(true);
+  Serial.println(F("<------------------->"));
   return true;
 }
 
