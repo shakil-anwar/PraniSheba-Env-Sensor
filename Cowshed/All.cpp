@@ -2,16 +2,12 @@
 //#include "./src/Schema.h"
 
 
-uint8_t buff[256];
-
-void updateDisplay();
-//void sendPayload();
+//uint8_t buff[256];
 
 
-Task task1(DATA_ACQUIRE_INTERVAL, &dataAcquisition); //send payload triggers after 5 second interval
-Task task2(10, &updateDisplay);
 
-Scheduler scheduler;
+
+
 
 
 void system_setup(void)
@@ -23,7 +19,7 @@ void system_setup(void)
   pinMode(FLASH_CS, OUTPUT);
   pinMode(FLASH_CS, HIGH);
 
-  led_begin();
+  
 
   //  humSensorBegin();
   //  mqBegin();
@@ -36,8 +32,7 @@ void system_setup(void)
   objectsBegin();
   
 
-  scheduler.addTask(&task1);
-  scheduler.addTask(&task2);
+  
   scheduler.begin(&second);
 
   wdtEnable(8000);

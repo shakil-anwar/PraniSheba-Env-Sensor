@@ -15,8 +15,16 @@ MemQ memQ(256, 1000);
 payload_t pldBuf;
 uint8_t payloadCount = 1;
 
+
+Task task2(10, &updateDisplay);
+Task task1(DATA_ACQUIRE_INTERVAL, &dataAcquisition); //send payload triggers after 5 second interval
+
+
 void deviceBegin()
 {
+  led_begin();
+  scheduler.addTask(&task1);
+  scheduler.addTask(&task2);
 	  //  espSerial.begin(9600);
   /**********MemQ and Flash Begin************/
   //  memQ.attachFlash(&flash, (void**)&buffer.flashPtr, sizeof(payload_t), TOTAL_PAYLOAD_BUFFERS / 2);

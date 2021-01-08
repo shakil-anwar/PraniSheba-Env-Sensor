@@ -34,5 +34,6 @@ void objectsBegin();
 extern Flash flash;       
 extern RingEEPROM myeepRom;
 extern MemQ memQ;
+extern Scheduler scheduler;
 //extern AsyncServer server;
 #endif
