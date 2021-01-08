@@ -24,10 +24,7 @@
 /*********Common Library for all files**********/
 #include "param.h"
 #include "./src/device_ps/device.h"
-//#include "./src/pin.h"
-////#include "./src/Schema.h"
-//#include "./src/Payload.h"
-//#include "./src/led.h"
+
 
 void objectsBegin();
 

@@ -1,14 +1,4 @@
 #include "All.h"
-//#include "./src/Schema.h"
-
-
-//uint8_t buff[256];
-
-
-
-
-
-
 
 void system_setup(void)
 {

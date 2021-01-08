@@ -2,7 +2,6 @@
 #define _RADIO_H_
 #include "IoT.h"
 
-
 void radio_begin(void);
 void radioStart();
 uint32_t getRtcTime();
