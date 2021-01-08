@@ -12,7 +12,7 @@
 #define COWSHED_ID 80
 
 /******************Buffer Parameters*********************/
-#define TOTAL_PAYLOAD_BUFFER 6
+#define TOTAL_PAYLOAD_BUFFER 10
 
 // /*****************Gas Sensor Parameter******************/
 // #define MQ4_AIR_RS_R0_RATIO 1.0f
