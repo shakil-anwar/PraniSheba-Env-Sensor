@@ -31,8 +31,10 @@ void system_setup(void)
   sensorBegin();
   sensorCalibrate();
 
-  objectsBegin();
   dataSchemaBegin();
+  deviceBegin();
+  objectsBegin();
+  
 
   scheduler.addTask(&task1);
   scheduler.addTask(&task2);

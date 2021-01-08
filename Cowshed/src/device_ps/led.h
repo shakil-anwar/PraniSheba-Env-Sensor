@@ -1,6 +1,7 @@
 #ifndef _H_LED_
 #define _H_LED_
-#include "../IoT.h"
+// #include "../IoT.h"
+#include "device.h"
 
 void led_begin();
 void led_blink();

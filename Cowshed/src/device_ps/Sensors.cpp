@@ -2,7 +2,8 @@
 #include "pin.h"
 #include "MQ.h"
 #include <SHT21.h>
-#include "../IoT.h"
+// #include "../IoT.h"
+#include "device.h"
 
 void mqBegin();
 void mqCalibrate();

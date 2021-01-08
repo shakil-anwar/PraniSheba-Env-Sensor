@@ -2,8 +2,9 @@
 #define _PAYLOAD_H_
 // #include <Arduino.h>
 #include "Schema.h"
-#include "../IoT.h"
+// #include "../IoT.h"
 #include "Sensors.h"
+#include "device.h"
 
 void dataSchemaBegin();
 sensor_t *getSensorsData(sensor_t *senPtr);
