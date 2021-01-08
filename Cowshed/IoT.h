@@ -5,7 +5,6 @@
 
 /**********Used Library*************/
 #include "MemQ.h"
-//#include "asyncServer.h"
 #include "asyncXfer.h"
 #include "nRF24.h"
 #include "nRF24_Query.h"
@@ -18,8 +17,10 @@
 #include "RingEEPROM.h"
 #include "AVR_Timer1.h"
 
+
 /*********Third Party Library******************/
 #include <ShiftRegister74HC595.h>
+#include <SHT21.h>
 
 /*********Common Library for all files**********/
 #include "param.h"

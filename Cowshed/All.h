@@ -26,5 +26,5 @@ void startDevice();
 void deviceRunSM();
 
 
-extern Scheduler scheduler;
+
 #endif 

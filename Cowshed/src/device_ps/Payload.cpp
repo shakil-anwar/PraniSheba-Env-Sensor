@@ -1,4 +1,6 @@
 #include "Payload.h"
+#include "Sensors.h"
+
 
 volatile payload_t  payload[TOTAL_PAYLOAD_BUFFER];
 queryData_t queryBuffer;

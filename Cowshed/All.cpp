@@ -26,7 +26,7 @@ void system_setup(void)
 
   wdtEnable(8000);
   rtBegin();
-  delay(2000);
+  delay(1000);
 
   Serial.println("Setup Done.");
 }

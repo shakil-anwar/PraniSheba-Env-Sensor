@@ -1,6 +1,5 @@
 #include "All.h"
 #include "radio.h"
-//#include "./src/Schema.h"
 
 mainState_t mainState;
 void setup()
