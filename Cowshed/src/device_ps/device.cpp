@@ -6,9 +6,15 @@ void printBuffer(byte *buf, byte len);
 
 
 /*********Flash & MemQ variables**********************/
+
+#if defined(DEVICE_HAS_FLASH_MEMORY)
 Flash flash(FLASH_CS);
-RingEEPROM myeepRom(0x00);
 MemQ memQ(256, 1000);
+RingEEPROM myeepRom(0x00);
+#else
+	#warning "device has no flash memory"
+#endif
+
 
 /**********Async Server Objects*********************/
 //AsyncServer server(&memQ);
@@ -25,20 +31,16 @@ void deviceBegin()
   led_begin();
   scheduler.addTask(&task1);
   scheduler.addTask(&task2);
-	  //  espSerial.begin(9600);
-  /**********MemQ and Flash Begin************/
-  //  memQ.attachFlash(&flash, (void**)&buffer.flashPtr, sizeof(payload_t), TOTAL_PAYLOAD_BUFFERS / 2);
+
+#if defined(DEVICE_HAS_FLASH_MEMORY)
   memQ.attachFlash(&flash, &_ramQFlash, sizeof(payload_t), TOTAL_PAYLOAD_BUFFER / 2);
   memQ.attachEEPRom(&myeepRom, 4);
-
   //  memQ.attachSafetyFuncs(nrfRestorToRxTx,nrfRxTxToStandy1);
   memQ.attachSafetyFuncs(NULL, nrfRxTxToStandy1);
   //  memQ.reset();
-  /*********Server begin********************/
-  //  server.setServerCbs(nrfSend, ackWait);
-  ////  server.setSchema(sizeof(payload_t), 1);
-  //  server.setSchema(payloadBuffer,sizeof(payload_t), 1);
-  //  server.start();
+#endif
+  sensorBegin();
+  sensorCalibrate();
 }
 
 uint8_t *readMem()

@@ -19,20 +19,19 @@ void system_setup(void)
   pinMode(FLASH_CS, OUTPUT);
   pinMode(FLASH_CS, HIGH);
 
-  
+
 
   //  humSensorBegin();
   //  mqBegin();
   //  mqCalibrate();
-  sensorBegin();
-  sensorCalibrate();
+
 
   dataSchemaBegin();
   deviceBegin();
   objectsBegin();
-  
 
-  
+
+
   scheduler.begin(&second);
 
   wdtEnable(8000);
@@ -55,23 +54,25 @@ void startDevice()
 
 void deviceRunSM()
 {
+#if defined(DEVICE_HAS_FLASH_MEMORY)
   memQ.saveLoop();
+#endif
   bool nrfsendok = xferSendLoop();
-  if(nrfsendok == false)
+  if (nrfsendok == false)
   {
-    Serial.print(F("==>send ok :"));Serial.println(nrfsendok);
+    Serial.print(F("==>send ok :")); Serial.println(nrfsendok);
     xferReady();
   }
   realTimeSync();
-  
+
   static uint32_t prevModeMillis;
   if (millis() - prevModeMillis > 2000)
   {
     nrfWhichMode();
     prevModeMillis = millis();
   }
-//  Serial.print(F("Time: "));Serial.println(rtMs());
-//  delay(1000);
+  //  Serial.print(F("Time: "));Serial.println(rtMs());
+  //  delay(1000);
 
 }
 
