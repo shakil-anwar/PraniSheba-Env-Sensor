@@ -10,7 +10,6 @@
 uint8_t *readMem();
 void sendNrf(uint8_t *data);
 int ackWait();
-
 void deviceBegin();
 
 

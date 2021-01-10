@@ -1,7 +1,7 @@
 #ifndef _DATA_SCHEMA_H_
 #define _DATA_SCHEMA_H_
 #include <Arduino.h>
-
+#include "device.h"
 
 
 typedef struct sensor_t
@@ -67,8 +67,8 @@ typedef union queryData_t
   bolus_config_t bolusConfig;
 };
 
-
-void dataAcquisition();
+void schemaBegin();
+void schemaReadSensors();
 
 extern volatile payload_t  payload[TOTAL_PAYLOAD_BUFFER];
 extern queryData_t queryBuffer;

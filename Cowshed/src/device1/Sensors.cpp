@@ -20,3 +20,8 @@ float getVoltage()
 {
   return random(1,30);
 }
+
+float getTemp()
+{
+   return random(1,30);
+}

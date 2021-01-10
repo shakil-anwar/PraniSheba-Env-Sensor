@@ -44,7 +44,7 @@ void printSensor(sensor_t *sensor)
 }
 
 
-void dataAcquisition()
+void schemaReadSensors()
 {
   sensor_t *senPtr = (sensor_t*)ramQHead();
   getSensorsData(senPtr);

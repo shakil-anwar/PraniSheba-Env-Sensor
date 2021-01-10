@@ -21,14 +21,15 @@ payload_t pldBuf;
 uint8_t payloadCount = 1;
 
 
-// Task task2(10, &updateDisplay);
-Task task1(DATA_ACQUIRE_INTERVAL, &dataAcquisition); //send payload triggers after 5 second interval
 
+Task task1(DATA_ACQUIRE_INTERVAL, &schemaReadSensors); //send payload triggers after 5 second interval
+// Task task2(10, &updateDisplay);
 
 void deviceBegin()
 {
-  // scheduler.addTask(&task1);
-  scheduler.addTask(&task2);
+  schemaBegin();
+  scheduler.addTask(&task1);
+  // scheduler.addTask(&task2);
 
 #if defined(DEVICE_HAS_FLASH_MEMORY)
   memQ.attachFlash(&flash, &_ramQFlash, sizeof(payload_t), TOTAL_PAYLOAD_BUFFER / 2);
