@@ -7,13 +7,15 @@
 #include "Payload.h"
 #include "led.h"
 
-// #define DEVICE_HAS_FLASH_MEMORY //if device has flash memory. 
-
-uint8_t *readMem();
-void sendNrf(uint8_t *data);
-int ackWait();
 
 void deviceBegin();
+uint8_t *deviceMemRead();
+void deviceRfSend(uint8_t *data);
+int deviceRfAckWait();
+
+// uint8_t *readMem();
+// void sendNrf(uint8_t *data);
+// int ackWait();
 
 
 #endif
