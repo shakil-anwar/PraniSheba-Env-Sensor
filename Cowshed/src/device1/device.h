@@ -4,8 +4,6 @@
 #include "pin.h"
 #include "Schema.h"
 #include "Sensors.h"
-#include "Payload.h"
-#include "led.h"
 
 // #define DEVICE_HAS_FLASH_MEMORY //if device has flash memory. 
 

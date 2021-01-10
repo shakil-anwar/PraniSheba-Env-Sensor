@@ -17,19 +17,17 @@ RingEEPROM myeepRom(0x00);
 
 
 /**********Async Server Objects*********************/
-//AsyncServer server(&memQ);
 payload_t pldBuf;
 uint8_t payloadCount = 1;
 
 
-Task task2(10, &updateDisplay);
+// Task task2(10, &updateDisplay);
 Task task1(DATA_ACQUIRE_INTERVAL, &dataAcquisition); //send payload triggers after 5 second interval
 
 
 void deviceBegin()
 {
-  led_begin();
-  scheduler.addTask(&task1);
+  // scheduler.addTask(&task1);
   scheduler.addTask(&task2);
 
 #if defined(DEVICE_HAS_FLASH_MEMORY)
