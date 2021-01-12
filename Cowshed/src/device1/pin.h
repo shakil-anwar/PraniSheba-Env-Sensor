@@ -11,23 +11,11 @@
 #define NRF_IRQ   3
 */
 #define NRF_CE_PORT   PORTB
-#define NRF_CE_PIN    PB2 
-#define NRF_CSN_PORT  PORTB
-#define NRF_CSN_PIN   PB1
-#define NRF_IRQ   	  3
-/**************** FLASH PINOUT ******************/
-#define FLASH_CS  8
+#define NRF_CE_PIN    PB0 
+#define NRF_CSN_PORT  PORTD
+#define NRF_CSN_PIN   PD7
+#define NRF_IRQ   	  2
 
-///Shift Resigter PIN diagram 
-#define TOTAL_SR  3
-#define SR_DATA   7
-#define SR_CLOCK  6
-#define SR_LATCH  5
-#define SR_PWM    4
-
-///MQ Pin diagram 
-#define MQ4_PIN   A0
-#define MQ135_PIN A1
 
 
 

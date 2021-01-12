@@ -3,7 +3,7 @@
 #include <Arduino.h>
 
 #define DEV //development flag
-#define DEVICE_HAS_FLASH_MEMORY //if device has flash memory. 
+//#define DEVICE_HAS_FLASH_MEMORY //if device has flash memory. 
 
 /******************Device Identifier********************/
 #define SENSOR_TYPE 1

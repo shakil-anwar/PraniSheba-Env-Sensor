@@ -5,8 +5,8 @@ void system_setup(void)
   Serial.begin(250000);
   radio_begin();
   
-  pinMode(FLASH_CS, OUTPUT);
-  pinMode(FLASH_CS, HIGH);
+//  pinMode(FLASH_CS, OUTPUT);
+//  pinMode(FLASH_CS, HIGH);
 
 //  dataSchemaBegin();
   deviceBegin();
