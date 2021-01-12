@@ -42,7 +42,7 @@ void deviceBegin()
   sensorCalibrate();
 }
 
-uint8_t *readMem()
+uint8_t *deviceMemRead()
 {
   //  Serial.println(F("Reading mem"));
   /**********Read from Flash****************/
@@ -57,14 +57,14 @@ uint8_t *readMem()
   return p;
 }
 
-void sendNrf(uint8_t *data)
+void deviceRfSend(uint8_t *data)
 {
   Serial.println(F("Sending Via nrf"));
   nrfWrite(data, sizeof(payload_t));
   nrfStartTransmit();
 }
 
-int ackWait()
+int deviceRfAckWait()
 {
   Serial.println(F("Ack wait"));
   if (nrfAck()) return 200;

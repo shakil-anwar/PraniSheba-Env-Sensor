@@ -3,6 +3,7 @@
 Scheduler scheduler;
 void objectsBegin()
 {
-  xferBegin(readMem, sendNrf, ackWait);
+  scheduler.begin(&second);
+  xferBegin(deviceMemRead, deviceRfSend, deviceRfAckWait);
   xferReady();
 }

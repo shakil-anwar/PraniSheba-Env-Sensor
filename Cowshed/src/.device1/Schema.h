@@ -6,7 +6,7 @@
 
 typedef struct sensor_t
 {
- uint8_t type;     //device type
+  uint8_t type;     //device type
   uint8_t reserve;
   uint16_t id;        //deviceId
   uint32_t unixTime;

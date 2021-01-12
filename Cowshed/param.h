@@ -6,15 +6,15 @@
 #define DEVICE_HAS_FLASH_MEMORY //if device has flash memory. 
 
 /******************Device Identifier********************/
-#define SENSOR_TYPE 2
-#define COWSHED_ID 80
+#define SENSOR_TYPE 1
+#define SENSOR_ID   81
 
 /******************Menory and Buffer Param*********************/
 #define TOTAL_PAYLOAD_BUFFER 10
 
 
 /****************Interval Parameter********************/
-#define DATA_ACQUIRE_INTERVAL  2
+#define DATA_ACQUIRE_INTERVAL  5
 
 
 #endif

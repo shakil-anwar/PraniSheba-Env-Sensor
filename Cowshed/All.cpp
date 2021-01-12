@@ -8,11 +8,11 @@ void system_setup(void)
   pinMode(FLASH_CS, OUTPUT);
   pinMode(FLASH_CS, HIGH);
 
-  dataSchemaBegin();
+//  dataSchemaBegin();
   deviceBegin();
   objectsBegin();
 
-  scheduler.begin(&second);
+  
 
   wdtEnable(8000);
   rtBegin();
