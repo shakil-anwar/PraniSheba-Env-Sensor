@@ -35,6 +35,11 @@ void loop()
         mainState = DEVICE_RUN;
         nrfStandby1();
       }
+//      nrfTxAddrRestore(2);
+//      rtSync(163456366);
+//      nrfStandby1();
+//      nrfTXStart();
+//      mainState = DEVICE_RUN;
       break;
     case DEVICE_RUN:
       deviceRunSM();

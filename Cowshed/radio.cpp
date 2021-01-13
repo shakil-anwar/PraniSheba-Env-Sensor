@@ -39,8 +39,8 @@ void radioStart()
 {
 //  nrfStandby1();
 //  nrfTXStart(); //nrf goes standby-1
-  pinMode(3, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(3), nrfIrq, FALLING );
+  pinMode(NRF_IRQ, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(NRF_IRQ), nrfIrq, FALLING );
 }
 void txIsr(void)
 {

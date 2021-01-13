@@ -53,7 +53,11 @@ uint8_t *deviceMemRead()
 //  Serial.print(F("RamQ Head Counter : "));Serial.println(ramQCounter);
 //  Serial.print(F("RamQ Tail Counter : "));Serial.println(ramQTailCounter);
   
-  if (p != NULL) printBuffer(p, sizeof(payload_t));
+  if (p != NULL) 
+  {
+    Serial.println(F("Mem Read Ok"));
+    printBuffer(p, sizeof(payload_t));
+  }
   return p;
 }
 
