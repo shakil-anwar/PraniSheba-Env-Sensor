@@ -1,6 +1,6 @@
 #include "device.h"
 
-
+#define PAYLOAD_READ_COUNT 1
 void printBuffer(byte *buf, byte len);
 
 
@@ -20,6 +20,7 @@ RingEEPROM myeepRom(0x00);
 //AsyncServer server(&memQ);
 payload_t pldBuf;
 uint8_t payloadCount = 1;
+uint8_t *pldPtr; //This will keep track of  read memory until sent 
 
 
 Task task2(10, &updateDisplay);
@@ -42,6 +43,8 @@ void deviceBegin()
 #endif
   sensorBegin();
   sensorCalibrate();
+
+  pldPtr = NULL; //This has to be null for proper operation.
 }
 
 
@@ -51,13 +54,27 @@ uint8_t *deviceMemRead()
   /**********Read from Flash****************/
 //    uint8_t *p = memQ.read((uint8_t*)&pldBuf, payloadCount);// Read from flash
   /**********Read from Flash Memory*********/
-  uint8_t *p = ramQRead();
-  ramQUpdateTail();
-//  Serial.print(F("RamQ Head Counter : "));Serial.println(ramQCounter);
-//  Serial.print(F("RamQ Tail Counter : "));Serial.println(ramQTailCounter);
+//   uint8_t *p = ramQRead();
+//   ramQUpdateTail();
+// //  Serial.print(F("RamQ Head Counter : "));Serial.println(ramQCounter);
+// //  Serial.print(F("RamQ Tail Counter : "));Serial.println(ramQTailCounter);
   
-  if (p != NULL) printBuffer(p, sizeof(payload_t));
-  return p;
+//   if (p != NULL) printBuffer(p, sizeof(payload_t));
+//   return p;
+
+  if(pldPtr == NULL)
+  {
+    // Serial.println(F("Reading from Flash"));
+    pldPtr = memQ.read((uint8_t *)&pldBuf, PAYLOAD_READ_COUNT); // Read from flash
+    if (pldPtr != NULL)
+    {
+      Serial.println(F("<----------Read Mem----->"));
+      printBuffer(pldPtr, sizeof(payload_t));
+    }
+    return pldPtr;
+  }
+  Serial.println(F("Reading from prev pointer"));
+  return pldPtr;
 }
 
 void deviceRfSend(uint8_t *data)
@@ -70,8 +87,13 @@ void deviceRfSend(uint8_t *data)
 int deviceRfAckWait()
 {
   Serial.println(F("Ack wait"));
-  if (nrfAck()) return 200;
-  else return -1;
+  bool res =  nrfAck();
+  if(res)
+  {
+    pldPtr = NULL;
+    return 200;
+  }
+  return -1;
 }
 
 void printBuffer(byte *buf, byte len)

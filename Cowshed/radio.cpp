@@ -21,6 +21,7 @@ uint8_t pipeAddr[6][5] =
 };
 void radio_begin()
 {
+  nrfSetMillis(millis);
   nrfSetPin(&NRF_CE_PORT, NRF_CE_PIN, &NRF_CSN_PORT, NRF_CSN_PIN);
 //  nrfSetPin(&PORTB,2, &PORTB, 1);
   nrfBegin(SPEED_2MB, POWER_ZERO_DBM, 1000000);
