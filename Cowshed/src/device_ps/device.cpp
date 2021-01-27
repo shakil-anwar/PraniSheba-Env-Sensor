@@ -9,7 +9,7 @@ void printBuffer(byte *buf, byte len);
 
 #if defined(DEVICE_HAS_FLASH_MEMORY)
 Flash flash(FLASH_CS);
-MemQ memQ(256, 1000);
+MemQ memQ(1, 1000);
 RingEEPROM myeepRom(0x00);
 #else
 	#warning "device has no flash memory"
@@ -40,6 +40,8 @@ void deviceBegin()
   //  memQ.attachSafetyFuncs(nrfRestorToRxTx,nrfRxTxToStandy1);
   memQ.attachSafetyFuncs(NULL, nrfRxTxToStandy1);
   // memQ.reset();
+  // memQ.erase();
+  memQ.debug(true);
 #endif
   sensorBegin();
   sensorCalibrate();
