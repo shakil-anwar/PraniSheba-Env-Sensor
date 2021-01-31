@@ -1,65 +1,96 @@
 #include "radio.h"
-#include "pin.h"
-#include "dataSchema.h"
-#include "Obj.h"
 
-//Flash flash(FLASH_CS);
+#define TX_PIPE      5
+#define QUERY_PIPE   1
 
-int retryCount;
-bool rf_send_success;
+void txIsr(void);
+void rxIsr(void);
+void maxRtIsr(void);
 
-//RingEEPROM myeepRom(0x00);
+uint8_t commonAddr[5] = {1, 2, 3, 4, 5};
+uint8_t txLsByte;
 
-//MemQ memQ(256, 1000);
-
-uint8_t buf2[5];
-void IsrNrf();
-bool rf_led_state =HIGH;
-
-
+uint8_t pipeAddr[6][5] =
+{
+  {1, 2, 3, 4, 5},
+  {2, 2, 3, 4, 5},
+  {3, 2, 3, 4, 5},
+  {4, 2, 3, 4, 5},
+  {5, 2, 3, 4, 5},
+  {6, 2, 3, 4, 5}
+};
 void radio_begin()
 {
-//  memQ.attachFlash(&flash, (void**)&buffer.flashPtr, sizeof(payload_t),TOTAL_PAYLOAD_BUFFERS/2);
-//  memQ.attachEEPRom(&myeepRom, 4);
-//  memQ.reset();
-  rf_send_success = false;
-  nrf_send_success = false;
-  retryCount = 0;
-
+  nrfSetMillis(millis);
+  nrfSetPin(&NRF_CE_PORT, NRF_CE_PIN, &NRF_CSN_PORT, NRF_CSN_PIN);
+//  nrfSetPin(&PORTB,2, &PORTB, 1);
+  nrfBegin(SPEED_2MB, POWER_ZERO_DBM, 1000000);
   
-  if(!buffer.nrfPtr)
-  {
-    Serial.println(F("Buf Ptr not Initializer"));
-  }
+  nrfSetIrqs(txIsr, rxIsr, maxRtIsr);
+//  nrfQueryClientSet(QUERY_PIPE,pipeAddr[QUERY_PIPE]);
+  nrfQueryClientSet(QUERY_PIPE,commonAddr);
+  nrfQueryBufferSet((uint8_t*)&queryBuffer, sizeof(queryData_t));
   
-  nrf_begin();
-  nrf_common_begin();
-  nrf_tx_begin();
-  attachInterrupt(digitalPinToInterrupt(3), IsrNrf, FALLING );
-  read_bytes_in_register(RF24_TX_ADDR, buf2, 5);
-  Serial.print("RX Address");
-  Serial.println((char)buf2, HEX);
-//  printBuffer(buf2, 5);
-  nrfConfigPrint();
+//  nrfSetTx(pipeAddr[TX_PIPE], true);
+  nrfPowerDown();
+  Serial.println(F("Radio setup done"));
+}
 
-  write_register(RF24_STATUS, RX_DR);
+void radioStart()
+{
+//  nrfStandby1();
+//  nrfTXStart(); //nrf goes standby-1
+  pinMode(NRF_IRQ, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(NRF_IRQ), nrfIrq, FALLING );
+}
+void txIsr(void)
+{
+  nrfClearTxDs();
+}
+
+void rxIsr(void)
+{
+  nrfClearRxDr();
+}
+
+void maxRtIsr(void)
+{
+  nrfClearMaxRt();
+  nrf_flush_rx();
+  nrf_flush_tx();
+  
 }
 
 
-void IsrNrf()
+uint32_t getRtcTime()
 {
-  Serial.println("=====>NRF IRQ Triggered");
-  uint8_t rfStatus  = read_register(RF24_STATUS);
-  if(rfStatus && TX_DS)
+  unixTime_t *uTimePtr = (unixTime_t*)&queryBuffer;
+  memset(&queryBuffer,0, sizeof(queryData_t));
+//  uTimePtr -> type = 0;
+//  uTimePtr -> opCode = 1;
+//  uTimePtr -> utime = 0;
+  
+  nrfStandby1();
+  nrfTXStart();
+  uTimePtr = (unixTime_t*)nrfQuery(0,1);
+  flash.printBytes((byte*)uTimePtr,sizeof(unixTime_t));
+  nrfPowerDown();
+  Serial.print(F("Type : "));Serial.print(uTimePtr -> type);
+  Serial.print(F(" Opcode: "));Serial.println(uTimePtr -> opCode);
+//  delay(2000);
+  if(uTimePtr != NULL)
   {
-    Serial.println("NRF Send Success");
-//    rf_led(rf_led_state = !rf_led_state);
-    rf_send_success = true;
-  }else  {
-    retryCount = 16;
-    Serial.println("NRF Send Failed");
-//    rf_led(LOW);
+    
+    if(uTimePtr -> type == 0 && uTimePtr -> opCode == 1)
+    {
+      Serial.print(F("Received Time : "));Serial.println(uTimePtr -> utime);
+//      Serial.print(F("padding :"));      Serial.println(uTimePtr -> padding);
+      return (uTimePtr -> utime);
+    }
   }
-  write_register(RF24_STATUS,rfStatus | TX_DS | MAX_RT);
-//  rf_led(HIGH);
+  else
+  {
+    Serial.println(F("RTC Query falied"));
+    return 0;
+  }
 }
