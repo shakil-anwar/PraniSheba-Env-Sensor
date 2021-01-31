@@ -4,6 +4,7 @@
 // #include "MQ.h"
 // #include <SHT21.h>
 
+float sensorValidate(float value);
 void mqBegin();
 void mqCalibrate();
 void humSensorBegin();
@@ -13,6 +14,18 @@ SHT21 sht;
 
 MQ mq4(MQ4_PIN);
 MQ mq135(MQ135_PIN);
+
+float sensorValidate(float value)
+{
+  if(isfinite(value))
+  {
+  	return value;
+  }
+  else
+  {
+  	return 0;
+  }
+}
 
 
 bool sensorBegin()
@@ -57,7 +70,7 @@ float getHum()
 #if defined(DEV)
   return 1.0;
 #else
-  return sht.getHumidity();
+  return sensorValidate(sht.getHumidity());
 #endif
 }
 
@@ -66,7 +79,7 @@ float getTemp()
 #if defined(DEV)
   return 1.0;
 #else
-  return sht.getTemperature();
+  return sensorValidate(sht.getTemperature());
 #endif
 }
 
@@ -76,7 +89,7 @@ float getAmmonia()
   return 1.0;
   //  return (float)(random(10,50)*1.00);
 #else
-  return mq4.getPPM();
+  return sensorValidate(mq4.getPPM());
 #endif
 }
 
@@ -86,6 +99,7 @@ float getMethane()
   return 1.0;
   //  return (float)(random(10,50)*1.00);
 #else
-  return mq135.getPPM();
+  return sensorValidate(mq135.getPPM());
 #endif
 }
+
