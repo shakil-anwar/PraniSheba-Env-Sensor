@@ -25,17 +25,7 @@ SHT21 sht;
 MQ mq4(MQ4_PIN);
 MQ mq135(MQ135_PIN);
 
-float sensorValidate(float value)
-{
-  if(isfinite(value))
-  {
-  	return value;
-  }
-  else
-  {
-  	return 0;
-  }
-}
+
 
 
 bool sensorBegin()
@@ -80,6 +70,18 @@ void mqBegin()
 //   Serial.println(F("Calibrating MQ Sensors.."));
 
 // }
+
+float sensorValidate(float value)
+{
+  if(isfinite(value))
+  {
+  	return value;
+  }
+  else
+  {
+  	return 0;
+  }
+}
 
 void humSensorBegin()
 {
