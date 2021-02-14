@@ -1,11 +1,11 @@
 #include "Sensors.h"
 #include "pin.h"
 #include "device.h"
+#include "EEPROM.h"
 // #include "MQ.h"
 // #include <SHT21.h>
 #define MQ4_EEP_ADDR		0
 #define MQ135_EEPROM_ADDR 	21  
-
 
 
 void saveMq4Calib(calib_t *cPtr);
@@ -47,7 +47,8 @@ bool sensorBegin()
 
 bool sensorCalibrate()
 {
-  mqCalibrate();
+  //mqCalibrate();
+	return true;
 }
 
 void mqBegin()
@@ -63,17 +64,22 @@ void mqBegin()
 #if defined(DO_CALIBRATION)
 	mq4.setXY(1000, 5000, 1, 0.6);
 	mq4.setR(1000, MQ4_AIR_RS_R0_RATIO);
-	mq4.runCalib(saveCalib);
+	mq4.runCalib(saveMq4Calib);
+
+	mq135.setXY(2.65, 1, 10, 100);
+	mq135.setR(1000, MQ135_AIR_RS_R0_RATIO);
+	mq135.runCalib(saveMq135Calib);
 #else
-	mq4.beginFromMem(readCalib);
+	mq4.beginFromMem(readMq4Calib);
+	mq135.beginFromMem(readMq135Calib);
 #endif
 
 }
-void mqCalibrate()
-{
-  Serial.println(F("Calibrating MQ Sensors.."));
+// void mqCalibrate()
+// {
+//   Serial.println(F("Calibrating MQ Sensors.."));
 
-}
+// }
 
 void humSensorBegin()
 {
@@ -147,33 +153,17 @@ void saveMq135Calib(calib_t *cPtr)
   uint8_t *ptr = (uint8_t*)cPtr;
   for(uint8_t i = 0; i<sizeof(calib_t);i++)
   {
-    EEPROM.update(MQ4_EEP_ADDR+i, *(ptr+i));
+    EEPROM.update(MQ135_EEPROM_ADDR+i, *(ptr+i));
   }
   mq4.printCalib(cPtr);
 }
 void readMq135Calib(calib_t *cPtr)
 {
-
-}
-
-void saveCalib(calib_t *cPtr)
-{
-  Serial.println(F("Calib Saved"));
-  uint8_t *ptr = (uint8_t*)cPtr;
-  for(uint8_t i = 0; i<sizeof(calib_t);i++)
-  {
-    EEPROM.update(MQ4_EEP_ADDR+i, *(ptr+i));
-  }
-  mq4.printCalib(cPtr);
-}
-
-void readCalib(calib_t *cPtr)
-{
-  Serial.println(F("Calib Rading.."));
+  Serial.println(F("Calib Rading for mq135"));
   uint8_t *ptr = (uint8_t*)cPtr;
   for(uint8_t i = 0 ; i< sizeof(calib_t); i++)
   {
-    *(ptr+i) = EEPROM.read(MQ4_EEP_ADDR+i);
+    *(ptr+i) = EEPROM.read(MQ135_EEPROM_ADDR+i);
   }
   mq4.printCalib(cPtr);
 }
