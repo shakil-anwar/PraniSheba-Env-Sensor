@@ -39,7 +39,7 @@ void deviceBegin()
   memQ.attachEEPRom(&myeepRom, 4);
   //  memQ.attachSafetyFuncs(nrfRestorToRxTx,nrfRxTxToStandy1);
   memQ.attachSafetyFuncs(NULL, nrfRxTxToStandy1);
-  // memQ.reset();
+  memQ.reset();
   // memQ.erase();
   memQ.debug(true);
 #endif
