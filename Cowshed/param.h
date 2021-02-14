@@ -17,5 +17,9 @@
 /****************Interval Parameter********************/
 #define DATA_ACQUIRE_INTERVAL  5
 
+/****************EEPROM MEMORY MAP*********************/
+#define MQ4_EEP_ADDR         0
+#define MQ135_EEPROM_ADDR   (MQ4_EEP_ADDR + 21)
+#define RING_EEPROM_ADDR    (MQ135_EEPROM_ADDR+ 21)
 
 #endif

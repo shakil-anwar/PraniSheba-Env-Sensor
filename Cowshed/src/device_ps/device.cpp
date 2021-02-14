@@ -10,7 +10,7 @@ void printBuffer(byte *buf, byte len);
 #if defined(DEVICE_HAS_FLASH_MEMORY)
 Flash flash(FLASH_CS);
 MemQ memQ(1, 1000);
-RingEEPROM myeepRom(0x00);
+RingEEPROM myeepRom(RING_EEPROM_ADDR);
 #else
 	#warning "device has no flash memory"
 #endif

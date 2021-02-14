@@ -4,8 +4,7 @@
 #include "EEPROM.h"
 // #include "MQ.h"
 // #include <SHT21.h>
-#define MQ4_EEP_ADDR		0
-#define MQ135_EEPROM_ADDR 	21  
+
 
 
 void saveMq4Calib(calib_t *cPtr);
