@@ -8,10 +8,15 @@ typedef enum mainState_t
 {
   CHECK_HARDWARE,
   START_DEVICE,
-  SYNCHRONIZE,
+  SYNC_DEVICE,
   DEVICE_RUN,
   STOP
 };
+
+//typedef enum runState_t
+//{
+//  
+//};
 
 void system_setup(void);
 void test_flash(void);
@@ -25,6 +30,7 @@ bool isHardwareOk();
 void startDevice();
 void deviceRunSM();
 
-
+void readAddr(addr_t *addrPtr);
+void saveAddr(addr_t *addrPtr);
 
 #endif 

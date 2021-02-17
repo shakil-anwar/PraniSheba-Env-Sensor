@@ -16,5 +16,8 @@
 /****************Interval Parameter********************/
 #define DATA_ACQUIRE_INTERVAL  5
 
+/*****************EEPROM Address Map*******************/
+#define ROM_ADDR_FOR_TXD  0
+#define RING_EEPROM_ADDR  20
 
 #endif

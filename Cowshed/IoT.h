@@ -21,14 +21,20 @@
 /*********Third Party Library******************/
 #include <ShiftRegister74HC595.h>
 #include <SHT21.h>
-
+#include "RTClib.h"
 /*********Common Library for all files**********/
 #include "param.h"
+#include "utility.h"
 #include "./src/device_ps/device.h"
 //#include "./src/device1/device.h"
 
 
 void objectsBegin();
+
+void rtcBegin();
+uint32_t rtcGetSec();
+void rtcUpdateSec(uint32_t unix);
+
 
 extern Flash flash;       
 extern RingEEPROM myeepRom;

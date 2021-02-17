@@ -26,24 +26,21 @@ void loop()
     case START_DEVICE:
       Serial.println(F("m_STATE: START_DEVICE"));
       startDevice();
-      mainState = SYNCHRONIZE;
+      mainState = SYNC_DEVICE;
       break;
-    case SYNCHRONIZE:
-      Serial.println(F("m_STATE: SYNCHRONIZE"));
-      if (setDeviceConf())
-      {
-        mainState = DEVICE_RUN;
-        nrfStandby1();
-      }
-//      nrfTxAddrRestore(2);
-//      rtSync(163456366);
-//      nrfStandby1();
-//      nrfTXStart();
-//      mainState = DEVICE_RUN;
+    case SYNC_DEVICE:
+      uint32_t uTime = nrfPing();
+      //read addr from memory
+      nrfTxAddrHandler(readAddr, saveAddr);
+      // synctime | this will begin data acquire scheduler
+      rtSync(uTime);
+      nrfTxReady();
+      mainState = DEVICE_RUN;
       break;
     case DEVICE_RUN:
       deviceRunSM();
       scheduler.run();
+      rtLoop();
       break;
     case STOP:
       Serial.println(F("m_STATE: STOP"));
@@ -55,3 +52,18 @@ void loop()
   }
   wdtReset();
 }
+
+
+//    case SYNCHRONIZE:
+//      Serial.println(F("m_STATE: SYNCHRONIZE"));
+//      if (setDeviceConf())
+//      {
+//        mainState = DEVICE_RUN;
+//        nrfStandby1();
+//      }
+////      nrfTxAddrRestore(2);
+////      rtSync(163456366);
+////      nrfStandby1();
+////      nrfTXStart();
+////      mainState = DEVICE_RUN;
+//      break;
