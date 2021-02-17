@@ -46,6 +46,7 @@ void deviceRunSM()
 #if defined(DEVICE_HAS_FLASH_MEMORY)
   memQ.saveLoop();
 #endif
+  Serial.println(F("hello from run"));
   bool nrfsendok = xferSendLoop();
   if (nrfsendok == false)
   {
@@ -61,6 +62,7 @@ void deviceRunSM()
     nrfWhichMode();
     prevModeMillis = millis();
   }
+  rtLoop();
 }
 
 
