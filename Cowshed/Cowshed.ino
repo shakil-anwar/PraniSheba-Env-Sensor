@@ -38,6 +38,7 @@ void loop()
       mainState = DEVICE_RUN;
       break;
     case DEVICE_RUN:
+      Serial.println(F("m_STATE: DEVICE_RUN"));
       deviceRunSM();
       scheduler.run();
       rtLoop();
