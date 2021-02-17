@@ -4,7 +4,7 @@
 // #include "device.h"
 
 /*****************Gas Sensor Parameter******************/
-#define MQ4_AIR_RS_R0_RATIO 		1.0f
+#define MQ4_AIR_RS_R0_RATIO 		4.4f
 #define MQ135_AIR_RS_R0_RATIO 		3.7f
 
 /******API for  Schema***************/
