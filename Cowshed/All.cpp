@@ -58,6 +58,7 @@ void deviceRunSM()
     uint32_t runPing = nrfPing();
     if (runPing > 0)
     {
+      nrfTxReady();
       xferReady();
     }
   }
