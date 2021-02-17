@@ -1,12 +1,15 @@
 #include "All.h"
 #include "EEPROM.h"
 
-//runState_t runState;
+
 void system_setup(void)
 {
   Serial.begin(250000);
-  radio_begin();
 
+  radio_begin();
+  rtcBegin();
+  rtAttachRTC(rtcGetSec, rtcUpdateSec);
+  rtBegin();
   //  pinMode(FLASH_CS, OUTPUT);
   //  pinMode(FLASH_CS, HIGH);
 
@@ -15,9 +18,7 @@ void system_setup(void)
   objectsBegin();
 
   wdtEnable(8000);
-  rtcBegin();
-  rtAttachRTC(rtcGetSec, rtcUpdateSec);
-  rtBegin();
+
   delay(1000);
 
   Serial.println("Setup Done.");
@@ -39,6 +40,9 @@ void startDevice()
 {
   radioStart();
   wdtStart();
+#if defined(FACTORY_RESET)
+  nrfTxAddrReset(saveAddr);
+#endif
 }
 
 void deviceRunSM()
@@ -46,16 +50,19 @@ void deviceRunSM()
 #if defined(DEVICE_HAS_FLASH_MEMORY)
   memQ.saveLoop();
 #endif
-  Serial.println(F("hello from run"));
+  //  Serial.println(F("hello from run"));
   bool nrfsendok = xferSendLoop();
   if (nrfsendok == false)
   {
     Serial.print(F("==>send ok :")); Serial.println(nrfsendok);
-    if(nrfPing()>0)
+    uint32_t runPing = nrfPing();
+    if (runPing > 0)
     {
       xferReady();
     }
   }
+
+
   static uint32_t prevModeMillis;
   if (millis() - prevModeMillis > 2000)
   {
@@ -63,6 +70,7 @@ void deviceRunSM()
     prevModeMillis = millis();
   }
   rtLoop();
+  scheduler.run();
 }
 
 
@@ -117,27 +125,27 @@ void deviceRunSM()
 //  }
 
 
-  //  do
-  //  {
-  //    uTime = getRtcTime();
-  //    if (uTime)
-  //    {
-  //      Serial.print(F("Got NTP Time"));
-  //      break;
-  //    }
-  //    else
-  //    {
-  //      Serial.print(F("Try count :")); Serial.println(maxCount);
-  //      delay(1000);
-  //    }
-  //  } while (--maxCount);
-  //
-  //  Serial.println(uTime);
-  //  if(uTime)
-  //  {
-  //    Serial.println(F("Setting Time"));
-  //    rtSync(uTime);
-  //  }
+//  do
+//  {
+//    uTime = getRtcTime();
+//    if (uTime)
+//    {
+//      Serial.print(F("Got NTP Time"));
+//      break;
+//    }
+//    else
+//    {
+//      Serial.print(F("Try count :")); Serial.println(maxCount);
+//      delay(1000);
+//    }
+//  } while (--maxCount);
+//
+//  Serial.println(uTime);
+//  if(uTime)
+//  {
+//    Serial.println(F("Setting Time"));
+//    rtSync(uTime);
+//  }
 
 //}
 

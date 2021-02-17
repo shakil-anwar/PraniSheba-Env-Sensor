@@ -1,8 +1,8 @@
 #include "All.h"
 #include "radio.h"
 void printMainState(mainState_t mstate);
-
 mainState_t mainState;
+bool startRun = false;
 void setup()
 {
   system_setup();
@@ -11,6 +11,10 @@ void setup()
 
 void loop()
 {
+  if(startRun)
+  {
+    deviceRunSM();
+  }
   printMainState(mainState);
   switch (mainState)
   {
@@ -26,23 +30,30 @@ void loop()
       }
       break;
     case START_DEVICE:
-//      Serial.println(F("m_STATE: START_DEVICE"));
+      //      Serial.println(F("m_STATE: START_DEVICE"));
       startDevice();
       mainState = SYNC_DEVICE;
       break;
     case SYNC_DEVICE:
       uint32_t uTime = nrfPing();
-      nrfTxAddrHandler(readAddr, saveAddr);//read addr from memory
-      rtSync(uTime);// synctime | this will begin data acquire scheduler
-      nrfTxReady();
-      mainState = DEVICE_RUN;
+      if (uTime)
+      {
+        nrfTxAddrHandler(readAddr, saveAddr);//read addr from memory
+        rtSync(uTime);// synctime | this will begin data acquire scheduler
+        nrfTxReady();
+        mainState = RUN_LOOP;
+        startRun = true;
+        Serial.println(F("Goint to run"));
+      }
       break;
-    case DEVICE_RUN:
-      deviceRunSM();
+    case RUN_LOOP:
+      Serial.println(F("--------------->>TP1"));
+//      deviceRunSM();
+      Serial.println(F("--------------->>TP2"));
       scheduler.run();
       break;
     case STOP:
-      mainState = CHECK_HARDWARE;
+//      mainState = CHECK_HARDWARE;
       break;
     default:
       mainState = CHECK_HARDWARE;
@@ -64,8 +75,8 @@ void printMainState(mainState_t mstate)
     case SYNC_DEVICE:
       Serial.println(F("m_STATE: SYNC_DEVICE"));
       break;
-    case DEVICE_RUN:
-//      Serial.println(F("m_STATE: DEVICE_RUN"));
+    case RUN_LOOP:
+      //      Serial.println(F("m_STATE: DEVICE_RUN"));
       break;
     case STOP:
       Serial.println(F("m_STATE: STOP"));

@@ -5,7 +5,8 @@
 #define DEV //development flag
 #define DEVICE_HAS_FLASH_MEMORY //if device has flash memory. 
 //#define DO_CALIBRATION
-//#define CLEAR_MEMORY
+//#define FACTORY_RESET
+
 /******************Device Identifier********************/
 #define SENSOR_TYPE 2
 #define SENSOR_ID   81
