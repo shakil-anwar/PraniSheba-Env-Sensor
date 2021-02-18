@@ -8,6 +8,7 @@ volatile uint32_t _nowSec;
 bool _nrfSendOk;
 uint32_t prevModeMillis = 0 ;
 
+Task taskNrfStatus(5, &nrfWhichMode);
 void system_setup(void)
 {
   Serial.begin(250000);
@@ -20,6 +21,7 @@ void system_setup(void)
   deviceBegin();
   objectsBegin();
 
+  scheduler.addTask(&taskNrfStatus); 
   wdtEnable(8000);
   delay(1000);
   Serial.println("Setup Done.");
@@ -96,11 +98,11 @@ void deviceRunSM()
   }
 
 
-  if (millis() - prevModeMillis > 2000)
-  {
-    nrfWhichMode();
-    prevModeMillis = millis();
-  }
+//  if (millis() - prevModeMillis > 2000)
+//  {
+//    nrfWhichMode();
+//    prevModeMillis = millis();
+//  }
 }
 
 
