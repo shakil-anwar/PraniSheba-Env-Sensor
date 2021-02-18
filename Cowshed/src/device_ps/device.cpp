@@ -72,25 +72,25 @@ uint8_t *deviceMemRead()
     pldPtr = memQ.read((uint8_t *)&pldBuf, PAYLOAD_READ_COUNT); // Read from flash
     if (pldPtr != NULL)
     {
-      Serial.println(F("<----------Read Mem----->"));
+      // Serial.println(F("Read Mem : New"));
       printBuffer(pldPtr, sizeof(payload_t));
     }
     return pldPtr;
   }
-  Serial.println(F("Reading from prev pointer"));
+  Serial.println(F("----->Read Mem : Old"));
   return pldPtr;
 }
 
 void deviceRfSend(uint8_t *data)
 {
-  Serial.println(F("Sending Via nrf"));
+  // Serial.println(F("Sending Via nrf"));
   nrfWrite(data, sizeof(payload_t));
   nrfStartTransmit();
 }
 
 int deviceRfAckWait()
 {
-  Serial.println(F("Ack wait"));
+  // Serial.println(F("Ack wait"));
   bool res =  nrfAck();
   if(res)
   {

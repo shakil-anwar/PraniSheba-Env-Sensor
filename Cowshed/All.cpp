@@ -1,6 +1,6 @@
 #include "All.h"
 #include "EEPROM.h"
-
+void printRunState();
 runState_t runState;
 
 volatile uint32_t _prevRunSec;
@@ -17,11 +17,11 @@ void system_setup(void)
   rtcBegin();
   rtAttachRTC(rtcGetSec, rtcUpdateSec);
   rtBegin();
-  
+
   deviceBegin();
   objectsBegin();
 
-  scheduler.addTask(&taskNrfStatus); 
+  scheduler.addTask(&taskNrfStatus);
   wdtEnable(8000);
   delay(1000);
   Serial.println("Setup Done.");
@@ -57,7 +57,6 @@ void deviceRunSM()
   switch (runState)
   {
     case RUN_WAIT:
-      //      Serial.println(F("Run State : RUN_WAIT"));
       _nowSec = second();
       if (_nowSec -  _prevRunSec >= DATA_TRASNFER_INTERVAL)
       {
@@ -67,7 +66,7 @@ void deviceRunSM()
       }
       break;
     case RUN_CHK_BS_CONN:
-      Serial.println(F("run : CHK_BS_CONN"));
+
       if (nrfPing() > 0)
       {
         nrfTxReady();
@@ -77,7 +76,7 @@ void deviceRunSM()
       else
       {
         runState = RUN_WAIT;
-        delay(500);
+        Serial.println(F("<==BS Not Connected==>"));
       }
       break;
     case RUN_TX_XFER:
@@ -86,6 +85,7 @@ void deviceRunSM()
       if (_nrfSendOk)
       {
         runState = RUN_WAIT;
+        Serial.println(F("Going to Wait"));
       }
       else
       {
@@ -93,105 +93,35 @@ void deviceRunSM()
       }
       break;
     default :
-      Serial.println(F("------------Default"));
+      Serial.println(F("-->Accidental Default mode"));
+      runState = RUN_WAIT;
       break;
   }
+  printRunState();
 
 
-//  if (millis() - prevModeMillis > 2000)
-//  {
-//    nrfWhichMode();
-//    prevModeMillis = millis();
-//  }
+  //  if (millis() - prevModeMillis > 2000)
+  //  {
+  //    nrfWhichMode();
+  //    prevModeMillis = millis();
+  //  }
 }
 
-
-//bool setDeviceConf()
-//{
-//  memset(&queryBuffer, 0, sizeof(queryData_t));
-//  nrfStandby1();
-//  nrfTXStart();
-//  confPacket_t *confPtr = (confPacket_t*)nrfQuery(0, 3);
-//  nrfPowerDown();
-//  if (confPtr != NULL)
-//  {
-//    Serial.print(F("\r\nType : ")); Serial.print(confPtr -> type);
-//    Serial.print(F(" Opcode: ")); Serial.println(confPtr -> opCode);
-//    Serial.print(F("Device addr :")); Serial.println(confPtr -> txAddrByte);
-//    Serial.print(F("Time :")); Serial.println(confPtr -> uTime);
-//    //    flash.printBytes((byte*)confPtr, sizeof(confPacket_t));
-//    if (confPtr -> type == 0 && confPtr -> opCode == 3)
-//    {
-//      Serial.println(F("Setting Node as TX"));
-//      nrfTxAddrRestore(confPtr -> txAddrByte);
-//      rtSync(confPtr -> uTime);
-//
-//      nrfStandby1();
-//      nrfTXStart();
-//    }
-//
-//    return true;
-//  }
-//  else
-//  {
-//    Serial.println(F("Return Null"));
-//    delay(2000);
-//  }
-//  return false;
-//}
-//
-//bool syncTime()
-//{
-//  uint32_t uTime = getRtcTime();
-//  if (uTime)
-//  {
-//    Serial.print(F("Got NTP Time : ")); Serial.println(uTime);
-//    rtSync(uTime);
-//    return true;
-//  }
-//  else
-//  {
-//    Serial.println(F("NTP Parse Failed"));
-//    delay(1000);
-//    return false;
-//  }
-
-
-//  do
-//  {
-//    uTime = getRtcTime();
-//    if (uTime)
-//    {
-//      Serial.print(F("Got NTP Time"));
-//      break;
-//    }
-//    else
-//    {
-//      Serial.print(F("Try count :")); Serial.println(maxCount);
-//      delay(1000);
-//    }
-//  } while (--maxCount);
-//
-//  Serial.println(uTime);
-//  if(uTime)
-//  {
-//    Serial.println(F("Setting Time"));
-//    rtSync(uTime);
-//  }
-
-//}
-//  bool nrfsendok = xferSendLoop();
-//  bool nrfsendok = xferSendLoopV3();
-//  if (nrfsendok == false)
-//  {
-//    Serial.print(F("==>send ok :")); Serial.println(nrfsendok);
-//    uint32_t runPing = nrfPing();
-//    if (runPing > 0)
-//    {
-//      nrfTxReady();
-//      xferReady();
-//    }
-//  }
+void printRunState()
+{
+  switch (runState)
+  {
+    case RUN_WAIT:
+//      Serial.println(F("runState : RUN_WAIT"));
+      break;
+    case RUN_CHK_BS_CONN:
+      Serial.println(F("runState : RUN_CHK_BS_CONN"));
+      break;
+    case RUN_TX_XFER:
+      Serial.println(F("runState : RUN_TX_XFER"));
+      break;
+  }
+}
 
 
 void saveAddr(addr_t *addrPtr)
