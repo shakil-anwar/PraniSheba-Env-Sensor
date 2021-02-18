@@ -9,7 +9,7 @@ runState_t runState;
 volatile uint32_t _prevRunSec;
 volatile uint32_t _nowSec;
 bool _nrfSendOk;
-uint32_t prevModeMillis = 0 ;
+//uint32_t prevModeMillis = 0 ;
 
 Task taskNrfStatus(5, &nrfWhichMode);
 void system_setup(void)
@@ -28,18 +28,6 @@ void system_setup(void)
   wdtEnable(8000);
   delay(1000);
   Serial.println("Setup Done.");
-}
-
-bool isHardwareOk()
-{
-  Serial.println(F("<--Hardware Status-->"));
-  bool nrfOk = nrfIsRunning();
-  Serial.print(F("NRF :")); Serial.println(nrfOk);
-  Serial.print(F("RTC: ")); Serial.println(true);
-  Serial.print(F("Flash :")); Serial.println(true);
-  Serial.print(F("Logic Power: ")); Serial.println(true);
-  Serial.println(F("<------------------->"));
-  return true;
 }
 
 void startDevice()
@@ -101,12 +89,6 @@ void deviceRunSM()
   }
   printRunState();
 
-
-  //  if (millis() - prevModeMillis > 2000)
-  //  {
-  //    nrfWhichMode();
-  //    prevModeMillis = millis();
-  //  }
 }
 
 bool isBsConnected()
@@ -138,6 +120,17 @@ void printRunState()
   }
 }
 
+bool isHardwareOk()
+{
+  Serial.println(F("<--Hardware Status-->"));
+  bool nrfOk = nrfIsRunning();
+  Serial.print(F("NRF :")); Serial.println(nrfOk);
+  Serial.print(F("RTC: ")); Serial.println(true);
+  Serial.print(F("Flash :")); Serial.println(true);
+  Serial.print(F("Logic Power: ")); Serial.println(true);
+  Serial.println(F("<------------------->"));
+  return true;
+}
 
 void saveAddr(addr_t *addrPtr)
 {
@@ -160,3 +153,11 @@ void readAddr(addr_t *addrPtr)
   }
   nrfDebugBuffer(ptr, sizeof(addr_t));
 }
+
+
+
+  //  if (millis() - prevModeMillis > 2000)
+  //  {
+  //    nrfWhichMode();
+  //    prevModeMillis = millis();
+  //  }
