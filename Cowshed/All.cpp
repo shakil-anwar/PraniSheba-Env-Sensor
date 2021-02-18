@@ -1,6 +1,9 @@
 #include "All.h"
 #include "EEPROM.h"
+
 void printRunState();
+bool isBsConnected();
+
 runState_t runState;
 
 volatile uint32_t _prevRunSec;
@@ -66,8 +69,7 @@ void deviceRunSM()
       }
       break;
     case RUN_CHK_BS_CONN:
-
-      if (nrfPing() > 0)
+      if (isBsConnected())
       {
         nrfTxReady();
         xferReady();
@@ -105,6 +107,19 @@ void deviceRunSM()
   //    nrfWhichMode();
   //    prevModeMillis = millis();
   //  }
+}
+
+bool isBsConnected()
+{
+  int8_t tryCount = 3;
+  do
+  {
+    if(nrfPing())
+    {
+      return true;
+    }
+  }while(--tryCount);
+  return false;
 }
 
 void printRunState()
