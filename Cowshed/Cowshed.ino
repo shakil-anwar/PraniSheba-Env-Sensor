@@ -11,10 +11,6 @@ void setup()
 
 void loop()
 {
-  if(startRun)
-  {
-    deviceRunSM();
-  }
   printMainState(mainState);
   switch (mainState)
   {
@@ -35,25 +31,25 @@ void loop()
       mainState = SYNC_DEVICE;
       break;
     case SYNC_DEVICE:
-      uint32_t uTime = nrfPing();
-      if (uTime)
+      _nowSec = nrfPing();
+      if (_nowSec)
       {
         nrfTxAddrHandler(readAddr, saveAddr);//read addr from memory
-        rtSync(uTime);// synctime | this will begin data acquire scheduler
+        rtSync(_nowSec);// synctime | this will begin data acquire scheduler
         nrfTxReady();
         mainState = RUN_LOOP;
-        startRun = true;
-        Serial.println(F("Goint to run"));
+        _nowSec = second();
+        _prevRunSec = _nowSec;
+        Serial.println(F("Starting Operation"));
       }
       break;
     case RUN_LOOP:
-      Serial.println(F("--------------->>TP1"));
-//      deviceRunSM();
-      Serial.println(F("--------------->>TP2"));
+      deviceRunSM();
+      rtLoop();
       scheduler.run();
       break;
     case STOP:
-//      mainState = CHECK_HARDWARE;
+      mainState = CHECK_HARDWARE;
       break;
     default:
       mainState = CHECK_HARDWARE;

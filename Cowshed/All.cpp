@@ -1,6 +1,12 @@
 #include "All.h"
 #include "EEPROM.h"
 
+runState_t runState;
+
+volatile uint32_t _prevRunSec;
+volatile uint32_t _nowSec;
+bool _nrfSendOk;
+uint32_t prevModeMillis = 0 ;
 
 void system_setup(void)
 {
@@ -10,17 +16,12 @@ void system_setup(void)
   rtcBegin();
   rtAttachRTC(rtcGetSec, rtcUpdateSec);
   rtBegin();
-  //  pinMode(FLASH_CS, OUTPUT);
-  //  pinMode(FLASH_CS, HIGH);
-
-  //  dataSchemaBegin();
+  
   deviceBegin();
   objectsBegin();
 
   wdtEnable(8000);
-
   delay(1000);
-
   Serial.println("Setup Done.");
 }
 
@@ -43,6 +44,7 @@ void startDevice()
 #if defined(FACTORY_RESET)
   nrfTxAddrReset(saveAddr);
 #endif
+  runState = RUN_WAIT;
 }
 
 void deviceRunSM()
@@ -50,29 +52,55 @@ void deviceRunSM()
 #if defined(DEVICE_HAS_FLASH_MEMORY)
   memQ.saveLoop();
 #endif
-  //  Serial.println(F("hello from run"));
-//  bool nrfsendok = xferSendLoop();
-  bool nrfsendok = xferSendLoopV3();
-  if (nrfsendok == false)
+  switch (runState)
   {
-    Serial.print(F("==>send ok :")); Serial.println(nrfsendok);
-    uint32_t runPing = nrfPing();
-    if (runPing > 0)
-    {
-      nrfTxReady();
-      xferReady();
-    }
+    case RUN_WAIT:
+      //      Serial.println(F("Run State : RUN_WAIT"));
+      _nowSec = second();
+      if (_nowSec -  _prevRunSec >= DATA_TRASNFER_INTERVAL)
+      {
+        _prevRunSec = _nowSec;
+        runState = RUN_CHK_BS_CONN;
+        Serial.println(F("Time to data send"));
+      }
+      break;
+    case RUN_CHK_BS_CONN:
+      Serial.println(F("run : CHK_BS_CONN"));
+      if (nrfPing() > 0)
+      {
+        nrfTxReady();
+        xferReady();
+        runState = RUN_TX_XFER;
+      }
+      else
+      {
+        runState = RUN_WAIT;
+        delay(500);
+      }
+      break;
+    case RUN_TX_XFER:
+      Serial.println(F("run : RUN_TX_XFER"));
+      _nrfSendOk = xferSendLoopV3();
+      if (_nrfSendOk)
+      {
+        runState = RUN_WAIT;
+      }
+      else
+      {
+        runState = RUN_CHK_BS_CONN;
+      }
+      break;
+    default :
+      Serial.println(F("------------Default"));
+      break;
   }
 
 
-  static uint32_t prevModeMillis;
   if (millis() - prevModeMillis > 2000)
   {
     nrfWhichMode();
     prevModeMillis = millis();
   }
-  rtLoop();
-  scheduler.run();
 }
 
 
@@ -150,6 +178,18 @@ void deviceRunSM()
 //  }
 
 //}
+//  bool nrfsendok = xferSendLoop();
+//  bool nrfsendok = xferSendLoopV3();
+//  if (nrfsendok == false)
+//  {
+//    Serial.print(F("==>send ok :")); Serial.println(nrfsendok);
+//    uint32_t runPing = nrfPing();
+//    if (runPing > 0)
+//    {
+//      nrfTxReady();
+//      xferReady();
+//    }
+//  }
 
 
 void saveAddr(addr_t *addrPtr)

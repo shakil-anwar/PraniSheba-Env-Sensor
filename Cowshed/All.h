@@ -13,10 +13,13 @@ typedef enum mainState_t
   STOP
 };
 
-//typedef enum runState_t
-//{
-//  
-//};
+typedef enum runState_t
+{
+  RUN_WAIT,
+  RUN_CHK_BS_CONN,
+  RUN_TX_XFER,
+  
+};
 
 void system_setup(void);
 void test_flash(void);
@@ -32,5 +35,8 @@ void deviceRunSM();
 
 void readAddr(addr_t *addrPtr);
 void saveAddr(addr_t *addrPtr);
+
+extern volatile uint32_t _nowSec;
+extern volatile uint32_t _prevRunSec;
 
 #endif 
