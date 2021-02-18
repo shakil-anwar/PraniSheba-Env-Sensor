@@ -51,7 +51,8 @@ void deviceRunSM()
   memQ.saveLoop();
 #endif
   //  Serial.println(F("hello from run"));
-  bool nrfsendok = xferSendLoop();
+//  bool nrfsendok = xferSendLoop();
+  bool nrfsendok = xferSendLoopV3();
   if (nrfsendok == false)
   {
     Serial.print(F("==>send ok :")); Serial.println(nrfsendok);
