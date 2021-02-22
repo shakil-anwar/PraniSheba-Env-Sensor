@@ -39,6 +39,7 @@
 	#define NRF_IRQ   	  2
 
 	#define FLASH_CS 	  6
+	#define FLASH_HOLD	  7
 
 	#define TOTAL_SR  3
 	#define SR_DATA   5

@@ -8,7 +8,7 @@ void printBuffer(byte *buf, byte len);
 /*********Flash & MemQ variables**********************/
 
 #if defined(DEVICE_HAS_FLASH_MEMORY)
-Flash flash(FLASH_CS);
+Flash flash(FLASH_CS,FLASH_HOLD);
 MemQ memQ(1, 1000);
 RingEEPROM myeepRom(RING_EEPROM_ADDR);
 #else
