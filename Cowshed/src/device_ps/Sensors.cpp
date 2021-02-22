@@ -90,7 +90,7 @@ void humSensorBegin()
 float getHum()
 {
 #if defined(DEV)
-  return 1.0;
+  return SENSOR_ID;
 #else
   return sensorValidate(sht.getHumidity());
 #endif
@@ -99,7 +99,7 @@ float getHum()
 float getTemp()
 {
 #if defined(DEV)
-  return 1.0;
+  return SENSOR_ID;
 #else
   return sensorValidate(sht.getTemperature());
 #endif
@@ -108,7 +108,7 @@ float getTemp()
 float getAmmonia()
 {
 #if defined(DEV)
-  return 1.0;
+  return SENSOR_ID;
   //  return (float)(random(10,50)*1.00);
 #else
   return sensorValidate(mq4.getPPM());
@@ -118,7 +118,7 @@ float getAmmonia()
 float getMethane()
 {
 #if defined(DEV)
-  return 1.0;
+  return SENSOR_ID;
   //  return (float)(random(10,50)*1.00);
 #else
   return sensorValidate(mq135.getPPM());

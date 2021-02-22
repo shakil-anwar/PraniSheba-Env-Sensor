@@ -5,7 +5,10 @@
 #define DEV //development flag
 #define DEVICE_HAS_FLASH_MEMORY //if device has flash memory. 
 //#define DO_CALIBRATION
-//#define FACTORY_RESET
+#define FACTORY_RESET
+
+//#define  PCB_V_0_1_0
+#define  PCB_V_0_2_0
 
 /******************Device Identifier********************/
 #define SENSOR_TYPE 2
