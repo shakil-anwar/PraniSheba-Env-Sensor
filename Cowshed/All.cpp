@@ -15,7 +15,7 @@ Task taskNrfStatus(5, &nrfWhichMode);
 void system_setup(void)
 {
   Serial.begin(250000);
-
+  confSetting(CONFIG_BTN_PIN,configRead,configSave);
   radio_begin();
   rtcBegin();
   rtAttachRTC(rtcGetSec, rtcUpdateSec);
@@ -155,6 +155,26 @@ void readAddr(addr_t *addrPtr)
 }
 
 
+
+
+void configSave(config_t *bootPtr)
+{
+   uint8_t *ptr = (uint8_t*)bootPtr;
+  for(uint8_t i = 0 ; i< sizeof(config_t); i++)
+  {
+    EEPROM.update(CONFIG_EEPROM_ADDR+i, *(ptr+i));
+  }
+}
+
+void configRead(config_t *bootPtr)
+{
+  uint8_t *ptr = (uint8_t*)bootPtr;
+  for(uint8_t i = 0 ; i< sizeof(config_t); i++)
+  {
+    *(ptr+i) = EEPROM.read(CONFIG_EEPROM_ADDR+i);
+  }
+//  return bootPtr;
+}
 
   //  if (millis() - prevModeMillis > 2000)
   //  {

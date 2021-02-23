@@ -36,6 +36,9 @@ void deviceRunSM();
 void readAddr(addr_t *addrPtr);
 void saveAddr(addr_t *addrPtr);
 
+void configSave(config_t *bootPtr);
+void configRead(config_t *bootPtr);
+
 extern volatile uint32_t _nowSec;
 extern volatile uint32_t _prevRunSec;
 

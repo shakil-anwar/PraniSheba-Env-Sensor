@@ -159,8 +159,8 @@ void handleParamSetting()
 void printIntroText()
 {
   Serial.println(F("|------------------------------------------------|"));
-  Serial.println(F("|       Real Time Data Acquisition System        |"));
-  Serial.println(F("|  Dev. By Shuvangkar Shuvo(sshuvo93@gmail.com)  |"));
+  Serial.println(F("|                   Gas Sensor                   |"));
+  Serial.println(F("|        A Product of Adorsho Pranisheba         |"));
   Serial.println(F("|------------------------------------------------|"));
 }
 

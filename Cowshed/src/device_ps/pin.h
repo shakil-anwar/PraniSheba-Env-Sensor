@@ -49,6 +49,8 @@
 	
 	#define MQ4_PIN   A0
 	#define MQ135_PIN A1
+
+	#define CONFIG_BTN_PIN	A2
 #else
 	#error "No Board Selected"
 #endif

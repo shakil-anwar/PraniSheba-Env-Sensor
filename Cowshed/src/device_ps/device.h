@@ -6,7 +6,7 @@
 #include "Sensors.h"
 #include "Payload.h"
 #include "led.h"
-
+#include "confSimple.h"
 
 void deviceBegin();
 uint8_t *deviceMemRead();
