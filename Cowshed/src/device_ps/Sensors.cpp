@@ -34,11 +34,6 @@ bool sensorBegin()
   mqBegin();
 }
 
-bool sensorCalibrate()
-{
-  //mqCalibrate();
-	return true;
-}
 
 void mqBegin()
 {
@@ -51,24 +46,32 @@ void mqBegin()
   // mq135.setRl(1000);
 
 #if defined(DO_CALIBRATION)
-	mq4.setXY(1000, 5000, 1, 0.6);
-	mq4.setR(1000, MQ4_AIR_RS_R0_RATIO);
-	mq4.runCalib(saveMq4Calib);
+	// mq4.setXY(1000, 5000, 1, 0.6);
+	// mq4.setR(1000, MQ4_AIR_RS_R0_RATIO);
+	// mq4.runCalib(saveMq4Calib);
 
-	mq135.setXY(2.65, 1, 10, 100);
-	mq135.setR(1000, MQ135_AIR_RS_R0_RATIO);
-	mq135.runCalib(saveMq135Calib);
+	// mq135.setXY(2.65, 1, 10, 100);
+	// mq135.setR(1000, MQ135_AIR_RS_R0_RATIO);
+	// mq135.runCalib(saveMq135Calib);
+  sensorCalibrate();
 #else
 	mq4.beginFromMem(readMq4Calib);
 	mq135.beginFromMem(readMq135Calib);
 #endif
 
 }
-// void mqCalibrate()
-// {
-//   Serial.println(F("Calibrating MQ Sensors.."));
 
-// }
+bool sensorCalibrate()
+{
+  mq4.setXY(1000, 5000, 1, 0.6);
+	mq4.setR(1000, MQ4_AIR_RS_R0_RATIO);
+	mq4.runCalib(saveMq4Calib);
+
+	mq135.setXY(2.65, 1, 10, 100);
+	mq135.setR(1000, MQ135_AIR_RS_R0_RATIO);
+	mq135.runCalib(saveMq135Calib);
+	return true;
+}
 
 float sensorValidate(float value)
 {

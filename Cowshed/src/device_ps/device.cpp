@@ -46,7 +46,6 @@ void deviceBegin()
   memQ.debug(true);
 #endif
   sensorBegin();
-  sensorCalibrate();
 
   pldPtr = NULL; //This has to be null for proper operation.
 }

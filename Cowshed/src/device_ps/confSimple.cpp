@@ -1,6 +1,7 @@
 #include "confSimple.h"
 #include "SerialString.h"
 #include  "../../IoT.h"
+#include "Sensors.h"
 
 const char ptext1[] PROGMEM = "1. Device ID";
 const char ptext2[] PROGMEM = "2. Sampling Interval";
@@ -107,6 +108,10 @@ void handlleDeviceCmd()
         Serial.println(F("Log Off"));
         config.isDebugOff = true;;
         break;
+      case 5:
+        Serial.println(F("Calibrating Sensor"));
+        sensorCalibrate();
+      break;
       default:
         if (subcmd == 0)
         {
@@ -186,6 +191,7 @@ void printDeviceCmd()
   Serial.println(F("2. Factory Reset"));
   Serial.println(F("3. Log On"));
   Serial.println(F("4. Log Off"));
+  Serial.println(F("5. Calibrate Sensor"));
   Serial.println(F("0. Exit Setup Menu"));
   //  return getSerialCmd();
 }
