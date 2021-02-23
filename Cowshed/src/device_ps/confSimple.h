@@ -2,11 +2,11 @@
 #define _CONFSIMPLE_H_
 #include <Arduino.h>
 #define BTN_DEFAULT false
+#define SETUP_DONE_CONST  200
 
 typedef struct config_t
 {
-  bool isFirstBoot;
-  bool isRegDone;
+  uint8_t isSetupDone;
   bool isDebugOff;
   uint16_t deviceId;
   uint16_t sampInterval;

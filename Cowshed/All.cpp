@@ -15,7 +15,7 @@ Task taskNrfStatus(5, &nrfWhichMode);
 void system_setup(void)
 {
   Serial.begin(250000);
-  confSetting(CONFIG_BTN_PIN,configRead,configSave);
+  
   radio_begin();
   rtcBegin();
   rtAttachRTC(rtcGetSec, rtcUpdateSec);
@@ -23,8 +23,9 @@ void system_setup(void)
 
   deviceBegin();
   objectsBegin();
-
   scheduler.addTask(&taskNrfStatus);
+  
+  confSetting(CONFIG_BTN_PIN,configRead,configSave);
   wdtEnable(8000);
   delay(1000);
   Serial.println("Setup Done.");

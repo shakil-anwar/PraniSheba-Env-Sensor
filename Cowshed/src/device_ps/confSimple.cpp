@@ -1,5 +1,6 @@
 #include "confSimple.h"
 #include "SerialString.h"
+#include  "../../IoT.h"
 
 const char ptext1[] PROGMEM = "1. Device ID";
 const char ptext2[] PROGMEM = "2. Sampling Interval";
@@ -68,10 +69,14 @@ void confSetting(uint8_t pin,memFun_t read, memFun_t save)
       }
       else
       {
-        Serial.println(F("Unknown Command"));
+        Serial.println(F("Unknown main cmd"));
       }
     } while (maincmd);
-    Serial.println(F("----> End Setting"));
+    Serial.println(F("---->Exit Config"));
+    if(configValidate(&config))
+    {
+      config.isSetupDone = SETUP_DONE_CONST;
+    }
     save(&config);
     configPrint(&config);
   }
@@ -87,10 +92,12 @@ void handlleDeviceCmd()
     switch (subcmd)
     {
       case 1:
-        Serial.println(F("Erasing Flash Memory.."));
+        Serial.println(F("Erasing Flash.."));
+        memQ.erase();
         break;
       case 2:
         Serial.println(F("Factory Resetting Device.."));
+        
         break;
       case 3:
         Serial.println(F("Log On"));
@@ -151,7 +158,7 @@ void handleParamSetting()
       subcmd = 0;
     }
   } while (subcmd);
-  Serial.println(F("------------->End Param Setting"));
+  Serial.println(F("Exit Param Setting"));
 }
 
 
@@ -169,7 +176,7 @@ void printMainCmd()
 {
   Serial.println(F("1. Device Setting"));
   Serial.println(F("2. Parameter Setting"));
-  Serial.println(F("0. Exit Setup Menu"));
+  Serial.println(F("0. Exit Config"));
   //  return getSerialCmd();
 }
 
@@ -177,6 +184,8 @@ void printDeviceCmd()
 {
   Serial.println(F("1. Reset Flash Mem"));
   Serial.println(F("2. Factory Reset"));
+  Serial.println(F("3. Log On"));
+  Serial.println(F("4. Log Off"));
   Serial.println(F("0. Exit Setup Menu"));
   //  return getSerialCmd();
 }
@@ -209,7 +218,8 @@ void configPrint(config_t *configPtr)
  Serial.println(F("| Device Config Param |\r\n----------------------"));
  Serial.print(F("Device Id: "));Serial.println(configPtr -> deviceId);
  Serial.print(F("Samp Interval: "));Serial.println(configPtr -> sampInterval);
- Serial.print(F("Debug Off: "));Serial.println(configPtr ->isDebugOff); 
+ Serial.print(F("Debug Off: "));Serial.println(configPtr ->isDebugOff);
+ Serial.print(F("Registration: "));Serial.println(configPtr ->isSetupDone); 
  Serial.println(F("----------------------"));
 }
 
