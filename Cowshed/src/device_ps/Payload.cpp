@@ -26,7 +26,7 @@ sensor_t *getSensorsData(sensor_t *senPtr)
   sensor_t *sensor = senPtr;
 
   sensor -> type = SENSOR_TYPE;
-  sensor -> id = SENSOR_ID;
+  sensor -> id = config.deviceId;
   sensor -> unixTime = second();
   sensor -> temp = getTemp();
   sensor -> hum = getHum();

@@ -23,9 +23,11 @@ void system_setup(void)
 
   deviceBegin();
   objectsBegin();
-  scheduler.addTask(&taskNrfStatus);
   
-  confSetting(CONFIG_BTN_PIN,configRead,configSave);
+  //confsetting has to call after deviceBegin, because it operate on flash and sensor
+  confSetting(CONFIG_BTN_PIN,configRead,configSave);  
+
+  scheduler.addTask(&taskNrfStatus);
   wdtEnable(8000);
   delay(1000);
   Serial.println("Setup Done.");
