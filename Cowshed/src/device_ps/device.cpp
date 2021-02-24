@@ -7,12 +7,24 @@ void printBuffer(byte *buf, byte len);
 
 /*********Flash & MemQ variables**********************/
 
+// #if defined(DEVICE_HAS_FLASH_MEMORY)
+// Flash flash(FLASH_CS,FLASH_HOLD);
+// MemQ memQ(1, 1000);
+// RingEEPROM myeepRom(RING_EEPROM_ADDR);
+// #else
+// 	#warning "device has no flash memory"
+// #endif
+
 #if defined(DEVICE_HAS_FLASH_MEMORY)
-Flash flash(FLASH_CS,FLASH_HOLD);
-MemQ memQ(1, 1000);
+  #if defined(PCB_V_0_1_0)
+    Flash flash(FLASH_CS);
+  #elif defined(PCB_V_0_2_0)
+    Flash flash(FLASH_CS,FLASH_HOLD);
+  #endif
+MemQ memQ(1, 100);
 RingEEPROM myeepRom(RING_EEPROM_ADDR);
 #else
-	#warning "device has no flash memory"
+  #warning "device has no flash memory"
 #endif
 
 

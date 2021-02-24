@@ -13,7 +13,7 @@
 #define NRF_CSN   9
 #define NRF_IRQ   3
 */
-#ifdef defined(PCB_V_0_1_0)
+#if defined(PCB_V_0_1_0)
 	#define NRF_CE_PORT   PORTB
 	#define NRF_CE_PIN    PB2 
 	#define NRF_CSN_PORT  PORTB
@@ -30,6 +30,8 @@
 	///MQ Pin diagram 
 	#define MQ4_PIN   A0
 	#define MQ135_PIN A1
+
+	#define CONFIG_BTN_PIN	2
 
 #elif defined(PCB_V_0_2_0)
 	#define NRF_CE_PORT   PORTB

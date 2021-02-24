@@ -1,7 +1,18 @@
 #ifndef _CONFSIMPLE_H_
 #define _CONFSIMPLE_H_
 #include <Arduino.h>
-#define BTN_DEFAULT false
+#include  "../../IoT.h"
+
+#if defined(PCB_V_0_1_0)
+   #define BTN_DEFAULT true
+#elif defined(PCB_V_0_2_0)
+   #define BTN_DEFAULT false
+#else
+  #error "Btn Board not selected"
+#endif
+
+
+#define BTN_DEFAULT true
 #define SETUP_DONE_CONST  200
 
 typedef struct config_t

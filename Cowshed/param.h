@@ -7,15 +7,15 @@
 //#define DO_CALIBRATION
 //#define FACTORY_RESET
 
-//#define  PCB_V_0_1_0
-#define  PCB_V_0_2_0
+#define  PCB_V_0_1_0
+//#define  PCB_V_0_2_0
 
 /******************Device Identifier********************/
 #define SENSOR_TYPE 2
 #define SENSOR_ID   81
 
 /******************Menory and Buffer Param*********************/
-#define TOTAL_PAYLOAD_BUFFER 10
+#define TOTAL_PAYLOAD_BUFFER 2
 
 
 /****************Interval Parameter********************/

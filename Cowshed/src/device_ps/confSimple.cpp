@@ -1,6 +1,5 @@
 #include "confSimple.h"
 #include "SerialString.h"
-#include  "../../IoT.h"
 #include "Sensors.h"
 
 const char ptext1[] PROGMEM = "1. Device ID";
