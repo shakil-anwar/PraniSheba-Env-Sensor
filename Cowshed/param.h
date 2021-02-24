@@ -7,20 +7,20 @@
 //#define DO_CALIBRATION
 //#define FACTORY_RESET
 
-//#define  PCB_V_0_1_0
-#define  PCB_V_0_2_0
+#define  PCB_V_0_1_0
+//#define  PCB_V_0_2_0
 
 /******************Device Identifier********************/
 #define SENSOR_TYPE 2
 #define SENSOR_ID   81
 
 /******************Menory and Buffer Param*********************/
-#define TOTAL_PAYLOAD_BUFFER 10
+#define TOTAL_PAYLOAD_BUFFER 2
 
 
 /****************Interval Parameter********************/
-#define DATA_ACQUIRE_INTERVAL   1
-#define DATA_TRASNFER_INTERVAL  180
+#define DATA_ACQUIRE_INTERVAL   10
+#define DATA_TRASNFER_INTERVAL  10
 
 /****************EEPROM MEMORY MAP*********************/
 #define MQ4_EEP_ADDR         0

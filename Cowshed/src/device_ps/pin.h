@@ -13,7 +13,7 @@
 #define NRF_CSN   9
 #define NRF_IRQ   3
 */
-#ifdef defined(PCB_V_0_1_0)
+#if defined(PCB_V_0_1_0)
 	#define NRF_CE_PORT   PORTB
 	#define NRF_CE_PIN    PB2 
 	#define NRF_CSN_PORT  PORTB

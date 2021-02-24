@@ -3,7 +3,7 @@
 
 void printRunState();
 bool isBsConnected();
-
+void printPCBVersion();
 runState_t runState;
 
 volatile uint32_t _prevRunSec;
@@ -15,7 +15,7 @@ Task taskNrfStatus(5, &nrfWhichMode);
 void system_setup(void)
 {
   Serial.begin(250000);
-
+  printPCBVersion();
   radio_begin();
   rtcBegin();
   rtAttachRTC(rtcGetSec, rtcUpdateSec);
@@ -154,7 +154,16 @@ void readAddr(addr_t *addrPtr)
   nrfDebugBuffer(ptr, sizeof(addr_t));
 }
 
-
+void printPCBVersion()
+{
+  #if defined(PCB_V_0_1_0)
+    Serial.println(F("<----PCB_V_0_1_0---->"));
+  #elif defined(PCB_V_0_2_0)
+    Serial.println(F("<----PCB_V_0_2_0---->"));
+  #else
+    Serial.println(F("<----NO PCB board selected---->"));
+  #endif
+}
 
   //  if (millis() - prevModeMillis > 2000)
   //  {
