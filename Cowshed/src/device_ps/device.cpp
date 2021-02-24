@@ -120,3 +120,9 @@ void printBuffer(byte *buf, byte len)
   }
   Serial.println();
 }
+
+void updateDataInterval(uint32_t time)
+{
+  task1.setInterval(time);
+  Serial.println(F("-------------->Sample Interval updated"));
+}

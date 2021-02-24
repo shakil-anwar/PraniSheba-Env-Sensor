@@ -20,7 +20,7 @@
 
 /****************Interval Parameter********************/
 #define DATA_ACQUIRE_INTERVAL   5
-#define DATA_TRASNFER_INTERVAL  10
+#define DATA_TRASNFER_INTERVAL  15
 
 /****************EEPROM MEMORY MAP*********************/
 #define MQ4_EEP_ADDR         0

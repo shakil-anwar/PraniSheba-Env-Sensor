@@ -41,6 +41,7 @@ void startDevice()
   nrfTxAddrReset(saveAddr);
 #endif
   runState = RUN_WAIT;
+  updateDataInterval(config.sampInterval);
 }
 
 void deviceRunSM()
