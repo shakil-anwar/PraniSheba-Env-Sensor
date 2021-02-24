@@ -2,20 +2,44 @@
 #define _OBJECTS_H_
 #include <Arduino.h>
 #include <SoftwareSerial.h>
+#include "param.h"
 
-/**********Used Library*************/
-#include "MemQ.h"
-#include "asyncXfer.h"
-#include "nRF24.h"
-#include "nRF24_Query.h"
-#include "tScheduler.h"
-#include "watchdog.h"
-#include "realTime.h"
-#include "ramQ.h"
-#include "MQ.h"
-#include "FlashMemory.h"
-#include "RingEEPROM.h"
-#include "AVR_Timer1.h"
+#if defined(PROD_BUILD)    
+    #include "./src/lib/MemQ/src/MemQ.h"
+    #include "./src/lib/asyncXfer/asyncXfer.h"
+    #include "./src/lib/nRF24/nRF24.h"
+    #include "./src/lib/nRF24/nRF24_Query.h"
+    #include "./src/lib/tScheduler/tScheduler.h"
+    #include "./src/lib/AVR_Watchdog/watchdog.h"
+    #include "./src/lib/realTime/src/realTime.h"
+    #include "./src/lib/ramQ/src/ramQ.h"
+    #include "./src/lib/MQSensor/src/MQ.h"
+    #include "./src/lib/FlashMemory/src/FlashMemory.h"
+
+    // #include "./src/lib/RingEEPROM/src/RingEEPROM.h
+    // #include "./src/lib/Timer1/src/AVR_Timer1.h
+
+    #include "RingEEPROM.h"
+    #include "AVR_Timer1.h"
+#elif defined(DEV_BUILD)
+    #include "MemQ.h"
+    #include "asyncXfer.h"
+    #include "nRF24.h"
+    #include "nRF24_Query.h"
+    #include "tScheduler.h"
+    #include "watchdog.h"
+    #include "realTime.h"
+    #include "ramQ.h"
+    #include "MQ.h"
+    #include "FlashMemory.h"
+    #include "RingEEPROM.h"
+    #include "AVR_Timer1.h"
+#else
+    #error "Select build type and library"
+#endif
+
+
+
 
 
 /*********Third Party Library******************/
@@ -23,7 +47,7 @@
 #include <SHT21.h>
 #include "RTClib.h"
 /*********Common Library for all files**********/
-#include "param.h"
+
 #include "utility.h"
 #include "./src/device_ps/device.h"
 //#include "./src/device1/device.h"

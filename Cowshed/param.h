@@ -2,6 +2,7 @@
 #define _PARAM_H_
 #include <Arduino.h>
 
+#define PROD_BUILD
 #define DEV //development flag
 #define DEVICE_HAS_FLASH_MEMORY //if device has flash memory. 
 //#define DO_CALIBRATION
