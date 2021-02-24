@@ -1,5 +1,10 @@
 #include "asyncXfer.h"
-#include "Serial.h"
+
+#if defined(PROD_BUILD)
+    #include "../ArduinoCwrapper/Serial.h"
+#else
+    #include "Serial.h"
+#endif
 
 typedef enum state_e
 {

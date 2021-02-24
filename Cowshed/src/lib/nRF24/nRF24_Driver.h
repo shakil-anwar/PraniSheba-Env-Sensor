@@ -10,8 +10,13 @@
 
 #if defined(ARDUINO_ARCH_AVR)
     #include <Arduino.h>
-    #include "spi_driver.h"
-    #include "Serial.h"
+    #if defined(PROD_BUILD)
+        #include "../ArduinoCwrapper/Serial.h"
+        #include "../ArduinoCwrapper/spi_driver.h"
+    #else
+        #include "spi_driver.h"
+        #include "Serial.h"
+    #endif
 #elif defined(ARDUINO_ARCH_SAM)
     #include <Arduino.h>
 #elif defined(__MSP430G2553__)
