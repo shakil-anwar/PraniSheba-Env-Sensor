@@ -1,8 +1,13 @@
 # Before running this script please run following command in administrator mode in powershell
 # set-executionpolicy unrestricted
 
-cd  ./src
-# md lib
+# Navigate to src directory
+cd  ./src  
+# Remove previous lib directory 
+Remove-Item -path .\lib -force -Recurse
+# Create lib directory
+md lib
+# Navigate to lib directory
 cd ./lib
 
 # clone own repository
