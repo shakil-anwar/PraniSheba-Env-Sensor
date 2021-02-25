@@ -12,7 +12,6 @@
 #endif
 
 
-#define BTN_DEFAULT true
 #define SETUP_DONE_CONST  200
 
 typedef struct config_t

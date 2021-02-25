@@ -32,6 +32,7 @@ void loop()
       break;
     case SYNC_DEVICE:
       _nowSec = nrfPing();
+      Serial.print(F("NTP Time: "));Serial.println(_nowSec);
       if (_nowSec)
       {
         nrfTxAddrHandler(readAddr, saveAddr);//read addr from memory

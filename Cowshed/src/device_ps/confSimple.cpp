@@ -33,11 +33,13 @@ bool btnLongPressed(uint8_t pin)
 {
   pinMode(pin, INPUT);
   bool press1 = digitalRead(pin);
+  Serial.print(F("BTN status : ")); Serial.println(press1);
   if (press1 == !BTN_DEFAULT)
   {
     delay(2000);
     if (digitalRead(pin) == !BTN_DEFAULT)
     {
+      Serial.print(F("BTN status : ")); Serial.println(press1);
       return true;
     }
   }
