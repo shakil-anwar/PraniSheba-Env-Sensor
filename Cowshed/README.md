@@ -13,6 +13,19 @@ set-executionpolicy unrestricted
 
 ## How to build a production code
 We will use arduino-cli to compile the projects and generate hex file. For production build a global compiler flag `PROD_BUILD` used throughout all the libraries and main codebase. So arduino cli has to pass the compiler flag while build the projects. 
+
+- Just compile 
 ```
 arduino-cli compile --build-property  build.extra_flags=-DPROD_BUILD
+```
+- compile , export binary, upload, verify 
+```
+arduino-cli compile --build-property  build.extra_flags=-DPROD_BUILD -u -v -e -t 
+```
+
+## Serial Debug on Linux
+
+Open Terminal port 
+```
+cat /dev/ttyACM0 115200
 ```
