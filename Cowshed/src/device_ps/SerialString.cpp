@@ -10,7 +10,7 @@ uint8_t getSerialCmd()
   {
     delay(1);
   }
-  Serial.print(F("Loop breaks : ")); Serial.println(timeout);
+  // Serial.print(F("Loop breaks : ")); Serial.println(timeout);
   int cmd = Serial.parseInt();
   Serial.print(F("Input Cmd :")); Serial.println(cmd);
   return cmd;

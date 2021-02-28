@@ -12,6 +12,7 @@ void objectsBegin()
 
 void factoryReset()
 {
+   Serial.println(F("Factory Resetting Device.."));
    memQ.reset();  //erase full flash memory
    nrfTxAddrReset(saveAddr); //reset tc addr
 }

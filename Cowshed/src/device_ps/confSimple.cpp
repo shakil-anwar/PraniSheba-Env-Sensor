@@ -33,13 +33,13 @@ bool btnLongPressed(uint8_t pin)
 {
   pinMode(pin, INPUT);
   bool press1 = digitalRead(pin);
-  Serial.print(F("BTN status : ")); Serial.println(press1);
+  // Serial.print(F("BTN status : ")); Serial.println(press1);
   if (press1 == !BTN_DEFAULT)
   {
     delay(2000);
     if (digitalRead(pin) == !BTN_DEFAULT)
     {
-      Serial.print(F("BTN status : ")); Serial.println(press1);
+      // Serial.print(F("BTN status : ")); Serial.println(press1);
       return true;
     }
   }
@@ -98,8 +98,9 @@ void handlleDeviceCmd()
         memQ.erase();
         break;
       case 2:
-        Serial.println(F("Factory Resetting Device.."));
-        
+        // Serial.println(F("Factory Resetting Device.."));
+        factoryReset();
+        config.isSetupDone = 0;//setup done flag is clearing
         break;
       case 3:
         Serial.println(F("Log On"));
@@ -110,7 +111,7 @@ void handlleDeviceCmd()
         config.isDebugOff = true;;
         break;
       case 5:
-        Serial.println(F("Calibrating Sensor"));
+        Serial.println(F("Calibrating Sensor.."));
         sensorCalibrate();
       break;
       default:
@@ -146,16 +147,16 @@ void handleParamSetting()
         break;
     }
     getSerialString(buf);
-    Serial.println(buf);
+    // Serial.println(buf);
     switch (subcmd)
     {
       case 1:
         config.deviceId = atol(buf);
-        Serial.println(F("Device id :")); Serial.println(config.deviceId);
+        Serial.println(config.deviceId);
         break;
       case 2:
         config.sampInterval = atoi(buf);
-        Serial.println(F("Device interval:")); Serial.println(config.sampInterval);
+        Serial.println(config.sampInterval);
         break;
     }
     subcmd++;
