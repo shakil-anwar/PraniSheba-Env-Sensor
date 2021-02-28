@@ -26,22 +26,16 @@ void loop()
       }
       break;
     case START_DEVICE:
-      //      Serial.println(F("m_STATE: START_DEVICE"));
       startDevice();
       mainState = SYNC_DEVICE;
       break;
     case SYNC_DEVICE:
-      _nowSec = nrfPing();
-      Serial.print(F("NTP Time: "));Serial.println(_nowSec);
-      if (_nowSec)
+      if (syncTime())
       {
         nrfTxAddrHandler(readAddr, saveAddr);//read addr from memory
-        rtSync(_nowSec);// synctime | this will begin data acquire scheduler
-        nrfTxReady();
         mainState = RUN_LOOP;
         _nowSec = second();
         _prevRunSec = _nowSec;
-        Serial.println(F("Starting Operation"));
       }
       break;
     case RUN_LOOP:
@@ -81,16 +75,32 @@ void printMainState(mainState_t mstate)
   }
 }
 
-//    case SYNCHRONIZE:
-//      Serial.println(F("m_STATE: SYNCHRONIZE"));
-//      if (setDeviceConf())
+
+bool syncTime()
+{
+  _nowSec = nrfPing();
+  Serial.print(F("NTP Time: ")); Serial.println(_nowSec);
+  RT_SYNC_STATUS_t rtStatus = rtSync(_nowSec);
+  if(rtStatus != UNSYNCED)
+  {
+    return true;
+  }
+  else
+  {
+    delay(2000);// ping after 2s interval
+  }
+  return false;
+}
+
+//      _nowSec = nrfPing();
+//      Serial.print(F("NTP Time: "));Serial.println(_nowSec);
+//      if (_nowSec)
 //      {
-//        mainState = DEVICE_RUN;
-//        nrfStandby1();
+//        nrfTxAddrHandler(readAddr, saveAddr);//read addr from memory
+//        rtSync(_nowSec);// synctime | this will begin data acquire scheduler
+//        nrfTxReady();
+//        mainState = RUN_LOOP;
+//        _nowSec = second();
+//        _prevRunSec = _nowSec;
+//        Serial.println(F("Starting Operation"));
 //      }
-////      nrfTxAddrRestore(2);
-////      rtSync(163456366);
-////      nrfStandby1();
-////      nrfTXStart();
-////      mainState = DEVICE_RUN;
-//      break;
