@@ -4,9 +4,9 @@
 // #include "device.h"
 #include "./conf/confSimple.h"
 
-/*****************Gas Sensor Parameter******************/
-#define MQ4_AIR_RS_R0_RATIO 		4.4f
-#define MQ135_AIR_RS_R0_RATIO 		3.7f
+// /*****************Gas Sensor Parameter******************/
+// #define MQ4_AIR_RS_R0_RATIO 		4.4f
+// #define MQ135_AIR_RS_R0_RATIO 		3.7f
 
 /******API for  Schema***************/
 float getTemp();

@@ -5,7 +5,7 @@ queryData_t queryBuffer;
 
 sensor_t sensor;
 
-void dataSchemaBegin()
+void schemaBegin()
 {
   /**************Compile time checking************************/
   static_assert(!(TOTAL_PAYLOAD_BUFFER % 2), "\"TOTAL_FLASH_BUFFERS\" Should be Even Number");
@@ -45,7 +45,7 @@ void printSensor(sensor_t *sensor)
 }
 
 
-void dataAcquisition()
+void schemaReadSensors()
 {
   sensor_t *senPtr = (sensor_t*)ramQHead();
   getSensorsData(senPtr);

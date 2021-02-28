@@ -72,11 +72,11 @@ typedef union queryData_t
 };
 
 
-void dataSchemaBegin();
+void schemaBegin();
 sensor_t *getSensorsData(sensor_t *senPtr);
 void printSensor(sensor_t *sensor);
 
-void dataAcquisition();
+void schemaReadSensors();
 
 extern volatile payload_t  payload[TOTAL_PAYLOAD_BUFFER];
 extern queryData_t queryBuffer;

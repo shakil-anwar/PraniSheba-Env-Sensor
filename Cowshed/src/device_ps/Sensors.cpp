@@ -4,7 +4,9 @@
 #include "EEPROM.h"
 // #include "MQ.h"
 // #include <SHT21.h>
-
+/*****************Gas Sensor Parameter******************/
+#define MQ4_AIR_RS_R0_RATIO 		4.4f
+#define MQ135_AIR_RS_R0_RATIO 		3.7f
 
 
 void saveMq4Calib(calib_t *cPtr);

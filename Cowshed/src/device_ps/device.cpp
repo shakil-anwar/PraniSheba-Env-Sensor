@@ -27,12 +27,12 @@ uint8_t *pldPtr; //This will keep track of  read memory until sent
 
 
 Task task2(10, &updateDisplay);
-Task task1(DATA_ACQUIRE_INTERVAL, &dataAcquisition); //send payload triggers after 5 second interval
+Task task1(DATA_ACQUIRE_INTERVAL, &schemaReadSensors); //send payload triggers after 5 second interval
 
 
 void deviceBegin()
 {
-  dataSchemaBegin();
+  schemaBegin();
   led_begin();
   scheduler.addTask(&task1);
   scheduler.addTask(&task2);
