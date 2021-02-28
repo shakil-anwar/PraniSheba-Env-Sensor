@@ -29,7 +29,6 @@ RingEEPROM myeepRom(RING_EEPROM_ADDR);
 
 
 /**********Async Server Objects*********************/
-//AsyncServer server(&memQ);
 payload_t pldBuf;
 uint8_t payloadCount = 1;
 uint8_t *pldPtr; //This will keep track of  read memory until sent 
