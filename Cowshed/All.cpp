@@ -15,17 +15,19 @@ Task taskNrfStatus(5, &nrfWhichMode);
 void system_setup(void)
 {
   Serial.begin(250000);
-  
+
   radio_begin();
   rtcBegin();
+#if defined(DEVICE_HAS_RTC)
   rtAttachRTC(rtcGetSec, rtcUpdateSec);
+#endif
   rtBegin();
 
   deviceBegin();
   objectsBegin();
-  
+
   //confsetting has to call after deviceBegin, because it operate on flash and sensor
-  confSetting(CONFIG_BTN_PIN,configRead,configSave);  
+  confSetting(CONFIG_BTN_PIN, configRead, configSave);
 
   scheduler.addTask(&taskNrfStatus);
   wdtEnable(8000);
@@ -100,11 +102,11 @@ bool isBsConnected()
   int8_t tryCount = 3;
   do
   {
-    if(nrfPing())
+    if (nrfPing())
     {
       return true;
     }
-  }while(--tryCount);
+  } while (--tryCount);
   return false;
 }
 
@@ -113,7 +115,7 @@ void printRunState()
   switch (runState)
   {
     case RUN_WAIT:
-//      Serial.println(F("runState : RUN_WAIT"));
+      //      Serial.println(F("runState : RUN_WAIT"));
       break;
     case RUN_CHK_BS_CONN:
       Serial.println(F("runState : RUN_CHK_BS_CONN"));
@@ -163,25 +165,25 @@ void readAddr(addr_t *addrPtr)
 
 void configSave(config_t *bootPtr)
 {
-   uint8_t *ptr = (uint8_t*)bootPtr;
-  for(uint8_t i = 0 ; i< sizeof(config_t); i++)
+  uint8_t *ptr = (uint8_t*)bootPtr;
+  for (uint8_t i = 0 ; i < sizeof(config_t); i++)
   {
-    EEPROM.update(CONFIG_EEPROM_ADDR+i, *(ptr+i));
+    EEPROM.update(CONFIG_EEPROM_ADDR + i, *(ptr + i));
   }
 }
 
 void configRead(config_t *bootPtr)
 {
   uint8_t *ptr = (uint8_t*)bootPtr;
-  for(uint8_t i = 0 ; i< sizeof(config_t); i++)
+  for (uint8_t i = 0 ; i < sizeof(config_t); i++)
   {
-    *(ptr+i) = EEPROM.read(CONFIG_EEPROM_ADDR+i);
+    *(ptr + i) = EEPROM.read(CONFIG_EEPROM_ADDR + i);
   }
-//  return bootPtr;
+  //  return bootPtr;
 }
 
-  //  if (millis() - prevModeMillis > 2000)
-  //  {
-  //    nrfWhichMode();
-  //    prevModeMillis = millis();
-  //  }
+//  if (millis() - prevModeMillis > 2000)
+//  {
+//    nrfWhichMode();
+//    prevModeMillis = millis();
+//  }

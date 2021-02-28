@@ -1,5 +1,6 @@
 #include "All.h"
 #include "radio.h"
+#define SYNC_PING_DELAY_MS 5000
 void printMainState(mainState_t mstate);
 mainState_t mainState;
 bool startRun = false;
@@ -87,7 +88,7 @@ bool syncTime()
   }
   else
   {
-    delay(2000);// ping after 2s interval
+    delay(SYNC_PING_DELAY_MS);// ping after 2s interval
   }
   return false;
 }
