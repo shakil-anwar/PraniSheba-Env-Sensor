@@ -1,6 +1,6 @@
 #include "confSimple.h"
 #include "SerialString.h"
-#include "Sensors.h"
+#include "../Sensors.h"
 
 const char ptext1[] PROGMEM = "1. Device ID";
 const char ptext2[] PROGMEM = "2. Sampling Interval";

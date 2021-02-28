@@ -1,7 +1,7 @@
 #ifndef _CONFSIMPLE_H_
 #define _CONFSIMPLE_H_
 #include <Arduino.h>
-#include  "../../IoT.h"
+#include  "../../../IoT.h"
 
 #if defined(PCB_V_0_1_0)
    #define BTN_DEFAULT true
