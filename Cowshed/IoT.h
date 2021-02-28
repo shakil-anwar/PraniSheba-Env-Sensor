@@ -34,7 +34,7 @@ void objectsBegin();
 void rtcBegin();
 uint32_t rtcGetSec();
 void rtcUpdateSec(uint32_t unix);
-
+void factoryReset();
 
 extern Flash flash;       
 extern RingEEPROM myeepRom;

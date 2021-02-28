@@ -6,4 +6,7 @@ void radio_begin(void);
 void radioStart();
 uint32_t getRtcTime();
 
+void readAddr(addr_t *addrPtr);
+void saveAddr(addr_t *addrPtr);
+
 #endif

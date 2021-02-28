@@ -9,16 +9,15 @@ runState_t runState;
 volatile uint32_t _prevRunSec;
 volatile uint32_t _nowSec;
 bool _nrfSendOk;
-//uint32_t prevModeMillis = 0 ;
 
 Task taskNrfStatus(5, &nrfWhichMode);
 void system_setup(void)
 {
   Serial.begin(250000);
 
-  radio_begin();
-  rtcBegin();
+  radio_begin(); 
 #if defined(DEVICE_HAS_RTC)
+  rtcBegin();
   rtAttachRTC(rtcGetSec, rtcUpdateSec);
 #endif
   rtBegin();
@@ -99,7 +98,7 @@ void deviceRunSM()
 
 bool isBsConnected()
 {
-  int8_t tryCount = 3;
+  int8_t tryCount = 2;
   do
   {
     if (nrfPing())
@@ -138,27 +137,27 @@ bool isHardwareOk()
   return true;
 }
 
-void saveAddr(addr_t *addrPtr)
-{
-  Serial.println(F("NRF EEPROM Saving.."));
-  uint8_t *ptr = (uint8_t*)addrPtr;
-  for (uint8_t i = 0; i < sizeof(addr_t); i++)
-  {
-    EEPROM.update(ROM_ADDR_FOR_TXD + i, *(ptr + i));
-  }
-  nrfDebugBuffer(ptr, sizeof(addr_t));
-}
-
-void readAddr(addr_t *addrPtr)
-{
-  Serial.println(F("NRF EEPROM Reading.."));
-  uint8_t *ptr = (uint8_t*)addrPtr;
-  for (uint8_t i = 0 ; i < sizeof(addr_t); i++)
-  {
-    *(ptr + i) = EEPROM.read(ROM_ADDR_FOR_TXD + i);
-  }
-  nrfDebugBuffer(ptr, sizeof(addr_t));
-}
+//void saveAddr(addr_t *addrPtr)
+//{
+//  Serial.println(F("NRF EEPROM Saving.."));
+//  uint8_t *ptr = (uint8_t*)addrPtr;
+//  for (uint8_t i = 0; i < sizeof(addr_t); i++)
+//  {
+//    EEPROM.update(ROM_ADDR_FOR_TXD + i, *(ptr + i));
+//  }
+//  nrfDebugBuffer(ptr, sizeof(addr_t));
+//}
+//
+//void readAddr(addr_t *addrPtr)
+//{
+//  Serial.println(F("NRF EEPROM Reading.."));
+//  uint8_t *ptr = (uint8_t*)addrPtr;
+//  for (uint8_t i = 0 ; i < sizeof(addr_t); i++)
+//  {
+//    *(ptr + i) = EEPROM.read(ROM_ADDR_FOR_TXD + i);
+//  }
+//  nrfDebugBuffer(ptr, sizeof(addr_t));
+//}
 
 
 

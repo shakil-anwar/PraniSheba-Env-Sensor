@@ -33,8 +33,7 @@ bool isHardwareOk();
 void startDevice();
 void deviceRunSM();
 
-void readAddr(addr_t *addrPtr);
-void saveAddr(addr_t *addrPtr);
+
 
 void configSave(config_t *bootPtr);
 void configRead(config_t *bootPtr);

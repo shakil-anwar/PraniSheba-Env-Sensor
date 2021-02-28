@@ -1,5 +1,5 @@
 #include "IoT.h"
-
+#include "radio.h"
 
 RTC_DS1307 rtc;
 Scheduler scheduler;
@@ -8,6 +8,12 @@ void objectsBegin()
   scheduler.begin(&second);
   xferBegin(deviceMemRead, deviceRfSend, deviceRfAckWait,millis);
   xferReady();
+}
+
+void factoryReset()
+{
+   memQ.reset();  //erase full flash memory
+   nrfTxAddrReset(saveAddr); //reset tc addr
 }
 
 void rtcBegin()

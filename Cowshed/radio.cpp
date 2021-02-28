@@ -1,5 +1,5 @@
 #include "radio.h"
-
+#include "EEPROM.h"
 #define TX_PIPE      5
 #define QUERY_PIPE   0
 
@@ -59,36 +59,24 @@ void maxRtIsr(void)
 
 }
 
-//
-//uint32_t getRtcTime()
-//{
-//  unixTime_t *uTimePtr = (unixTime_t*)&queryBuffer;
-//  memset(&queryBuffer, 0, sizeof(queryData_t));
-//  //  uTimePtr -> type = 0;
-//  //  uTimePtr -> opCode = 1;
-//  //  uTimePtr -> utime = 0;
-//
-//  nrfStandby1();
-//  nrfTXStart();
-//  uTimePtr = (unixTime_t*)nrfQuery(0, 1);
-//  flash.printBytes((byte*)uTimePtr, sizeof(unixTime_t));
-//  nrfPowerDown();
-//  Serial.print(F("Type : ")); Serial.print(uTimePtr -> type);
-//  Serial.print(F(" Opcode: ")); Serial.println(uTimePtr -> opCode);
-//  //  delay(2000);
-//  if (uTimePtr != NULL)
-//  {
-//
-//    if (uTimePtr -> type == 0 && uTimePtr -> opCode == 1)
-//    {
-//      Serial.print(F("Received Time : ")); Serial.println(uTimePtr -> utime);
-//      //      Serial.print(F("padding :"));      Serial.println(uTimePtr -> padding);
-//      return (uTimePtr -> utime);
-//    }
-//  }
-//  else
-//  {
-//    Serial.println(F("RTC Query falied"));
-//    return 0;
-//  }
-//}
+void saveAddr(addr_t *addrPtr)
+{
+  Serial.println(F("NRF EEPROM Saving.."));
+  uint8_t *ptr = (uint8_t*)addrPtr;
+  for (uint8_t i = 0; i < sizeof(addr_t); i++)
+  {
+    EEPROM.update(ROM_ADDR_FOR_TXD + i, *(ptr + i));
+  }
+  nrfDebugBuffer(ptr, sizeof(addr_t));
+}
+
+void readAddr(addr_t *addrPtr)
+{
+  Serial.println(F("NRF EEPROM Reading.."));
+  uint8_t *ptr = (uint8_t*)addrPtr;
+  for (uint8_t i = 0 ; i < sizeof(addr_t); i++)
+  {
+    *(ptr + i) = EEPROM.read(ROM_ADDR_FOR_TXD + i);
+  }
+  nrfDebugBuffer(ptr, sizeof(addr_t));
+}
