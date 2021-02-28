@@ -16,7 +16,6 @@ void loop()
   switch (mainState)
   {
     case CHECK_HARDWARE:
-      Serial.println(F("m_STATE: CHECK_HARDWARE"));
       if (isHardwareOk())
       {
         mainState = START_DEVICE;
