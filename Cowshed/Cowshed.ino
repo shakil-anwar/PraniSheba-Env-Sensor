@@ -18,10 +18,20 @@ void loop()
     case CHECK_HARDWARE:
       if (isHardwareOk())
       {
-        mainState = START_DEVICE;
+//        Serial.print(F("-------Device Configured: "));Serial.println(confIsOk());
+        if(confIsOk())
+        {
+          mainState = START_DEVICE;
+        }
+        else
+        {
+          Serial.println(F("Device is not configured"));
+          mainState = STOP;
+        }
       }
       else
       {
+        Serial.println(F("Hardware Problem"));
         mainState = STOP;
       }
       break;
@@ -44,7 +54,7 @@ void loop()
       scheduler.run();
       break;
     case STOP:
-      mainState = CHECK_HARDWARE;
+//      mainState = CHECK_HARDWARE;
       break;
     default:
       mainState = CHECK_HARDWARE;
@@ -70,7 +80,7 @@ void printMainState(mainState_t mstate)
       //      Serial.println(F("m_STATE: DEVICE_RUN"));
       break;
     case STOP:
-      Serial.println(F("m_STATE: STOP"));
+//      Serial.println(F("m_STATE: STOP"));
       break;
   }
 }

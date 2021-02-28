@@ -56,10 +56,11 @@ void confSetting(uint8_t pin,memFun_t read, memFun_t save)
     Serial.println(F("ENTERED SETUP"));
     printIntroText();
     
-    printMainCmd();
+    // printMainCmd();
     uint8_t maincmd;
     do
     {
+      printMainCmd();
       maincmd = getSerialCmd();
       if (maincmd == 1)
       {
@@ -77,19 +78,19 @@ void confSetting(uint8_t pin,memFun_t read, memFun_t save)
     Serial.println(F("---->Exit Config"));
     if(configValidate(&config))
     {
-      config.isSetupDone = SETUP_DONE_CONST;
+      save(&config);
+      configPrint(&config);
     }
-    save(&config);
-    configPrint(&config);
   }
 }
 
 void handlleDeviceCmd()
 {
   uint8_t subcmd = 0;
-  printDeviceCmd();
+  //printDeviceCmd();
   do
   {
+    printDeviceCmd();
     subcmd = getSerialCmd();
     switch (subcmd)
     {
@@ -157,6 +158,7 @@ void handleParamSetting()
       case 2:
         config.sampInterval = atoi(buf);
         Serial.println(config.sampInterval);
+        config.isSetupDone = SETUP_DONE_CONST; //setup done if device got id and interval
         break;
     }
     subcmd++;
@@ -219,6 +221,10 @@ bool configValidate(config_t *configPtr)
   return true;
 }
 
+bool confIsOk()
+{
+  return (config.isSetupDone == SETUP_DONE_CONST);
+}
 
 void configPrint(config_t *configPtr)
 {

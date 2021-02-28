@@ -24,5 +24,6 @@ typedef struct config_t
 typedef void (*memFun_t)(config_t*);
 
 void confSetting(uint8_t pin,memFun_t read, memFun_t save);
+bool confIsOk(); //This function has to call after calling confSetting
 extern config_t config;
 #endif
