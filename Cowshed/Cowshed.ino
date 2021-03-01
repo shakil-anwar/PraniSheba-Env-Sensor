@@ -1,6 +1,7 @@
 #include "All.h"
 #include "radio.h"
 #define SYNC_PING_DELAY_MS 5000
+
 void printMainState(mainState_t mstate);
 mainState_t mainState;
 bool startRun = false;
@@ -18,7 +19,6 @@ void loop()
     case CHECK_HARDWARE:
       if (isHardwareOk())
       {
-//        Serial.print(F("-------Device Configured: "));Serial.println(confIsOk());
         if(confIsOk())
         {
           mainState = START_DEVICE;
@@ -101,16 +101,3 @@ bool syncTime()
   }
   return false;
 }
-
-//      _nowSec = nrfPing();
-//      Serial.print(F("NTP Time: "));Serial.println(_nowSec);
-//      if (_nowSec)
-//      {
-//        nrfTxAddrHandler(readAddr, saveAddr);//read addr from memory
-//        rtSync(_nowSec);// synctime | this will begin data acquire scheduler
-//        nrfTxReady();
-//        mainState = RUN_LOOP;
-//        _nowSec = second();
-//        _prevRunSec = _nowSec;
-//        Serial.println(F("Starting Operation"));
-//      }
