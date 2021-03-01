@@ -11,8 +11,8 @@
 #if defined(ARDUINO_ARCH_AVR)
     #include <Arduino.h>
     #if defined(PROD_BUILD)
-        #include "../ArduinoCwrapper/Serial.h"
-        #include "../ArduinoCwrapper/spi_driver.h"
+        #include "../arduinoCwrapper/Serial.h"
+        #include "../arduinoCwrapper/spi_driver.h"
     #else
         #include "spi_driver.h"
         #include "Serial.h"

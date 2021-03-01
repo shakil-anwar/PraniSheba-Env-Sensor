@@ -1,7 +1,7 @@
 #include "ramQ.h"
 
 #if defined(PROD_BUILD)
-    #include "../../ArduinoCwrapper/Serial.h"
+    #include "../../arduinoCwrapper/Serial.h"
 #else
     #include "Serial.h"
 #endif
