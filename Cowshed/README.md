@@ -29,3 +29,9 @@ Open Terminal port
 ```
 cat /dev/ttyACM0 115200
 ```
+
+
+## Install GNU Make
+GNU make is available on chocolatey.
+-Install chocolatey from here.
+-Then, choco install make.

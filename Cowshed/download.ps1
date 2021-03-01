@@ -1,5 +1,6 @@
 # Before running this script please run following command in administrator mode in powershell
 # set-executionpolicy unrestricted
+# Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
 
 # Navigate to src directory
 cd  ./src  
