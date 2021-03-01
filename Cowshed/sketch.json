@@ -1,7 +1,7 @@
 {
   "cpu": {
-    "fqbn": "arduino:avr:uno",
-    "name": "Arduino Uno",
-    "port": "serial://COM14"
+    // "fqbn": "arduino:avr:uno",
+    // "name": "Arduino Uno",
+    // "port": "serial://COM14"
   }
 }

@@ -1,2 +1,0 @@
-## Simple JSON Library
-Many IoT application needs json file to send data to the IoT server. So this is a simple low memory footprint json library form embedded projects. Currently the library is tested with Arduino in AVR Architecture. 
