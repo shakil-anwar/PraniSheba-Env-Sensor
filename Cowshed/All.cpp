@@ -72,6 +72,9 @@ void deviceRunSM()
       {
         nrfTxReady();
         xferReady();
+        // #if defined(PCB_V_0_2_0)
+        // delay(100);
+        // #endif
         runState = RUN_TX_XFER;
       }
       else
