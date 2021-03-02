@@ -30,7 +30,9 @@ void system_setup(void)
 
   scheduler.addTask(&taskNrfStatus);
   wdtEnable(8000);
+  BUZZER_ON();
   delay(1000);
+  BUZZER_OFF();
   Serial.println("Setup Done.");
 }
 
