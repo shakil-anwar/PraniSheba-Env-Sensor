@@ -3,7 +3,7 @@
 #define PAYLOAD_READ_COUNT 1
 void printBuffer(byte *buf, byte len);
 
-
+#define DEFAULT_DATA_SAMPLE_SEC   5
 
 /*********Flash & MemQ variables**********************/
 
@@ -27,7 +27,7 @@ uint8_t *pldPtr; //This will keep track of  read memory until sent
 
 
 Task task2(10, &updateDisplay);
-Task task1(DATA_ACQUIRE_INTERVAL, &schemaReadSensors); //send payload triggers after 5 second interval
+Task task1(DEFAULT_DATA_SAMPLE_SEC, &schemaReadSensors); //send payload triggers after 5 second interval
 
 
 void deviceBegin()
