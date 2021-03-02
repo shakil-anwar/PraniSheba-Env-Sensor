@@ -23,7 +23,7 @@
 
 
 /****************Interval Parameter********************/
-#define DATA_ACQUIRE_INTERVAL   2
+// #define DATA_ACQUIRE_INTERVAL   2
 #define DATA_TRASNFER_INTERVAL  10
 
 /****************EEPROM MEMORY MAP*********************/
