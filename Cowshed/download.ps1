@@ -5,7 +5,7 @@
 # Navigate to src directory
 cd  ./src  
 # Remove previous lib directory 
-Remove-Item -path .\lib -force -Recurse
+# Remove-Item -path .\lib -force -Recurse
 # Create lib directory
 md lib
 # Navigate to lib directory

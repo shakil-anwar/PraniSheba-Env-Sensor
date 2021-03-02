@@ -1,0 +1,40 @@
+/*
+
+#include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
+
+
+payload_t pldBuf;
+char jsonBuf[256];
+uint8_t totalPld = 1;
+
+void *readMemQ()
+{
+    return MemQ.read(&pldBuf, sizeof(payload_t));
+}
+
+void *readRamQ()
+{
+    void *ptr = ramQRead();
+    ramQUpdateTail();
+    return ptr;
+}
+
+char *to_json(const void* pldPtr)
+{
+    return toJson(pldPtr,jsonBuf, totalPld);
+}
+
+void pipeSend(const void *data)
+{
+    pipe.send(PIPE_SERVER_SEND_CODE, (char*)data);
+}
+
+void sendNrf(const void *data)
+{
+  nrfWrite(data,sizeof(payload_t));
+  nrfStartTransmit();
+}
+
+*/
