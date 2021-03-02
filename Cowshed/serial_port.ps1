@@ -14,13 +14,29 @@ do
 
     # if ($port.IsOpen)
     # {
-    #     $data = $port.ReadExisting()
-    #     if($data.Length -gt 0)
-    #     {
-    #         $data = $data -replace [System.Environment]::NewLine,""
-    #         Write-Host  $data
-    #     }
+    #     Write-Host $port.BytesToRead
+    #     # if($port.BytesToRead>0)
+    #     # {
+    #          $data = $port.ReadExisting()
+    #         # if($data.Contains("\r\n") -and ($data.Length -gt 0))
+    #         # {
+    #             //$data = $data -replace [System.Environment]::NewLine,""
+    #             $data
+    #         # }
+    #     # }
+       
+
+    #     # if($data.Length -gt 3)
+    #     # {
+    #     #     $data = $data -replace [System.Environment]::NewLine,""
+    #     #     Write-Host  $data
+    #     # }
         
+    # }
+
+    # if($port.DataReceived)
+    # {
+    #      Write-Host "---------------------data received"
     # }
     
     Write-Host $port.ReadLine();

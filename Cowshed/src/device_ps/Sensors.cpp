@@ -79,7 +79,13 @@ void humSensorBegin()
 
 float getHum()
 {
-#if defined(DEV)
+// #if defined(DEV)
+//   return config.deviceId;
+// #else
+//   return sensorValidate(sht.getHumidity());
+// #endif
+
+#if !defined(PROD_BUILD)
   return config.deviceId;
 #else
   return sensorValidate(sht.getHumidity());
@@ -88,7 +94,13 @@ float getHum()
 
 float getTemp()
 {
-#if defined(DEV)
+// #if defined(DEV)
+//   return config.deviceId;
+// #else
+//   return sensorValidate(sht.getTemperature());
+// #endif
+
+#if !defined(PROD_BUILD)
   return config.deviceId;
 #else
   return sensorValidate(sht.getTemperature());
@@ -97,9 +109,15 @@ float getTemp()
 
 float getAmmonia()
 {
-#if defined(DEV)
-  return config.deviceId;
-  //  return (float)(random(10,50)*1.00);
+// #if defined(DEV)
+//   return config.deviceId;
+//   //  return (float)(random(10,50)*1.00);
+// #else
+//   return sensorValidate(mq4.getPPM());
+// #endif
+
+#if !defined(PROD_BUILD)
+   return config.deviceId;
 #else
   return sensorValidate(mq4.getPPM());
 #endif
@@ -107,9 +125,15 @@ float getAmmonia()
 
 float getMethane()
 {
-#if defined(DEV)
-  return config.deviceId;
-  //  return (float)(random(10,50)*1.00);
+// #if defined(DEV)
+//   return config.deviceId;
+//   //  return (float)(random(10,50)*1.00);
+// #else
+//   return sensorValidate(mq135.getPPM());
+// #endif
+
+#if !defined(PROD_BUILD)
+   return config.deviceId;
 #else
   return sensorValidate(mq135.getPPM());
 #endif
