@@ -37,6 +37,8 @@ void deviceBegin()
   scheduler.addTask(&task1);
   scheduler.addTask(&task2);
 
+  BUZZER_OUT_MODE();
+  BUZZER_OFF();
 #if defined(DEVICE_HAS_FLASH_MEMORY)
   memQ.attachFlash(&flash, &_ramQFlash, sizeof(payload_t), TOTAL_PAYLOAD_BUFFER / 2);
   memQ.attachEEPRom(&myeepRom, 4);
@@ -86,8 +88,10 @@ uint8_t *deviceMemRead()
 void deviceRfSend(uint8_t *data)
 {
   // Serial.println(F("Sending Via nrf"));
+  BUZZER_ON();
   nrfWrite(data, sizeof(payload_t));
   nrfStartTransmit();
+  BUZZER_OFF();
 }
 
 int deviceRfAckWait()

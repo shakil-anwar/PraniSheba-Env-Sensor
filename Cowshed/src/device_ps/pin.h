@@ -53,6 +53,10 @@
 	#define MQ135_PIN A1
 
 	#define CONFIG_BTN_PIN	A2
+	
+	#define BUZZER_OUT_MODE() (DDRC |= 1<<PC3)
+	#define BUZZER_ON()		  (PORTC |= 1<<PC3)
+	#define BUZZER_OFF()	  (PORTC &= ~(1<<PC3))
 #else
 	#error "No Board Selected"
 #endif

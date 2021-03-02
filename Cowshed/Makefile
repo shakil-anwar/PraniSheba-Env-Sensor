@@ -1,4 +1,4 @@
-SERIAL_PORT=COM4
+SERIAL_PORT=COM17
 
 
 FQBN_PCB_V1=arduino:avr:uno
@@ -14,19 +14,10 @@ CFLAG_PCB2_DEV = --build-property  build.extra_flags=-DDEV  build.extra_flags=-D
 CFLAGS_PCB1_PROD =--build-property  build.extra_flags=-DPROD_BUILD 	build.extra_flags=-DPCB_V_0_1_0
 CFLAGS_PCB2_PROD =--build-property  build.extra_flags=-DPROD_BUILD  build.extra_flags=-DPCB_V_0_2_0
 
-.PHONY: download delete_lib
-
-# all:
-	# arduino-cli compile --build-property  build.extra_flags=-DPROD_BUILD -v
-delete_lib:
-	rm -rf ./src/lib
-build_v1:
+build_v1: delete_lib
 	$(CC) compile -b $(FQBN_PCB_V1) $(CFLAG_PCB1_DEV) -v
-build_v2:
+build_v2: delete_lib
 	$(CC) compile -b $(FQBN_PCB_v2) $(CFLAG_PCB2_DEV) -v
-
-download:
-	powershell  .\download.ps1
 
 build_prod_v1: download
 	$(CC) compile -b $(FQBN_PCB_V1)  $(CFLAGS_PCB1_PROD)
@@ -39,6 +30,12 @@ upload_v2:
 	$(CC) upload -b $(FQBN_PCB_v2)   -p $(SERIAL_PORT)  -v -t 
 
 
+delete_lib:
+	rm -rf ./src/lib
+download:
+	powershell  .\download.ps1
+
+.PHONY: download delete_lib
 
 # deploy_v1: 
 # 	$(CC) compile -b $(FQBN_PCB_V1)  $(CFLAG_PCB1_DEV) -p $(SERIAL_PORT) -u -v -e -t 

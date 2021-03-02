@@ -15,7 +15,7 @@ void system_setup(void)
 {
   Serial.begin(250000);
 
-  radio_begin(); 
+  radio_begin();
 #if defined(DEVICE_HAS_RTC)
   rtcBegin();
   rtAttachRTC(rtcGetSec, rtcUpdateSec);
@@ -42,7 +42,11 @@ void startDevice()
   nrfTxAddrReset(saveAddr);
 #endif
   runState = RUN_WAIT;
+#if defined(DATA_ACQUIRE_INTERVAL)
+  updateDataInterval(DATA_ACQUIRE_INTERVAL);
+#else
   updateDataInterval(config.sampInterval);
+#endif
 }
 
 void deviceRunSM()
@@ -80,11 +84,13 @@ void deviceRunSM()
       if (_nrfSendOk)
       {
         runState = RUN_WAIT;
-        Serial.println(F("Going to Wait"));
+        Serial.println(F("Done and wait"));
       }
       else
       {
-        runState = RUN_CHK_BS_CONN;
+        runState = RUN_WAIT;
+        Serial.println(F("Failed and wait"));
+        //runState = RUN_CHK_BS_CONN;
       }
       break;
     default :
@@ -98,7 +104,7 @@ void deviceRunSM()
 
 bool isBsConnected()
 {
-  int8_t tryCount = 2;
+  int8_t tryCount = 1;
   do
   {
     if (nrfPing())

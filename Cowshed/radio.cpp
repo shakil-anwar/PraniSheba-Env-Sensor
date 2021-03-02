@@ -48,6 +48,7 @@ void txIsr(void)
 
 void rxIsr(void)
 {
+  Serial.println(F("RX IRQ"));
 //  nrfClearRxDr();
 }
 
