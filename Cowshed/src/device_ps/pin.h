@@ -33,6 +33,10 @@
 
 	#define CONFIG_BTN_PIN	2
 
+	#define BUZZER_OUT_MODE() delay(1)
+	#define BUZZER_ON()		  delay(1)
+	#define BUZZER_OFF()	  delay(1)
+
 #elif defined(PCB_V_0_2_0)
 	#define NRF_CE_PORT   PORTB
 	#define NRF_CE_PIN    PB1

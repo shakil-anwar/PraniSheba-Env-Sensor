@@ -13,7 +13,7 @@ bool _nrfSendOk;
 Task taskNrfStatus(5, &nrfWhichMode);
 void system_setup(void)
 {
-  Serial.begin(250000);
+  Serial.begin(SERIAL_SPEED);
 
   radio_begin();
 #if defined(DEVICE_HAS_RTC)

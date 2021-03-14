@@ -2,17 +2,15 @@
 #define _PARAM_H_
 #include <Arduino.h>
 
-
-//#define PROD_BUILD
-#define DEV //development flag
-
+/**********************************Common Build Flags************************/
+//#define FACTORY_RESET
+//#define DATA_ERASE
 #define DEVICE_HAS_FLASH_MEMORY //if device has flash memory. 
 #define DEVICE_HAS_RTC
 //#define DO_CALIBRATION
 //#define FACTORY_RESET
-
-//#define  PCB_V_0_1_0
-#define  PCB_V_0_2_0
+#define  PCB_V_0_1_0
+//#define  PCB_V_0_2_0
 
 /******************Device Identifier********************/
 #define SENSOR_TYPE 2
@@ -23,16 +21,19 @@
 
 
 /****************Interval Parameter********************/
-// #define DATA_ACQUIRE_INTERVAL   2
-#define DATA_TRASNFER_INTERVAL  30
+#define DATA_ACQUIRE_INTERVAL   1
+#define DATA_TRASNFER_INTERVAL  6
 
+
+/***************Communication Parameter****************/
+#define SPI_SPEED 1000000UL
+#define SERIAL_SPEED  250000UL
 /****************EEPROM MEMORY MAP*********************/
 #define MQ4_EEP_ADDR         0
 #define MQ135_EEPROM_ADDR   (MQ4_EEP_ADDR + 21)
 #define ROM_ADDR_FOR_TXD    (MQ135_EEPROM_ADDR +21)
 #define CONFIG_EEPROM_ADDR  (ROM_ADDR_FOR_TXD+ 20)
 #define RING_EEPROM_ADDR    (CONFIG_EEPROM_ADDR+ 10)
-
 
 
 #endif
