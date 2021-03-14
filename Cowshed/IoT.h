@@ -22,7 +22,8 @@
     #include "./src/lib/ShiftRegister74HC595/src/ShiftRegister74HC595.h"
     #include "./src/lib/SHT21-Arduino-Library/SHT21.h"
 #else
-    #include "MemQ.h"
+//    #include "MemQ.h"
+    #include "memq.h"
     #include "asyncXfer.h"
     #include "nRF24.h"
     #include "nRF24_Query.h"
@@ -63,8 +64,9 @@ void rtcUpdateSec(uint32_t unix);
 void factoryReset();
 
 extern Flash flash;       
-extern RingEEPROM myeepRom;
-extern MemQ memQ;
+//extern RingEEPROM myeepRom;
+//extern MemQ memQ;
+extern struct memq_t *memq;
 extern Scheduler scheduler;
 //extern AsyncServer server;
 #endif

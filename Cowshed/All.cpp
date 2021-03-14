@@ -54,7 +54,8 @@ void startDevice()
 void deviceRunSM()
 {
 #if defined(DEVICE_HAS_FLASH_MEMORY)
-  memQ.saveLoop();
+  memq -> saveMemQPtr(memq);
+//  memQ.saveLoop();
 #endif
   switch (runState)
   {

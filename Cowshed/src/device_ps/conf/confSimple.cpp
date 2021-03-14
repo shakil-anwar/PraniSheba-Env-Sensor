@@ -47,7 +47,7 @@ bool btnLongPressed(uint8_t pin)
 }
 
 
-void confSetting(uint8_t pin,memFun_t read, memFun_t save)
+void confSetting(uint8_t pin,memFcn_t read, memFcn_t save)
 {
   read(&config);
   configPrint(&config);
@@ -96,7 +96,8 @@ void handlleDeviceCmd()
     {
       case 1:
         Serial.println(F("Erasing Flash.."));
-        memQ.erase();
+        memq -> reset(memq);
+        // memQ.erase();
         break;
       case 2:
         // Serial.println(F("Factory Resetting Device.."));

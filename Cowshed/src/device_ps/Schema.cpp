@@ -45,6 +45,26 @@ void printSensor(sensor_t *sensor)
 }
 
 
+void memqSave()
+{
+  //When ramq full, _ramQBase points to the base address,
+
+  if (_ramQBase != NULL)
+  {
+    //Serial.println(F("-----_ramQBase != NULL---"));
+    uint8_t *ramqPtr = _ramQBase;
+    for (uint16_t i = 0; i < TOTAL_PAYLOAD_BUFFER; i++)
+    {
+      memq -> write(memq, ramqPtr);
+      //uint32_t curPage = (memq ->ringPtr._head) >> 8;
+      //flash.dumpPage(curPage, pageBuf);
+      //Serial.print(F("Counter : ")); Serial.println(memq -> _ptrEventCounter);
+      ramqPtr += sizeof(payload_t);
+    }
+    _ramQBase = NULL; //null pagePtr to avoid overwrite
+  }
+}
+
 void schemaReadSensors()
 {
   sensor_t *senPtr = (sensor_t*)ramQHead();
@@ -55,5 +75,6 @@ void schemaReadSensors()
 //  nrfSend((const uint8_t*)senPtr,sizeof(payload_t));
 //  server.printPayload((byte*)senPtr,sizeof(payload_t));
   ramQUpdateHead();
+  memqSave();
 }
 

@@ -1,5 +1,12 @@
 #include "device.h"
 
+void memReader(uint32_t addr, uint8_t *buf, uint16_t len);
+void memWriter(uint32_t addr, uint8_t *buf, uint16_t len);
+void memEraser(uint32_t addr, uint16_t len);
+void memPtrReader(ptr_t *ptr);
+void memPtrWriter(ptr_t *ptr);
+
+
 #define PAYLOAD_READ_COUNT 1
 void printBuffer(byte *buf, byte len);
 
@@ -13,8 +20,11 @@ void printBuffer(byte *buf, byte len);
   #elif defined(PCB_V_0_2_0)
     Flash flash(FLASH_CS,FLASH_HOLD);
   #endif
-MemQ memQ(1, 100);
-RingEEPROM myeepRom(RING_EEPROM_ADDR);
+// MemQ memQ(1, 100);
+// RingEEPROM myeepRom(RING_EEPROM_ADDR);
+RingEEPROM ringObj(RING_EEPROM_ADDR);
+struct memq_t *memq;
+uint8_t pageBuf[256];
 #else
   #warning "device has no flash memory"
 #endif
@@ -40,15 +50,35 @@ void deviceBegin()
   BUZZER_OUT_MODE();
   BUZZER_OFF();
 #if defined(DEVICE_HAS_FLASH_MEMORY)
-  memQ.attachFlash(&flash, &_ramQFlash, sizeof(payload_t), TOTAL_PAYLOAD_BUFFER / 2);
-  memQ.attachEEPRom(&myeepRom, 4);
-  //  memQ.attachSafetyFuncs(nrfRestorToRxTx,nrfRxTxToStandy1);
-  memQ.attachSafetyFuncs(NULL, nrfRxTxToStandy1);
+  flash.begin(SPI_SPEED);
+  ringObj.begin(MEMQ_RING_BUF_LEN, sizeof(struct ptr_t));
+  memq = memqNew(0, sizeof(payload_t), 256);
+  if (memq == NULL)
+  {
+    while (1)
+    {
+      Serial.println(F("memq create failed"));
+      delay(1000);
+    }
+  }
+
+  memq -> setMemory(memq, memReader, memWriter, memEraser, MEMQ_SECTOR_ERASE_SZ);
+  memq -> setPointer(memq, memPtrReader, memPtrWriter, MEMQ_PTR_SAVE_AFTER);
+  memq -> attachBusSafety(memq, nrfRestorToRxTx, nrfRxTxToStandy1);
+
   #if defined(DATA_ERASE)
-  // memQ.reset();
-  memQ.erase();
+  memq -> reset(memq);
   #endif
-  memQ.debug(true);
+
+  // memQ.attachFlash(&flash, &_ramQFlash, sizeof(payload_t), TOTAL_PAYLOAD_BUFFER / 2);
+  // memQ.attachEEPRom(&myeepRom, 4);
+  // //  memQ.attachSafetyFuncs(nrfRestorToRxTx,nrfRxTxToStandy1);
+  // memQ.attachSafetyFuncs(NULL, nrfRxTxToStandy1);
+  // #if defined(DATA_ERASE)
+  // // memQ.reset();
+  // memQ.erase();
+  // #endif
+  // memQ.debug(true);
 #endif
   sensorBegin();
 
@@ -73,7 +103,8 @@ uint8_t *deviceMemRead()
   if(pldPtr == NULL)
   {
     // Serial.println(F("Reading from Flash"));
-    pldPtr = memQ.read((uint8_t *)&pldBuf, PAYLOAD_READ_COUNT); // Read from flash
+    // pldPtr = memQ.read((uint8_t *)&pldBuf, PAYLOAD_READ_COUNT); // Read from flash
+    pldPtr = memq -> read(memq, (uint8_t*)&pldBuf);
     if (pldPtr != NULL)
     {
       // Serial.println(F("Read Mem : New"));
@@ -121,3 +152,42 @@ void updateDataInterval(uint32_t time)
   task1.setInterval(time);
   Serial.println(F("-------------->Sample Interval updated"));
 }
+
+
+
+#if defined(DEVICE_HAS_FLASH_MEMORY)
+void memReader(uint32_t addr, uint8_t *buf, uint16_t len)
+{
+  Serial.print(F("<====Tail :"));
+  Serial.print(addr);
+  Serial.println(F("====>"));
+  flash.read(addr, buf, sizeof(payload_t));
+}
+
+void memWriter(uint32_t addr, uint8_t *buf, uint16_t len)
+{
+  Serial.print(F("<====Head :"));
+  Serial.print(addr);
+  Serial.println(F("====>"));
+  flash.write(addr, buf, sizeof(payload_t));
+}
+
+void memEraser(uint32_t addr, uint16_t len)
+{
+  flash.eraseSector(addr);
+  uint32_t curPage = addr >> 8;
+  flash.dumpPage(curPage, pageBuf);
+}
+
+void memPtrReader(ptr_t *ptr)
+{
+  Serial.println(F("MemQPtr Reader called"));
+  ringObj.readPacket((byte *)ptr);
+}
+
+void memPtrWriter(ptr_t *ptr)
+{
+  Serial.println(F("MemQPtr Writer called"));
+  ringObj.savePacket((byte *)ptr);
+}
+#endif

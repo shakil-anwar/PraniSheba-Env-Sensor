@@ -4,7 +4,7 @@
 
 /**********************************Common Build Flags************************/
 //#define FACTORY_RESET
-//#define DATA_ERASE
+#define DATA_ERASE
 #define DEVICE_HAS_FLASH_MEMORY //if device has flash memory. 
 #define DEVICE_HAS_RTC
 //#define DO_CALIBRATION
@@ -16,9 +16,13 @@
 #define SENSOR_TYPE 2
 #define SENSOR_ID   81
 
-/******************Menory and Buffer Param*********************/
+/******************MEMORY and Buffer Param*********************/
 #define TOTAL_PAYLOAD_BUFFER 2
-
+#define MEMQ_RING_BUF_LEN  4
+#define MEMQ_FLASH_START_ADDR 0
+#define MEMQ_TOTAL_BUFFER   256
+#define MEMQ_SECTOR_ERASE_SZ  4096
+#define MEMQ_PTR_SAVE_AFTER   10  
 
 /****************Interval Parameter********************/
 #define DATA_ACQUIRE_INTERVAL   1
@@ -34,6 +38,9 @@
 #define ROM_ADDR_FOR_TXD    (MQ135_EEPROM_ADDR +21)
 #define CONFIG_EEPROM_ADDR  (ROM_ADDR_FOR_TXD+ 20)
 #define RING_EEPROM_ADDR    (CONFIG_EEPROM_ADDR+ 10)
+
+
+/***************RING BUFFER PARAM**********************/
 
 
 #endif
