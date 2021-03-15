@@ -5,7 +5,7 @@
 #include "param.h"
 
 #if defined(PROD_BUILD)    
-    #include "./src/lib/MemQ/src/MemQ.h"
+    #include "./src/lib/memq/memq.h"
     #include "./src/lib/asyncXfer/asyncXfer.h"
     #include "./src/lib/nRF24/nRF24.h"
     #include "./src/lib/nRF24/nRF24_Query.h"
