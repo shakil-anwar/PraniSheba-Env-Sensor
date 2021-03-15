@@ -19,7 +19,8 @@ git clone https://github.com/shuvangkar/RingEEPROM.git
 git clone https://github.com/shuvangkar/MQSensor.git
 git clone https://github.com/shuvangkar/simple-json.git
 git clone https://github.com/shuvangkar/asyncXfer.git
-git clone https://github.com/shuvangkar/MemQ.git
+# git clone https://github.com/shuvangkar/MemQ.git
+git clone https://github.com/shuvangkar/memq.git
 git clone https://github.com/shuvangkar/ramQ.git
 git clone https://github.com/shuvangkar/SerialPipe.git
 git clone https://github.com/shuvangkar/nRF24.git
