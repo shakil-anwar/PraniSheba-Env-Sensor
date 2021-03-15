@@ -21,9 +21,9 @@ typedef struct config_t
   uint16_t deviceId;
   uint16_t sampInterval;
 };
-typedef void (*memFun_t)(config_t*);
+typedef void (*memFcn_t)(config_t*);
 
-void confSetting(uint8_t pin,memFun_t read, memFun_t save);
+void confSetting(uint8_t pin,memFcn_t read, memFcn_t save);
 bool confIsOk(); //This function has to call after calling confSetting
 extern config_t config;
 #endif

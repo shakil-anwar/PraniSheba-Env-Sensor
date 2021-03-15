@@ -6,15 +6,16 @@ Scheduler scheduler;
 void objectsBegin()
 {
   scheduler.begin(&second);
-  xferBegin(deviceMemRead, deviceRfSend, deviceRfAckWait,millis);
+  xferBegin(deviceMemRead, deviceRfSend, deviceRfAckWait, millis);
   xferReady();
 }
 
 void factoryReset()
 {
-   Serial.println(F("Factory Resetting Device.."));
-   memQ.reset();  //erase full flash memory
-   nrfTxAddrReset(saveAddr); //reset tc addr
+  Serial.println(F("Factory Resetting Device.."));
+  //   memQ.reset();  //erase full flash mem
+  memq -> reset(memq); 
+  nrfTxAddrReset(saveAddr); //reset tc addr
 }
 
 void rtcBegin()
@@ -54,8 +55,8 @@ void rtcUpdateSec(uint32_t unix)
   if (rtc.isrunning())
   {
     uint32_t rtcSec = rtcGetSec();
-    Serial.print(F("RTC Sec: "));Serial.println(rtcSec);
-    if(abs((int32_t)(unix-rtcSec))>1)
+    Serial.print(F("RTC Sec: ")); Serial.println(rtcSec);
+    if (abs((int32_t)(unix - rtcSec)) > 1)
     {
       //if difference is more than 1 sec, update rtc
       Serial.println(F("Updating RTC Time"));
