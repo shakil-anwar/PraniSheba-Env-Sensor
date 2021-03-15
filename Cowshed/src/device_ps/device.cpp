@@ -64,7 +64,7 @@ void deviceBegin()
 
   memq -> setMemory(memq, memReader, memWriter, memEraser, MEMQ_SECTOR_ERASE_SZ);
   memq -> setPointer(memq, memPtrReader, memPtrWriter, MEMQ_PTR_SAVE_AFTER);
-  memq -> attachBusSafety(memq, nrfRestorToRxTx, nrfRxTxToStandy1);
+  // memq -> attachBusSafety(memq, nrfRestorToRxTx, nrfRxTxToStandy1);
 
   #if defined(DATA_ERASE)
   memq -> reset(memq);
@@ -174,6 +174,7 @@ void memWriter(uint32_t addr, uint8_t *buf, uint16_t len)
 
 void memEraser(uint32_t addr, uint16_t len)
 {
+  Serial.print(F("Erasing Addr : ")); Serial.println(addr);
   flash.eraseSector(addr);
   uint32_t curPage = addr >> 8;
   flash.dumpPage(curPage, pageBuf);
@@ -181,13 +182,13 @@ void memEraser(uint32_t addr, uint16_t len)
 
 void memPtrReader(ptr_t *ptr)
 {
-  Serial.println(F("MemQPtr Reader called"));
+  Serial.println(F("memqPtr Reader called"));
   ringObj.readPacket((byte *)ptr);
 }
 
 void memPtrWriter(ptr_t *ptr)
 {
-  Serial.println(F("MemQPtr Writer called"));
+  Serial.println(F("memqPtr Writer called"));
   ringObj.savePacket((byte *)ptr);
 }
 #endif
