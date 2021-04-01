@@ -26,7 +26,10 @@ void radio_begin()
   nrfBegin(SPEED_2MB, POWER_ZERO_DBM, SPI_SPEED);
 
   nrfSetIrqs(txIsr, rxIsr, maxRtIsr);
-  nrfQueryClientSet(QUERY_PIPE, pipe0Addr);
+  nrfQryObj.pipe = QUERY_PIPE;
+  nrfQryObj.addr = pipe0Addr;
+  nrfQueryBegin(&nrfQryObj, SENSOR_NODE);
+  // nrfQueryClientSet(QUERY_PIPE, pipe0Addr);
   //nrfQueryBufferSet((uint8_t*)&queryBuffer, sizeof(queryData_t));
 
   //  nrfSetTx(pipeAddr[TX_PIPE], true);

@@ -1,4 +1,4 @@
-SERIAL_PORT=COM4
+SERIAL_PORT=COM5
 
 
 FQBN_PCB_V1=arduino:avr:uno
@@ -14,7 +14,7 @@ CFLAG_PCB2_DEV = --build-property  build.extra_flags=-DDEV  build.extra_flags=-D
 CFLAGS_PCB1_PROD =--build-property  build.extra_flags=-DPROD_BUILD 	build.extra_flags=-DPCB_V_0_1_0
 CFLAGS_PCB2_PROD =--build-property  build.extra_flags=-DPROD_BUILD  build.extra_flags=-DPCB_V_0_2_0
 
-build_v1: delete_lib
+build_v1:
 	$(CC) compile -b $(FQBN_PCB_V1) $(CFLAG_PCB1_DEV) 
 build_v2: delete_lib
 	$(CC) compile -b $(FQBN_PCB_v2) $(CFLAG_PCB2_DEV) 
