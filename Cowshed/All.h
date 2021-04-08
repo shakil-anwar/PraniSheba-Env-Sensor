@@ -19,7 +19,7 @@ typedef enum runState_t
   RUN_WAIT,
   RUN_CHK_BS_CONN,
   RUN_TX_XFER,
-  
+  RUN_END_TRANSFER,
 };
 
 void system_setup(void);

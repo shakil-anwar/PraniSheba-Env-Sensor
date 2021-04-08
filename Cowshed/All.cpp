@@ -1,15 +1,15 @@
 #include "All.h"
 #include "EEPROM.h"
 
-enum clientState_t
+enum bsSendState_t
 {
-  CLIENT_READY,
-  CLIENT_IS_CONNECTED,
-  CLIENT_CONNECT,
-  CLIENT_SEND,
+  BS_SEND_WAIT,
+  BS_IS_CONNECTED,
+  BS_SEND,
+  BS_SEND_END,
 };
 
-enum clientState_t clientState;
+enum bsSendState_t _bsSendState;
 void printRunState();
 bool isBsConnected();
 
@@ -63,10 +63,6 @@ void startDevice()
 
 void deviceRunSM()
 {
-#if defined(DEVICE_HAS_FLASH_MEMORY)
-  memq -> saveMemQPtr(memq);
-//  memQ.saveLoop();
-#endif
   switch (runState)
   {
     case RUN_WAIT:
@@ -83,9 +79,6 @@ void deviceRunSM()
       {
         nrfTxReady(&nrfConfig);
         xferReady();
-        // #if defined(PCB_V_0_2_0)
-        // delay(100);
-        // #endif
         runState = RUN_TX_XFER;
       }
       else
@@ -100,7 +93,7 @@ void deviceRunSM()
       if (_nrfSendOk)
       {
         runState = RUN_WAIT;
-        Serial.println(F("Done and wait"));
+        Serial.println(F("Done and RUN_END_TRANSFER"));
       }
       else
       {
@@ -117,44 +110,57 @@ void deviceRunSM()
   printRunState();
 
 }
+
 //
-//void clientSM()
+//void bsSendSm()
 //{
-//  switch (clientState)
+//  BS_SEND_WAIT,
+//  BS_IS_CONNECTED,
+//  BS_SEND,
+//  BS_SEND_END,
+//  switch (_bsSendState)
 //  {
-//    case CLIENT_READY:
-//      if (clientReady())
+//    case BS_SEND_WAIT:
+//      if (second() >= _nextSlotSec)
 //      {
-//        clientState = CLIENT_IS_CONNECTED;
+//        _bsSendState = BS_IS_CONNECTED;
 //      }
 //      break;
-//    case CLIENT_IS_CONNECTED:
-//      if (clientIsconnected())
+//    case BS_IS_CONNECTED:
+//      if (isBsConnected())
 //      {
-//        rtsync(); //sync time
-//        clientState = CLIENT_SEND;
+//        //check is my slot, then proceed
+//        nrfTxReady(&nrfConfig);
+//        xferReady();
+//        _bsSendState = BS_SEND;
 //      }
 //      else
 //      {
-//        clientState = CLIENT_CONNECT;
+//        //calculate next slot
+//        _nextSlotSec = calcNextSlotUnix(second(), &nrfConfig);
+//        _bsSendState = BS_SEND_WAIT;
+//        Serial.println(F("<==BS Not Connected==>"));
+//
 //      }
 //      break;
-//    case CLIENT_CONNECT:
-//      if (clientConnect())
+//    case BS_SEND:
+//      Serial.println(F("run : RUN_TX_XFER"));
+//      _nrfSendOk = xferSendLoopV3();
+//      if (_nrfSendOk)
 //      {
-//        rtsync(); //sync time
-//        clientState = CLIENT_SEND;
+//        _bsSendState = BS_SEND_END;
+//        Serial.println(F("Done and RUN_END_TRANSFER"));
 //      }
-//      break;
-//    case CLIENT_SEND:
-//      nrfsendok = xferSendLoop();
-//      if (nrfsendok == false)
+//      else
 //      {
-//        clientState = CLIENT_IS_CONNECTED;
+//        _bsSendState = BS_SEND_WAIT;
+//        Serial.println(F("Failed and wait"));
+//        //runState = RUN_CHK_BS_CONN;
 //      }
 //      break;
-//    default:
-//      clientState = CLIENT_READY;
+//    case BS_SEND_END:
+//      _nextSlotSec = calcNextSlotUnix(second(), &nrfConfig);
+//      runState = RUN_WAIT;
 //      break;
 //  }
 //}
@@ -200,27 +206,6 @@ bool isHardwareOk()
   return true;
 }
 
-//void saveAddr(addr_t *addrPtr)
-//{
-//  Serial.println(F("NRF EEPROM Saving.."));
-//  uint8_t *ptr = (uint8_t*)addrPtr;
-//  for (uint8_t i = 0; i < sizeof(addr_t); i++)
-//  {
-//    EEPROM.update(ROM_ADDR_FOR_TXD + i, *(ptr + i));
-//  }
-//  nrfDebugBuffer(ptr, sizeof(addr_t));
-//}
-//
-//void readAddr(addr_t *addrPtr)
-//{
-//  Serial.println(F("NRF EEPROM Reading.."));
-//  uint8_t *ptr = (uint8_t*)addrPtr;
-//  for (uint8_t i = 0 ; i < sizeof(addr_t); i++)
-//  {
-//    *(ptr + i) = EEPROM.read(ROM_ADDR_FOR_TXD + i);
-//  }
-//  nrfDebugBuffer(ptr, sizeof(addr_t));
-//}
 
 
 

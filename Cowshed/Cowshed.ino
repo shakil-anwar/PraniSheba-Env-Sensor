@@ -19,7 +19,7 @@ void loop()
     case CHECK_HARDWARE:
       if (isHardwareOk())
       {
-        if(confIsOk())
+        if (confIsOk())
         {
           mainState = START_DEVICE;
         }
@@ -49,19 +49,22 @@ void loop()
       }
       break;
     case SYNC_RF:
-      if(rfConfig())
+      if (rfConfig())
       {
-       
+
         mainState = RUN_LOOP;
       }
-    break;
+      break;
     case RUN_LOOP:
       deviceRunSM();
+#if defined(DEVICE_HAS_FLASH_MEMORY)
+      memq -> saveMemQPtr(memq);
+#endif
       rtLoop();
       scheduler.run();
       break;
     case STOP:
-//      mainState = CHECK_HARDWARE;
+      //      mainState = CHECK_HARDWARE;
       break;
     default:
       mainState = CHECK_HARDWARE;
@@ -87,7 +90,7 @@ void printMainState(mainState_t mstate)
       //      Serial.println(F("m_STATE: DEVICE_RUN"));
       break;
     case STOP:
-//      Serial.println(F("m_STATE: STOP"));
+      //      Serial.println(F("m_STATE: STOP"));
       break;
   }
 }
@@ -98,7 +101,7 @@ bool syncTime()
   _nowSec = nrfPing();
   Serial.print(F("NTP Time: ")); Serial.println(_nowSec);
   RT_SYNC_STATUS_t rtStatus = rtSync(_nowSec);
-  if(rtStatus != UNSYNCED)
+  if (rtStatus != UNSYNCED)
   {
     return true;
   }
@@ -112,16 +115,16 @@ bool syncTime()
 bool rfConfig()
 {
   bool conOk = nrfTxConfigHandler(config.deviceId, &nrfConfig, NRF_CONFIG_ROM_ADDR, eepromRead, eepromUpdate);
-  if(conOk)
+  if (conOk)
   {
-     
-     uint32_t slotSec = calcNextSlotUnix(second(), &nrfConfig);
-     setNextSlotSec(slotSec);
+
+    _nextSlotSec = calcNextSlotUnix(second(), &nrfConfig);
+//    setNextSlotSec(slotSec);
     return conOk;
   }
   else
   {
     delay(SYNC_PING_DELAY_MS);// ping after 2s interval
   }
-  
+
 }

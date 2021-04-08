@@ -15,7 +15,7 @@ uint32_t getNtpTime();
 
 volatile uint32_t _second;
 volatile uint32_t _tempSec;
-volatile uint32_t _slotSec;
+volatile uint32_t _nextSlotSec;
 volatile bool _readyToSend;
 
 RTC_DS1307 rtc;
@@ -39,29 +39,29 @@ void timerIsr(void)
   _second++;
   _tempSec++;
   // Serial.println(F("Timer ISR Triggered"));
-  if(_second >=_slotSec)
-  {
-    if( _second < (_slotSec + nrfConfig.perNodeInterval))
-    {
-      _readyToSend = true;
-    }
-    else
-    {
-      _readyToSend = false;
-    }
-  }
+//  if(_second >=_slotSec)
+//  {
+//    if( _second < (_slotSec + nrfConfig.perNodeInterval))
+//    {
+//      _readyToSend = true;
+//    }
+//    else
+//    {
+//      _readyToSend = false;
+//    }
+//  }
 }
 
-void setNextSlotSec(uint32_t unix)
-{
-  Serial.println(F("=====>Next Slot Second updated"));
-  _slotSec = unix;
-}
-
-bool *isTimeTosend()
-{
-  return &_readyToSend;
-}
+//void setNextSlotSec(uint32_t unix)
+//{
+//  Serial.println(F("=====>Next Slot Second updated"));
+//  _slotSec = unix;
+//}
+//
+//bool *isTimeTosend()
+//{
+//  return &_readyToSend;
+//}
 
 void timer1Start()
 {
