@@ -1,7 +1,7 @@
 #include "IoT.h"
 #include "radio.h"
 
-RTC_DS1307 rtc;
+//RTC_DS1307 rtc;
 Scheduler scheduler;
 void objectsBegin()
 {
