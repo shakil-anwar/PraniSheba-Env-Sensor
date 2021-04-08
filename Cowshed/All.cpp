@@ -8,6 +8,7 @@ runState_t runState;
 
 volatile uint32_t _prevRunSec;
 volatile uint32_t _nowSec;
+uint32_t _nextSlotUnix;
 bool _nrfSendOk;
 
 Task taskNrfStatus(5, &nrfWhichMode);

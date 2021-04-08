@@ -51,6 +51,7 @@ void loop()
     case SYNC_RF:
       if(rfConfig())
       {
+        _nextSlotUnix = calcNextSlotUnix(second(), &nrfConfig);
         mainState = RUN_LOOP;
       }
     break;
@@ -120,4 +121,23 @@ bool rfConfig()
     delay(SYNC_PING_DELAY_MS);// ping after 2s interval
   }
   
+}
+
+uint32_t calcNextSlotUnix(uint32_t uSec, nrfNodeConfig_t *conf)
+{
+  uint16_t slotSec = (conf -> perNodeInterval) * (conf -> slotId);
+  uint16_t curMoment = uSec % conf->momentDuration;
+
+  uint32_t nexSlotSec;
+  if (curMoment < slotSec)
+  {
+    nexSlotSec = uSec + (slotSec - curMoment);
+  }
+  else
+  {
+    nexSlotSec = uSec + (conf->momentDuration - curMoment) + slotSec;
+  }
+  Serial.print(F("curMoment :")); Serial.println(curMoment);
+  Serial.print(F("======>>>>>next slot unix :")); Serial.println(nexSlotSec);
+  return nexSlotSec;
 }

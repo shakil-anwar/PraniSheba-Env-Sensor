@@ -41,5 +41,6 @@ void configRead(config_t *bootPtr);
 
 extern volatile uint32_t _nowSec;
 extern volatile uint32_t _prevRunSec;
+extern uint32_t _nextSlotUnix;
 
 #endif 
