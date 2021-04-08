@@ -1,5 +1,6 @@
 #include "Timers.h"
 #include "IoT.h"
+#include "radio.h"
 //#include "RTClib.h"
 //#include "AVR_Timer1.h"
 
@@ -14,11 +15,14 @@ uint32_t getNtpTime();
 
 volatile uint32_t _second;
 volatile uint32_t _tempSec;
+volatile uint32_t _slotSec;
+volatile bool _readyToSend;
 
 RTC_DS1307 rtc;
 
 void TimersBegin()
 {
+   _readyToSend = false;
   _second = 0;
   _tempSec = 0;
   timer1.initialize(1);
@@ -34,8 +38,29 @@ void timerIsr(void)
 {
   _second++;
   _tempSec++;
-//   tdmUpdateSlot(_second);
   // Serial.println(F("Timer ISR Triggered"));
+  if(_second >=_slotSec)
+  {
+    if( _second < (_slotSec + nrfConfig.perNodeInterval))
+    {
+      _readyToSend = true;
+    }
+    else
+    {
+      _readyToSend = false;
+    }
+  }
+}
+
+void setNextSlotSec(uint32_t unix)
+{
+  Serial.println(F("=====>Next Slot Second updated"));
+  _slotSec = unix;
+}
+
+bool *isTimeTosend()
+{
+  return &_readyToSend;
 }
 
 void timer1Start()
@@ -120,6 +145,25 @@ void rtcUpdateSec(uint32_t unix)
       Serial.println(F("RTC time is updated"));
     }
   }
+}
+
+uint32_t calcNextSlotUnix(uint32_t uSec, nrfNodeConfig_t *conf)
+{
+  uint16_t slotSec = (conf -> perNodeInterval) * (conf -> slotId);
+  uint16_t curMoment = uSec % conf->momentDuration;
+
+  uint32_t nexSlotSec;
+  if (curMoment < slotSec)
+  {
+    nexSlotSec = uSec + (slotSec - curMoment);
+  }
+  else
+  {
+    nexSlotSec = uSec + (conf->momentDuration - curMoment) + slotSec;
+  }
+  Serial.print(F("curMoment :")); Serial.println(curMoment);
+  Serial.print(F("======>>>>>next slot unix :")); Serial.println(nexSlotSec);
+  return nexSlotSec;
 }
 
 // uint32_t getNtpTime()

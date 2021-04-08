@@ -24,8 +24,8 @@
 #define MEMQ_PTR_SAVE_AFTER   10  
 
 /****************Interval Parameter********************/
-#define DATA_ACQUIRE_INTERVAL   1
-#define DATA_TRASNFER_INTERVAL  6
+//#define DATA_ACQUIRE_INTERVAL   1
+#define DATA_TRASNFER_INTERVAL  10
 
 
 /***************Communication Parameter****************/
@@ -34,8 +34,9 @@
 /****************EEPROM MEMORY MAP*********************/
 #define MQ4_EEP_ADDR         0
 #define MQ135_EEPROM_ADDR   (MQ4_EEP_ADDR + 21)
-#define CONFIG_EEPROM_ADDR  (MQ135_EEPROM_ADDR+ 21)
-#define RING_EEPROM_ADDR    (CONFIG_EEPROM_ADDR+ 20)
+#define MAIN_CONFIG_EEPROM_ADDR  (MQ135_EEPROM_ADDR+ 21)
+#define NRF_CONFIG_ROM_ADDR     (MAIN_CONFIG_EEPROM_ADDR+20)
+#define RING_EEPROM_ADDR    (NRF_CONFIG_ROM_ADDR+ 20)
 
 
 /***************RING BUFFER PARAM**********************/

@@ -1,6 +1,15 @@
 #include "All.h"
 #include "EEPROM.h"
 
+enum clientState_t
+{
+  CLIENT_READY,
+  CLIENT_IS_CONNECTED,
+  CLIENT_CONNECT,
+  CLIENT_SEND,
+};
+
+enum clientState_t clientState;
 void printRunState();
 bool isBsConnected();
 
@@ -108,6 +117,47 @@ void deviceRunSM()
   printRunState();
 
 }
+//
+//void clientSM()
+//{
+//  switch (clientState)
+//  {
+//    case CLIENT_READY:
+//      if (clientReady())
+//      {
+//        clientState = CLIENT_IS_CONNECTED;
+//      }
+//      break;
+//    case CLIENT_IS_CONNECTED:
+//      if (clientIsconnected())
+//      {
+//        rtsync(); //sync time
+//        clientState = CLIENT_SEND;
+//      }
+//      else
+//      {
+//        clientState = CLIENT_CONNECT;
+//      }
+//      break;
+//    case CLIENT_CONNECT:
+//      if (clientConnect())
+//      {
+//        rtsync(); //sync time
+//        clientState = CLIENT_SEND;
+//      }
+//      break;
+//    case CLIENT_SEND:
+//      nrfsendok = xferSendLoop();
+//      if (nrfsendok == false)
+//      {
+//        clientState = CLIENT_IS_CONNECTED;
+//      }
+//      break;
+//    default:
+//      clientState = CLIENT_READY;
+//      break;
+//  }
+//}
 
 bool isBsConnected()
 {
@@ -180,7 +230,7 @@ void configSave(config_t *bootPtr)
   uint8_t *ptr = (uint8_t*)bootPtr;
   for (uint8_t i = 0 ; i < sizeof(config_t); i++)
   {
-    EEPROM.update(CONFIG_EEPROM_ADDR + i, *(ptr + i));
+    EEPROM.update(MAIN_CONFIG_EEPROM_ADDR + i, *(ptr + i));
   }
 }
 
@@ -189,7 +239,7 @@ void configRead(config_t *bootPtr)
   uint8_t *ptr = (uint8_t*)bootPtr;
   for (uint8_t i = 0 ; i < sizeof(config_t); i++)
   {
-    *(ptr + i) = EEPROM.read(CONFIG_EEPROM_ADDR + i);
+    *(ptr + i) = EEPROM.read(MAIN_CONFIG_EEPROM_ADDR + i);
   }
   //  return bootPtr;
 }

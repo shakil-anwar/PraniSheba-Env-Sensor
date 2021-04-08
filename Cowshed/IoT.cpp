@@ -16,7 +16,7 @@ void factoryReset()
   //   memQ.reset();  //erase full flash mem
   memq -> reset(memq); 
 //  nrfTxAddrReset(saveAddr); //reset tc addr
-  nrfTxConfigReset(&nrfConfig, CONFIG_EEPROM_ADDR, eepromUpdate);
+  nrfTxConfigReset(&nrfConfig, NRF_CONFIG_ROM_ADDR, eepromUpdate);
 }
 
 // void rtcBegin()
