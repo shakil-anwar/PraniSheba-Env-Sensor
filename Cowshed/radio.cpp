@@ -9,6 +9,7 @@ void maxRtIsr(void);
 
 uint8_t pipe0Addr[5] = {120, 121, 123, 124, 125};
 uint8_t txLsByte;
+nrfNodeConfig_t nrfConfig;
 
 uint8_t pipeAddr[6][5] =
 {
@@ -24,8 +25,8 @@ void radio_begin()
   nrfSetTimers(millis, second);
   nrfSetPin(&NRF_CE_PORT, NRF_CE_PIN, &NRF_CSN_PORT, NRF_CSN_PIN);
   nrfBegin(SPEED_2MB, POWER_ZERO_DBM, SPI_SPEED);
-
   nrfSetIrqs(txIsr, rxIsr, maxRtIsr);
+  
   nrfQryObj.pipe = QUERY_PIPE;
   nrfQryObj.addr = pipe0Addr;
   nrfQueryBegin(&nrfQryObj, SENSOR_NODE);
@@ -63,24 +64,31 @@ void maxRtIsr(void)
 
 }
 
-void saveAddr(addr_t *addrPtr)
+
+void eepromRead(uint32_t addr, uint8_t *buf, uint16_t len)
 {
-  Serial.println(F("NRF EEPROM Saving.."));
-  uint8_t *ptr = (uint8_t*)addrPtr;
-  for (uint8_t i = 0; i < sizeof(addr_t); i++)
+
+  uint16_t eepAddr = (uint16_t)addr;
+  uint8_t *ptr = buf;
+  Serial.print(F("EEPROM Reading Addr : ")); Serial.println(eepAddr);
+  for (uint16_t i = 0 ; i < len; i++)
   {
-    EEPROM.update(ROM_ADDR_FOR_TXD + i, *(ptr + i));
+    *(ptr + i) = EEPROM.read(eepAddr + i);
+    Serial.print( *(ptr + i)); Serial.print(F("  "));
   }
-  nrfDebugBuffer(ptr, sizeof(addr_t));
+  Serial.println();
 }
 
-void readAddr(addr_t *addrPtr)
+void eepromUpdate(uint32_t addr, uint8_t *buf, uint16_t len)
 {
-  Serial.println(F("NRF EEPROM Reading.."));
-  uint8_t *ptr = (uint8_t*)addrPtr;
-  for (uint8_t i = 0 ; i < sizeof(addr_t); i++)
+
+  uint16_t eepAddr = (uint16_t)addr;
+  uint8_t *ptr = buf;
+  Serial.print(F("EEPROM Update Addr : ")); Serial.println(eepAddr);
+  for (uint16_t i = 0; i < len; i++)
   {
-    *(ptr + i) = EEPROM.read(ROM_ADDR_FOR_TXD + i);
+    EEPROM.update(eepAddr + i, *(ptr + i));
+    Serial.print( *(ptr + i)); Serial.print(F("  "));
   }
-  nrfDebugBuffer(ptr, sizeof(addr_t));
+  Serial.println();
 }

@@ -9,6 +9,7 @@ typedef enum mainState_t
   CHECK_HARDWARE,
   START_DEVICE,
   SYNC_DEVICE,
+  SYNC_RF,
   RUN_LOOP,
   STOP
 };

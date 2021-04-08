@@ -42,12 +42,18 @@ void loop()
     case SYNC_DEVICE:
       if (syncTime())
       {
-        nrfTxAddrHandler(readAddr, saveAddr);//read addr from memory
-        mainState = RUN_LOOP;
+        // nrfTxAddrHandler(readAddr, saveAddr);//read addr from memory
+        mainState = SYNC_RF;
         _nowSec = second();
         _prevRunSec = _nowSec;
       }
       break;
+    case SYNC_RF:
+      if(rfConfig())
+      {
+        mainState = RUN_LOOP;
+      }
+    break;
     case RUN_LOOP:
       deviceRunSM();
       rtLoop();
@@ -100,4 +106,18 @@ bool syncTime()
     delay(SYNC_PING_DELAY_MS);// ping after 2s interval
   }
   return false;
+}
+
+bool rfConfig()
+{
+  bool conOk = nrfTxConfigHandler(config.deviceId, &nrfConfig, CONFIG_EEPROM_ADDR, eepromRead, eepromUpdate);
+  if(conOk)
+  {
+    return conOk;
+  }
+  else
+  {
+    delay(SYNC_PING_DELAY_MS);// ping after 2s interval
+  }
+  
 }

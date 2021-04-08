@@ -34,9 +34,8 @@
 /****************EEPROM MEMORY MAP*********************/
 #define MQ4_EEP_ADDR         0
 #define MQ135_EEPROM_ADDR   (MQ4_EEP_ADDR + 21)
-#define ROM_ADDR_FOR_TXD    (MQ135_EEPROM_ADDR +21)
-#define CONFIG_EEPROM_ADDR  (ROM_ADDR_FOR_TXD+ 20)
-#define RING_EEPROM_ADDR    (CONFIG_EEPROM_ADDR+ 10)
+#define CONFIG_EEPROM_ADDR  (MQ135_EEPROM_ADDR+ 21)
+#define RING_EEPROM_ADDR    (CONFIG_EEPROM_ADDR+ 20)
 
 
 /***************RING BUFFER PARAM**********************/

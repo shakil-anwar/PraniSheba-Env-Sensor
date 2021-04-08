@@ -20,7 +20,7 @@ void system_setup(void)
   rtcBegin();
   rtAttachRTC(rtcGetSec, rtcUpdateSec);
 #endif
-  rtBegin();
+  TimersBegin();
 
   deviceBegin();
   objectsBegin();
@@ -71,7 +71,7 @@ void deviceRunSM()
     case RUN_CHK_BS_CONN:
       if (isBsConnected())
       {
-        nrfTxReady();
+        nrfTxReady(&nrfConfig);
         xferReady();
         // #if defined(PCB_V_0_2_0)
         // delay(100);

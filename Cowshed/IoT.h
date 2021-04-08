@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 #include "param.h"
+#include "Timers.h"
 
 #if defined(PROD_BUILD)    
     #include "./src/lib/memq/memq.h"
@@ -58,9 +59,9 @@
 
 void objectsBegin();
 
-void rtcBegin();
-uint32_t rtcGetSec();
-void rtcUpdateSec(uint32_t unix);
+// void rtcBegin();
+// uint32_t rtcGetSec();
+// void rtcUpdateSec(uint32_t unix);
 void factoryReset();
 
 extern Flash flash;       

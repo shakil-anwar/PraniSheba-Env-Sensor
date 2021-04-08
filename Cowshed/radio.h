@@ -6,7 +6,10 @@ void radio_begin(void);
 void radioStart();
 uint32_t getRtcTime();
 
-void readAddr(addr_t *addrPtr);
-void saveAddr(addr_t *addrPtr);
+void eepromRead(uint32_t addr, uint8_t *buf, uint16_t len);
+void eepromUpdate(uint32_t addr, uint8_t *buf, uint16_t len);
+
+
+extern nrfNodeConfig_t nrfConfig;
 
 #endif
