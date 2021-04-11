@@ -12,6 +12,7 @@ enum bsSendState_t
 enum bsSendState_t _bsSendState;
 void printRunState();
 bool isBsConnected();
+bool isMySlot();
 
 runState_t runState;
 
@@ -48,12 +49,14 @@ void system_setup(void)
 
 void startDevice()
 {
+  runState = RUN_WAIT;
+  _bsSendState = BS_SEND_WAIT;
   radioStart();
   wdtStart();
 #if defined(FACTORY_RESET)
   nrfTxAddrReset(saveAddr);
 #endif
-  runState = RUN_WAIT;
+  
 #if defined(DATA_ACQUIRE_INTERVAL)
   updateDataInterval(DATA_ACQUIRE_INTERVAL);
 #else
@@ -111,57 +114,71 @@ void deviceRunSM()
 
 }
 
+
+void bsSendSm()
+{
+  switch (_bsSendState)
+  {
+    case BS_SEND_WAIT:
+      if (second() >= _nextSlotSec)
+      {
+        _bsSendState = BS_IS_CONNECTED;
+      }
+      break;
+    case BS_IS_CONNECTED:
+      Serial.println(F("run : BS_IS_CONNECTED"));
+      if (isMySlot())
+      {
+        nrfTxReady(&nrfConfig);
+        xferReady();
+        _bsSendState = BS_SEND;
+      }
+      else
+      {
+        _bsSendState = BS_SEND_END;
+        Serial.println(F("<==BS Not Connected==>"));
+
+      }
+      break;
+    case BS_SEND:
+      Serial.println(F("run : BS_SEND"));
+      _nrfSendOk = xferSendLoopV3();
+      _bsSendState = BS_SEND_END;
+      if (_nrfSendOk)
+      {
+        Serial.println(F("All Send Ok"));
+      }
+      else
+      {
+        Serial.println(F("All Not Sent"));
+      }
+      break;
+    case BS_SEND_END:
+      _nextSlotSec = calcNextSlotUnix(second(), &nrfConfig);
+      _bsSendState = BS_SEND_WAIT;
+      break;
+  }
+}
 //
 //void bsSendSm()
 //{
-//  BS_SEND_WAIT,
-//  BS_IS_CONNECTED,
-//  BS_SEND,
-//  BS_SEND_END,
-//  switch (_bsSendState)
+//  if (second() >= _nextSlotSec)
 //  {
-//    case BS_SEND_WAIT:
-//      if (second() >= _nextSlotSec)
-//      {
-//        _bsSendState = BS_IS_CONNECTED;
-//      }
-//      break;
-//    case BS_IS_CONNECTED:
-//      if (isBsConnected())
-//      {
-//        //check is my slot, then proceed
-//        nrfTxReady(&nrfConfig);
-//        xferReady();
-//        _bsSendState = BS_SEND;
-//      }
-//      else
-//      {
-//        //calculate next slot
-//        _nextSlotSec = calcNextSlotUnix(second(), &nrfConfig);
-//        _bsSendState = BS_SEND_WAIT;
-//        Serial.println(F("<==BS Not Connected==>"));
-//
-//      }
-//      break;
-//    case BS_SEND:
-//      Serial.println(F("run : RUN_TX_XFER"));
+//    if (isMySlot())
+//    {
+//      nrfTxReady(&nrfConfig);
+//      xferReady();
 //      _nrfSendOk = xferSendLoopV3();
 //      if (_nrfSendOk)
 //      {
-//        _bsSendState = BS_SEND_END;
-//        Serial.println(F("Done and RUN_END_TRANSFER"));
+//        Serial.println(F("All Send Ok"));
 //      }
 //      else
 //      {
-//        _bsSendState = BS_SEND_WAIT;
-//        Serial.println(F("Failed and wait"));
-//        //runState = RUN_CHK_BS_CONN;
+//        Serial.println(F("All Not Sent"));
 //      }
-//      break;
-//    case BS_SEND_END:
 //      _nextSlotSec = calcNextSlotUnix(second(), &nrfConfig);
-//      runState = RUN_WAIT;
-//      break;
+//    }
 //  }
 //}
 
@@ -173,6 +190,26 @@ bool isBsConnected()
     if (nrfPing())
     {
       return true;
+    }
+  } while (--tryCount);
+  return false;
+}
+
+
+bool isMySlot()
+{
+  int8_t tryCount = 3;
+  uint32_t uTime;
+  do
+  {
+    uTime = nrfPingSlot(config.deviceId, nrfConfig.slotId);
+    if (uTime)
+    {
+      return true;
+    }
+    else
+    {
+      delay(100);
     }
   } while (--tryCount);
   return false;

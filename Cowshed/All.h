@@ -33,6 +33,7 @@ bool syncTime();
 bool isHardwareOk();
 void startDevice();
 void deviceRunSM();
+void bsSendSm();
 
 
 

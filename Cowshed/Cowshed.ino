@@ -56,7 +56,8 @@ void loop()
       }
       break;
     case RUN_LOOP:
-      deviceRunSM();
+      //      deviceRunSM();
+      bsSendSm();
 #if defined(DEVICE_HAS_FLASH_MEMORY)
       memq -> saveMemQPtr(memq);
 #endif
@@ -119,7 +120,7 @@ bool rfConfig()
   {
 
     _nextSlotSec = calcNextSlotUnix(second(), &nrfConfig);
-//    setNextSlotSec(slotSec);
+    //    setNextSlotSec(slotSec);
     return conOk;
   }
   else
