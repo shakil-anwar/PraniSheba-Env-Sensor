@@ -56,8 +56,12 @@ void loop()
       }
       break;
     case RUN_LOOP:
-      //      deviceRunSM();
+#if defined(DEVICE_HAS_TDM)
       bsSendSm();
+#else
+      deviceRunSM();
+#endif
+
 #if defined(DEVICE_HAS_FLASH_MEMORY)
       memq -> saveMemQPtr(memq);
 #endif

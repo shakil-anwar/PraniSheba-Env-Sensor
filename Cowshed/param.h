@@ -3,13 +3,16 @@
 #include <Arduino.h>
 
 /**********************************Common Build Flags************************/
-//#define FACTORY_RESET
-//#define DATA_ERASE
+#define  PCB_V_0_1_0
+//#define  PCB_V_0_2_0
+
+#define FACTORY_RESET
+#define DATA_ERASE
 #define DEVICE_HAS_FLASH_MEMORY //if device has flash memory. 
 #define DEVICE_HAS_RTC
 //#define DO_CALIBRATION
-#define  PCB_V_0_1_0
-//#define  PCB_V_0_2_0
+#define DEVICE_HAS_TDM
+
 
 /******************Device Identifier********************/
 #define SENSOR_TYPE 2

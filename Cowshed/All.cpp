@@ -25,7 +25,7 @@ Task taskNrfStatus(5, &nrfWhichMode);
 void system_setup(void)
 {
   Serial.begin(SERIAL_SPEED);
-
+  SerialBegin(SERIAL_SPEED);  //supporting serial c library
   radio_begin();
 #if defined(DEVICE_HAS_RTC)
   rtcBegin();
@@ -54,7 +54,7 @@ void startDevice()
   radioStart();
   wdtStart();
 #if defined(FACTORY_RESET)
-  nrfTxAddrReset(saveAddr);
+   nrfTxConfigReset(&nrfConfig, NRF_CONFIG_ROM_ADDR, eepromUpdate);
 #endif
   
 #if defined(DATA_ACQUIRE_INTERVAL)
@@ -122,7 +122,10 @@ void bsSendSm()
     case BS_SEND_WAIT:
       if (second() >= _nextSlotSec)
       {
-        _bsSendState = BS_IS_CONNECTED;
+        if(second() >= _nextSlotSec)
+        {
+          _bsSendState = BS_IS_CONNECTED;
+        }
       }
       break;
     case BS_IS_CONNECTED:
