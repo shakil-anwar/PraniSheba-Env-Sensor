@@ -112,6 +112,8 @@ bool syncTime()
   }
   else
   {
+    Serial.println(F("Mode====="));
+    nrfWhichMode();
     delay(SYNC_PING_DELAY_MS);// ping after 2s interval
   }
   return false;

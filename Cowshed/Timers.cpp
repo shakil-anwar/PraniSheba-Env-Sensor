@@ -38,6 +38,7 @@ void timerIsr(void)
 {
   _second++;
   _tempSec++;
+  Serial.println(_second);
   // Serial.println(F("Timer ISR Triggered"));
 //  if(_second >=_slotSec)
 //  {

@@ -26,6 +26,7 @@ void system_setup(void)
 {
   Serial.begin(SERIAL_SPEED);
   SerialBegin(SERIAL_SPEED);  //supporting serial c library
+  gpioBegin(); //This function has to call first to set sensitive pin like cs pin of spi
   radio_begin();
 #if defined(DEVICE_HAS_RTC)
   rtcBegin();
@@ -208,6 +209,13 @@ bool isMySlot()
     uTime = nrfPingSlot(config.deviceId, nrfConfig.slotId);
     if (uTime)
     {
+      //update time 
+//      uTime = uTime-2;
+      if(abs((int32_t)(second()-uTime))>1)
+      {
+        Serial.println(F(">>>>>>>>>>>>>>>>.Time gap"));
+        rtSync(uTime);
+      }
       return true;
     }
     else

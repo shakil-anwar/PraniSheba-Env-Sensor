@@ -19,6 +19,13 @@ void factoryReset()
   nrfTxConfigReset(&nrfConfig, NRF_CONFIG_ROM_ADDR, eepromUpdate);
 }
 
+void gpioBegin()
+{
+  pinMode(FLASH_CS,OUTPUT);
+  digitalWrite(FLASH_CS,HIGH);
+}
+  
+
 // void rtcBegin()
 // {
 //   if (! rtc.begin())

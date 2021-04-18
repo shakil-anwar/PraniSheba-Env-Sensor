@@ -58,7 +58,7 @@
 
 
 void objectsBegin();
-
+void gpioBegin();
 // void rtcBegin();
 // uint32_t rtcGetSec();
 // void rtcUpdateSec(uint32_t unix);
