@@ -117,7 +117,7 @@ void deviceRfSend(uint8_t *data)
   // Serial.println(F("Sending Via nrf"));
   BUZZER_ON();
   nrfWrite(data, sizeof(payload_t));
-  nrfStartTransmit();
+  nrtTxStartTransmission();
   BUZZER_OFF();
 }
 
