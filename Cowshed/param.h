@@ -4,7 +4,7 @@
 
 /**********************************Common Build Flags************************/
 #define  PCB_V_0_1_0
-//#define  PCB_V_0_2_0
+// #define  PCB_V_0_2_0
 
 #define FACTORY_RESET
 #define DATA_ERASE

@@ -28,7 +28,7 @@ git clone https://github.com/shuvangkar/arduinoCwrapper.git
 git clone https://github.com/shuvangkar/AVR_Watchdog.git
 git clone https://github.com/shuvangkar/Timer1.git
 git clone https://github.com/shuvangkar/tScheduler.git
-
+git clone https://github.com/shuvangkar/Sensor_TDM.git
 # Clone arduino repository
 git clone https://github.com/adafruit/RTClib.git
 git clone https://github.com/Simsso/ShiftRegister74HC595.git
