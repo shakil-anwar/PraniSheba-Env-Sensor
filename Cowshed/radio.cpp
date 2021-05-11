@@ -24,7 +24,7 @@ void radio_begin()
 {
   nrfSetTimers(millis, second);
   nrfSetPin(&NRF_CE_PORT, NRF_CE_PIN, &NRF_CSN_PORT, NRF_CSN_PIN);
-  nrfDebug(true);
+  nrfSetDebug(true);
   nrfBegin(SPEED_2MB, POWER_ZERO_DBM, SPI_SPEED);
   nrfSetIrqs(txIsr, rxIsr, maxRtIsr);
   

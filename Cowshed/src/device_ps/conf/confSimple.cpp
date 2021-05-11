@@ -96,7 +96,7 @@ void handlleDeviceCmd()
     {
       case 1:
         Serial.println(F("Erasing Flash.."));
-        memq -> reset(memq);
+        memqReset(&memq); 
         // memQ.erase();
         break;
       case 2:

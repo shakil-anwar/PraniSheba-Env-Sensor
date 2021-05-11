@@ -3,9 +3,8 @@
 void memReader(uint32_t addr, uint8_t *buf, uint16_t len);
 void memWriter(uint32_t addr, uint8_t *buf, uint16_t len);
 void memEraser(uint32_t addr, uint16_t len);
-void memPtrReader(ptr_t *ptr);
-void memPtrWriter(ptr_t *ptr);
-
+void memPtrReader(struct memqPtr_t *ptr);
+void memPtrWriter(struct memqPtr_t *ptr);
 
 #define PAYLOAD_READ_COUNT 1
 void printBuffer(byte *buf, byte len);
@@ -23,7 +22,7 @@ void printBuffer(byte *buf, byte len);
 // MemQ memQ(1, 100);
 // RingEEPROM myeepRom(RING_EEPROM_ADDR);
 RingEEPROM ringObj(RING_EEPROM_ADDR);
-struct memq_t *memq;
+struct memq_t memq;
 uint8_t pageBuf[256];
 #else
   #warning "device has no flash memory"
@@ -40,6 +39,11 @@ Task task2(10, &updateDisplay);
 Task task1(DEFAULT_DATA_SAMPLE_SEC, &schemaReadSensors); //send payload triggers after 5 second interval
 
 
+// #define MEMQ_RING_BUF_LEN  4
+// #define MEMQ_FLASH_START_ADDR 0
+// #define MEMQ_TOTAL_BUFFER   256
+// #define MEMQ_SECTOR_ERASE_SZ  4096
+// #define MEMQ_PTR_SAVE_AFTER   10  
 void deviceBegin()
 {
   schemaBegin();
@@ -51,23 +55,15 @@ void deviceBegin()
   BUZZER_OFF();
 #if defined(DEVICE_HAS_FLASH_MEMORY)
   flash.begin(SPI_SPEED);
-  ringObj.begin(MEMQ_RING_BUF_LEN, sizeof(struct ptr_t));
-  memq = memqNew(0, sizeof(payload_t), 256);
-  if (memq == NULL)
-  {
-    while (1)
-    {
-      Serial.println(F("memq create failed"));
-      delay(1000);
-    }
-  }
+  ringObj.begin(MEMQ_RING_BUF_LEN, sizeof(struct memqPtr_t));
+  memqBegin(&memq,0, sizeof(payload_t), MEMQ_TOTAL_BUFFER);
 
-  memq -> setMemory(memq, memReader, memWriter, memEraser, MEMQ_SECTOR_ERASE_SZ);
-  memq -> setPointer(memq, memPtrReader, memPtrWriter, MEMQ_PTR_SAVE_AFTER);
+  memqSetMem(&memq, memReader, memWriter, memEraser, MEMQ_SECTOR_ERASE_SZ);
+  memqSetMemPtr(&memq, memPtrReader, memPtrWriter, MEMQ_PTR_SAVE_AFTER);
   // memq -> attachBusSafety(memq, nrfRestorToRxTx, nrfRxTxToStandy1);
 
   #if defined(DATA_ERASE)
-  memq -> reset(memq);
+  memqReset(&memq); 
   #endif
 
   // memQ.attachFlash(&flash, &_ramQFlash, sizeof(payload_t), TOTAL_PAYLOAD_BUFFER / 2);
@@ -104,7 +100,7 @@ uint8_t *deviceMemRead()
   {
     // Serial.println(F("Reading from Flash"));
     // pldPtr = memQ.read((uint8_t *)&pldBuf, PAYLOAD_READ_COUNT); // Read from flash
-    pldPtr = memq -> read(memq, (uint8_t*)&pldBuf);
+    pldPtr = memqRead(&memq, (uint8_t*)&pldBuf);
     if (pldPtr != NULL)
     {
       // Serial.println(F("Read Mem : New"));
@@ -156,39 +152,39 @@ void updateDataInterval(uint32_t time)
 
 
 #if defined(DEVICE_HAS_FLASH_MEMORY)
-void memReader(uint32_t addr, uint8_t *buf, uint16_t len)
-{
-  Serial.print(F("<====Tail :"));
-  Serial.print(addr);
-  Serial.println(F("====>"));
-  flash.read(addr, buf, sizeof(payload_t));
-}
+	void memReader(uint32_t addr, uint8_t *buf, uint16_t len)
+	{
+	  Serial.print(F("<====Tail :"));
+	  Serial.print(addr);
+	  Serial.println(F("====>"));
+	  flash.read(addr, buf, sizeof(payload_t));
+	}
 
-void memWriter(uint32_t addr, uint8_t *buf, uint16_t len)
-{
-  Serial.print(F("<====Head :"));
-  Serial.print(addr);
-  Serial.println(F("====>"));
-  flash.write(addr, buf, sizeof(payload_t));
-}
+	void memWriter(uint32_t addr, uint8_t *buf, uint16_t len)
+	{
+	  Serial.print(F("<====Head :"));
+	  Serial.print(addr);
+	  Serial.println(F("====>"));
+	  flash.write(addr, buf, sizeof(payload_t));
+	}
 
-void memEraser(uint32_t addr, uint16_t len)
-{
-  Serial.print(F("Erasing Addr : ")); Serial.println(addr);
-  flash.eraseSector(addr);
-  uint32_t curPage = addr >> 8;
-  flash.dumpPage(curPage, pageBuf);
-}
+	void memEraser(uint32_t addr, uint16_t len)
+	{
+	  Serial.print(F("Erasing Addr : ")); Serial.println(addr);
+	  flash.eraseSector(addr);
+	  uint32_t curPage = addr >> 8;
+	  flash.dumpPage(curPage, pageBuf);
+	}
 
-void memPtrReader(ptr_t *ptr)
-{
-  Serial.println(F("memqPtr Reader called"));
-  ringObj.readPacket((byte *)ptr);
-}
+	void memPtrReader(struct memqPtr_t *ptr)
+	{
+	  Serial.println(F("memqPtr Reader called"));
+	  ringObj.readPacket((byte *)ptr);
+	}
 
-void memPtrWriter(ptr_t *ptr)
-{
-  Serial.println(F("memqPtr Writer called"));
-  ringObj.savePacket((byte *)ptr);
-}
+	void memPtrWriter(struct memqPtr_t *ptr)
+	{
+	  Serial.println(F("memqPtr Writer called"));
+	  ringObj.savePacket((byte *)ptr);
+	}
 #endif

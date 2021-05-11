@@ -63,7 +63,7 @@ void loop()
 #endif
 
 #if defined(DEVICE_HAS_FLASH_MEMORY)
-      memq -> saveMemQPtr(memq);
+      memqSaveMemPtr(&memq);
 #endif
       rtLoop();
       scheduler.run();

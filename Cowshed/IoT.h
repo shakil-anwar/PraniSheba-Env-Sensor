@@ -67,7 +67,7 @@ void factoryReset();
 extern Flash flash;       
 //extern RingEEPROM myeepRom;
 //extern MemQ memQ;
-extern struct memq_t *memq;
+extern struct memq_t memq;
 extern Scheduler scheduler;
 //extern AsyncServer server;
 #endif

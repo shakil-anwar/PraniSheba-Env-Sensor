@@ -14,7 +14,7 @@ void factoryReset()
 {
   Serial.println(F("Factory Resetting Device.."));
   //   memQ.reset();  //erase full flash mem
-  memq -> reset(memq); 
+  memqReset(&memq); 
 //  nrfTxAddrReset(saveAddr); //reset tc addr
   nrfTxConfigReset(&nrfConfig, NRF_CONFIG_ROM_ADDR, eepromUpdate);
 }

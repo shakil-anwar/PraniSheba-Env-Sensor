@@ -55,7 +55,7 @@ void memqSave()
     uint8_t *ramqPtr = _ramQBase;
     for (uint16_t i = 0; i < TOTAL_PAYLOAD_BUFFER; i++)
     {
-      memq -> write(memq, ramqPtr);
+      memqWrite(&memq, ramqPtr);
       //uint32_t curPage = (memq ->ringPtr._head) >> 8;
       //flash.dumpPage(curPage, pageBuf);
       //Serial.print(F("Counter : ")); Serial.println(memq -> _ptrEventCounter);
