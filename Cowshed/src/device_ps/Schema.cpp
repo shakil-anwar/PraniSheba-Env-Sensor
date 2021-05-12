@@ -3,7 +3,9 @@
 volatile payload_t  payload[TOTAL_PAYLOAD_BUFFER];
 queryData_t queryBuffer;
 
-sensor_t sensor;
+struct sensor_t sensor;
+
+uint8_t checksumCalc(uint8_t *buf,uint8_t len);
 
 void schemaBegin()
 {
@@ -18,30 +20,48 @@ void schemaBegin()
 //  sensor.id = COWSHED_ID;
 }
 
-
-sensor_t *getSensorsData(sensor_t *senPtr)
+uint8_t checksumCalc(uint8_t *buf,uint8_t len)
 {
-  sensor_t *sensor = senPtr;
+  struct header_t *hPtr = (struct header_t*)buf;
+  hPtr->checksum = 0;
 
-  sensor -> type = SENSOR_TYPE;
-  sensor -> id = config.deviceId;
+  uint16_t sum = 0;
+  uint8_t *ptr = buf;
+  uint8_t i;
+  for(i = 0; i< len; i++)
+  {
+    sum += (uint16_t)ptr[i];
+  }
+  return (uint8_t)sum;
+}
+
+struct  sensor_t *getSensorsData(struct sensor_t *senPtr)
+{
+  struct sensor_t *sensor = senPtr;
+
+  sensor -> header.type = SENSOR_TYPE;
+  sensor -> header.id = config.deviceId;
   sensor -> unixTime = second();
   sensor -> temp = getTemp();
   sensor -> hum = getHum();
   sensor -> ammonia = getAmmonia();
   sensor -> methane = getMethane();
+
+  //calculate checksum
+  sensor -> header.checksum = checksumCalc((uint8_t*)sensor,sizeof(struct sensor_t));
   return senPtr;
 }
 
-void printSensor(sensor_t *sensor)
+void printSensor(struct sensor_t *sensor)
 {
   Serial.println(F("<---------Sensor Data----------------->"));
   Serial.print(F("Time : ")); Serial.println(sensor -> unixTime );
-  Serial.print(F("ID : ")); Serial.println(sensor -> id );
+  Serial.print(F("ID : ")); Serial.println(sensor -> header.id );
   Serial.print(F("Temperature : ")); Serial.print(sensor -> temp ); Serial.println(" C");
   Serial.print(F("Humidity : ")); Serial.print(sensor -> hum ); Serial.println(" %Rh");
   Serial.print(F("Ammonia : ")); Serial.print(sensor -> ammonia ); Serial.println(" ppm");
   Serial.print(F("Methane : ")); Serial.print(sensor -> methane ); Serial.println(" ppm");
+  Serial.print(F("checksum : ")); Serial.print(sensor->header.checksum );
 }
 
 
@@ -67,7 +87,7 @@ void memqSave()
 
 void schemaReadSensors()
 {
-  sensor_t *senPtr = (sensor_t*)ramQHead();
+  struct sensor_t *senPtr = (struct sensor_t*)ramQHead();
   getSensorsData(senPtr);
   printSensor(senPtr);
   Serial.print(F("ramQ Counter :"));Serial.println(ramQCounter);

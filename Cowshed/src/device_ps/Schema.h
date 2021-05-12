@@ -3,28 +3,50 @@
 #include <Arduino.h>
 #include "device.h"
 
-typedef struct dummy_t
+struct dummy_t
 {
   uint8_t temp[32];
 };
 
-typedef struct sensor_t
+// typedef struct struct sensor_t
+// {
+//   uint8_t type;
+//   uint8_t reserve;
+  
+//   uint16_t id;
+//   uint32_t unixTime;
+//   float ammonia;
+//   float methane;
+//   float hum;
+//   float temp;
+// };
+
+struct header_t
 {
   uint8_t type;
-  uint8_t reserve;
-  
+  uint8_t checksum;
   uint16_t id;
+};
+
+struct sensor_t
+{
+  //header
+  struct header_t header;
+  //payload
   uint32_t unixTime;
   float ammonia;
   float methane;
   float hum;
   float temp;
+  uint16_t logicVolt;
+  uint16_t errorCode;
+  uint8_t reserve[4];
 };
 
 typedef union payload_t
 {
-  sensor_t gasSensor;
-  dummy_t dummy; 
+  struct sensor_t gasSensor;
+  struct dummy_t dummy; 
 };
 /*************************Query Schema*****************************/
 
@@ -73,13 +95,13 @@ typedef union queryData_t
 
 
 void schemaBegin();
-sensor_t *getSensorsData(sensor_t *senPtr);
-void printSensor(sensor_t *sensor);
+struct sensor_t *getSensorsData(struct sensor_t *senPtr);
+void printSensor(struct sensor_t *sensor);
 
 void schemaReadSensors();
 
 extern volatile payload_t  payload[TOTAL_PAYLOAD_BUFFER];
 extern queryData_t queryBuffer;
-extern sensor_t sensor;
+extern struct sensor_t sensor;
 
 #endif 

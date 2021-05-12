@@ -161,7 +161,7 @@ void ledTestAll()
 
 void updateDisplay()
 {
-  sensor_t *sensorPtr = getSensorsData(&sensor);
+  struct sensor_t *sensorPtr = getSensorsData(&sensor);
 //  printSensor(sensorPtr);
   uint8_t level;
   //humidity
