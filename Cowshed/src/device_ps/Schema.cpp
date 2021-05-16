@@ -61,7 +61,7 @@ void printSensor(struct sensor_t *sensor)
   Serial.print(F("Humidity : ")); Serial.print(sensor -> hum ); Serial.println(" %Rh");
   Serial.print(F("Ammonia : ")); Serial.print(sensor -> ammonia ); Serial.println(" ppm");
   Serial.print(F("Methane : ")); Serial.print(sensor -> methane ); Serial.println(" ppm");
-  Serial.print(F("checksum : ")); Serial.print(sensor->header.checksum );
+  Serial.print(F("checksum : ")); Serial.println(sensor->header.checksum );
 }
 
 
