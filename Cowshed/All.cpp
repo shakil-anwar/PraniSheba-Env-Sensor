@@ -133,7 +133,8 @@ void bsSendSm()
       Serial.println(F("run : BS_IS_CONNECTED"));
       if (isMySlot())
       {
-        nrfTxReady(&nrfConfig);
+        // nrfTxReady(&nrfConfig);
+        nrfTxSetModeClient(BS_DATA,&nrfConfig);
         xferReady();
         _bsSendState = BS_SEND;
       }

@@ -7,7 +7,7 @@ void txIsr(void);
 void rxIsr(void);
 void maxRtIsr(void);
 
-uint8_t pipe0Addr[5] = {120, 121, 123, 124, 125};
+uint8_t pipe0Addr[5] = {120, 122, 123, 124, 125};
 uint8_t txLsByte;
 nrfNodeConfig_t nrfConfig;
 
@@ -30,7 +30,8 @@ void radio_begin()
   
   nrfQryObj.pipe = QUERY_PIPE;
   nrfQryObj.addr = pipe0Addr;
-  nrfQueryBegin(&nrfQryObj, SENSOR_NODE);
+  // nrfQryObj.pipeAddr = &pipeAddr;
+  nrfQueryBeginClient(&nrfQryObj);
   // nrfQueryClientSet(QUERY_PIPE, pipe0Addr);
   //nrfQueryBufferSet((uint8_t*)&queryBuffer, sizeof(queryData_t));
 
@@ -38,6 +39,7 @@ void radio_begin()
   nrfPowerDown();
   Serial.println(F("Radio setup done"));
 }
+
 
 void radioStart()
 {
