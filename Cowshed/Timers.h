@@ -5,7 +5,7 @@
 #if defined(PROD_BUILD) 
     #include "./src/lib/nRF24/nRF24_Qry_Client.h"
 #else
-    #include "nRF24_Qry_Client.h"
+    #include "nRF24_Client.h"
 #endif 
 
 void TimersBegin();
