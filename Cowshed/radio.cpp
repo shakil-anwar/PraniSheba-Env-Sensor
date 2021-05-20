@@ -29,7 +29,7 @@ void radio_begin()
   nrfSetIrqs(txIsr, rxIsr, maxRtIsr);
   
   nrfQryObj.pipe = QUERY_PIPE;
-  nrfQryObj.addr = pipe0Addr;
+  nrfQryObj.activePingAddr = pipe0Addr;
   // nrfQryObj.pipeAddr = &pipeAddr;
   nrfQueryBeginClient(&nrfQryObj);
   // nrfQueryClientSet(QUERY_PIPE, pipe0Addr);
