@@ -3,7 +3,7 @@
 #include <Arduino.h>
 
 /**********************************Common Build Flags************************/
-#define  PCB_V_0_1_0
+// #define  PCB_V_0_1_0
 // #define  PCB_V_0_2_0
 
 // #define FACTORY_RESET
@@ -32,7 +32,12 @@
 
 
 /***************Communication Parameter****************/
+#if defined(PCB_V_0_1_0)
 #define SPI_SPEED 1000000UL
+#elif defined(PCB_V_0_2_0)
+#define SPI_SPEED 10000UL
+#endif
+
 #define SERIAL_SPEED  250000UL
 /****************EEPROM MEMORY MAP*********************/
 #define MQ4_EEP_ADDR         0
