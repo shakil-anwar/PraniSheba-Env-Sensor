@@ -238,7 +238,7 @@ bool isMySlot()
       tdmSyncState = TDM_SYNCED;
       if(abs((int32_t)(second()-uTime))>1)
       {
-        Serial.println(F(">>>>>>>>>>>>>>>>.Time gap"));
+        Serial.println(F(">>>>>>>>>>>>>>>.Time gap"));
         rtSync(uTime);
       }
       return true;
