@@ -22,6 +22,7 @@ runState_t runState;
 volatile uint32_t _prevRunSec;
 volatile uint32_t _nowSec;
 uint32_t _nextSlotUnix;
+uint32_t _nextSlotEnd;
 bool _nrfSendOk;
 int16_t rfFailCount;
 
@@ -131,6 +132,7 @@ void bsSendSm()
       {
         if(second() >= _nextSlotSec)
         {
+          _nextSlotEnd = _nextSlotSec+(uint32_t)nrfConfig.momentDuration;
           _bsSendState = BS_IS_CONNECTED;
         }
       }
@@ -158,7 +160,16 @@ void bsSendSm()
       break;
     case BS_SEND:
       Serial.println(F("run : BS_SEND"));
-      _nrfSendOk = xferSendLoopV3();
+      if(second() <= _nextSlotEnd)
+      {
+        _nrfSendOk = xferSendLoopV3();
+      }
+      else
+      {
+        Serial.println(F("BS_SEND>Slot Timeout"));
+        _nrfSendOk = false;
+      }
+      
       _bsSendState = BS_SEND_END;
       if (_nrfSendOk)
       {
