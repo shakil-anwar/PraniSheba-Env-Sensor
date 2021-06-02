@@ -251,6 +251,7 @@ bool isMySlot()
       }
       else
       {
+        tdmSyncState = TDM_SYNCED;
         rtSync(pong.second);
       }
       return false;
