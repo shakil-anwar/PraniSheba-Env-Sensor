@@ -9,7 +9,10 @@ enum bsSendState_t
   BS_SEND_END,
 };
 
+mainState_t mainState;
+
 enum bsSendState_t _bsSendState;
+enum tdmSyncState_t tdmSyncState;
 void printRunState();
 bool isBsConnected();
 bool isMySlot();
@@ -20,10 +23,13 @@ volatile uint32_t _prevRunSec;
 volatile uint32_t _nowSec;
 uint32_t _nextSlotUnix;
 bool _nrfSendOk;
+int16_t rfFailCount;
 
 Task taskNrfStatus(5, &nrfWhichMode);
 void system_setup(void)
 {
+  rfFailCount = 0;
+  tdmSyncState = TDM_UNSYNCED;
   Serial.begin(SERIAL_SPEED);
   SerialBegin(SERIAL_SPEED);  //supporting serial c library
   gpioBegin(); //This function has to call first to set sensitive pin like cs pin of spi
@@ -133,6 +139,7 @@ void bsSendSm()
       Serial.println(F("run : BS_IS_CONNECTED"));
       if (isMySlot())
       {
+        rfFailCount = 0;
         // nrfTxReady(&nrfConfig);
         nrfTxSetModeClient(BS_DATA,&nrfConfig);
         xferReady();
@@ -140,9 +147,13 @@ void bsSendSm()
       }
       else
       {
+        rfFailCount++;
+        if(tdmSyncState == TDM_CONFIG_CHANGED)
+        {
+          mainState = SYNC_RF;
+        }
         _bsSendState = BS_SEND_END;
         Serial.println(F("<==BS Not Connected==>"));
-
       }
       break;
     case BS_SEND:
@@ -208,10 +219,11 @@ bool isMySlot()
   do
   {
     uTime = nrfPingSlot(config.deviceId, nrfConfig.slotId);
-    if (uTime)
+    if (uTime > 1)
     {
       //update time 
 //      uTime = uTime-2;
+      tdmSyncState = TDM_SYNCED;
       if(abs((int32_t)(second()-uTime))>1)
       {
         Serial.println(F(">>>>>>>>>>>>>>>>.Time gap"));
@@ -219,11 +231,17 @@ bool isMySlot()
       }
       return true;
     }
-    else
+    else if(uTime == 1)
     {
-      delay(100);
+      tdmSyncState = TDM_CONFIG_CHANGED;
+      return false;
     }
+    else{
+      tdmSyncState = TDM_SLOT_MISSED;
+    }
+    delay(100);
   } while (--tryCount);
+
   return false;
 }
 

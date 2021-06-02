@@ -22,6 +22,15 @@ typedef enum runState_t
   RUN_END_TRANSFER,
 };
 
+enum tdmSyncState_t
+{
+  TDM_SYNCED,
+  TDM_UNSYNCED,
+  TDM_SLOT_MISSED,
+  TDM_CONFIG_CHANGED,
+  TDM_CONFIGURED,
+};
+
 void system_setup(void);
 void test_flash(void);
 void payloadStateMachine();
@@ -40,8 +49,12 @@ void bsSendSm();
 void configSave(config_t *bootPtr);
 void configRead(config_t *bootPtr);
 
+
+extern mainState_t mainState;
 extern volatile uint32_t _nowSec;
 extern volatile uint32_t _prevRunSec;
 extern uint32_t _nextSlotUnix;
+extern int16_t rfFailCount;
+extern enum tdmSyncState_t tdmSyncState;
 
 #endif 

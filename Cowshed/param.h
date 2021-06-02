@@ -14,6 +14,8 @@
 #define DEVICE_HAS_TDM
 
 
+
+
 /******************Device Identifier********************/
 #define SENSOR_TYPE 2
 #define SENSOR_ID   81
@@ -29,7 +31,7 @@
 /****************Interval Parameter********************/
 //#define DATA_ACQUIRE_INTERVAL   1
 #define DATA_TRASNFER_INTERVAL  10
-
+#define MAX_RF_DATA_SEND_RETRY  5
 
 /***************Communication Parameter****************/
 #if defined(PCB_V_0_1_0)
