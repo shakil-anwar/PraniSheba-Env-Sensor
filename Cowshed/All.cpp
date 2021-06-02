@@ -227,9 +227,10 @@ bool isMySlot()
 {
   int8_t tryCount = 3;
   uint32_t uTime;
+  pong_t pong;
   do
   {
-    uTime = nrfPingSlot(config.deviceId, nrfConfig.slotId);
+    uTime = nrfPingSlot(config.deviceId, nrfConfig.slotId, &pong);
     if (uTime > 1)
     {
       //update time 
@@ -244,7 +245,14 @@ bool isMySlot()
     }
     else if(uTime == 1)
     {
-      tdmSyncState = TDM_CONFIG_CHANGED;
+      if(pong.isConfigChanged == 1)
+      {
+        tdmSyncState = TDM_CONFIG_CHANGED;
+      }
+      else
+      {
+        rtSync(pong.second);
+      }
       return false;
     }
     else{
