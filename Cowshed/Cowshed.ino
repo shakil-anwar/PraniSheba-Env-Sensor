@@ -3,7 +3,7 @@
 #define SYNC_PING_DELAY_MS 5000
 
 void printMainState(mainState_t mstate);
-mainState_t mainState;
+
 bool startRun = false;
 void setup()
 {
@@ -51,13 +51,20 @@ void loop()
     case SYNC_RF:
       if (rfConfig())
       {
-
         mainState = RUN_LOOP;
+        tdmSyncState = TDM_SYNCED;
+      }else{
+        tdmSyncState = TDM_UNSYNCED;
       }
       break;
     case RUN_LOOP:
 #if defined(DEVICE_HAS_TDM)
       bsSendSm();
+      if(rfFailCount > MAX_RF_DATA_SEND_RETRY)
+      {
+        rfFailCount = 0;
+        mainState = SYNC_RF;
+      }
 #else
       deviceRunSM();
 #endif
