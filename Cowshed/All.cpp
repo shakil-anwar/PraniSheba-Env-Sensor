@@ -130,11 +130,8 @@ void bsSendSm()
     case BS_SEND_WAIT:
       if (second() >= _nextSlotSec)
       {
-        if(second() >= _nextSlotSec)
-        {
           _nextSlotEnd = _nextSlotSec+(uint32_t)nrfConfig.momentDuration;
           _bsSendState = BS_IS_CONNECTED;
-        }
       }
       break;
     case BS_IS_CONNECTED:
