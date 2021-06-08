@@ -49,8 +49,8 @@
 
 	#define TOTAL_SR  3
 	#define SR_DATA   5
-	#define SR_CLOCK  A6
-	#define SR_LATCH  A7
+	#define SR_CLOCK  4
+	#define SR_LATCH  3
 	#define SR_PWM    10
 	
 	#define MQ4_PIN   A0

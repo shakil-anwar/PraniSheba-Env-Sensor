@@ -148,6 +148,12 @@ void rtcUpdateSec(uint32_t unix)
   }
 }
 
+
+bool rtcIsRunning()
+{
+  return rtc.isrunning();
+}
+
 uint32_t calcNextSlotUnix(uint32_t uSec, nrfNodeConfig_t *conf)
 {
   uint16_t slotSec = (conf -> perNodeInterval) * (conf -> slotId);

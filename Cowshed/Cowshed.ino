@@ -140,5 +140,6 @@ bool rfConfig()
   {
     delay(SYNC_PING_DELAY_MS);// ping after 2s interval
   }
+  return false;
 
 }
