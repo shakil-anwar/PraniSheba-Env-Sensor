@@ -43,9 +43,9 @@ bool nrfTxConfigHandler(uint16_t DeviceId, nrfNodeConfig_t *conf,
                     (conf -> type == PING_TYPE) &&
                     (conf -> opcode == NRF_CONFIG_OPCODE);
 
-    nrfNodeConfig_t conf_t;
     nrfNodeConfig_t *conf_t_ptr;
     SerialPrintlnF(P("Getting New Config"));
+    nrfTxSetModeClient(COMMON_PING,conf);
     conf_t_ptr = nrfTxGetConfig(DeviceId,conf);
 
     if(conf_t_ptr !=NULL)

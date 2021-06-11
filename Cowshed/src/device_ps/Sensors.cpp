@@ -32,6 +32,7 @@ MQ mq135(MQ135_PIN);
 bool sensorBegin()
 {
   Wire.begin();    // begin Wire(I2C)
+  sht.reset();
   humSensorBegin();
   mqBegin();
 }
@@ -75,6 +76,7 @@ float sensorValidate(float value)
 void humSensorBegin()
 {
   Wire.begin();    // begin Wire(I2C)
+
 }
 
 float getHum()
@@ -119,7 +121,7 @@ float getAmmonia()
 #if !defined(PROD_BUILD)
    return config.deviceId;
 #else
-  return sensorValidate(mq4.getPPM());
+  return sensorValidate(mq135.getPPM());
 #endif
 }
 
@@ -135,7 +137,7 @@ float getMethane()
 #if !defined(PROD_BUILD)
    return config.deviceId;
 #else
-  return sensorValidate(mq135.getPPM());
+  return sensorValidate(mq4.getPPM());
 #endif
 }
 

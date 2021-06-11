@@ -42,7 +42,7 @@ struct  sensor_t *getSensorsData(struct sensor_t *senPtr)
   sensor -> header.type = SENSOR_TYPE;
   sensor -> header.id = config.deviceId;
   sensor -> unixTime = second();
-  sensor -> temp = getTemp();
+  sensor -> temp = (getTemp() - 2);
   sensor -> hum = getHum();
   sensor -> ammonia = getAmmonia();
   sensor -> methane = getMethane();

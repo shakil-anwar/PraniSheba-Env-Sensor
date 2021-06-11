@@ -153,20 +153,36 @@ void PongHandler(query_t *qry)
     if(qry->opcode == PING2_OPCODE)
     {
         struct node_t *currentNode = (struct node_t*)tdmGetCurrentNode();
-        if(currentNode != NULL)
-        {
+        // if(currentNode != NULL)
+        // {
             SerialPrintF(P("Slot id : "));SerialPrintlnU8(currentNode -> slotNo);
-            pong.isBsFree = true;
-            pong.isMySlot = currentNode -> slotNo == qry ->slotId;
+
             pong.isConfigChanged = false;
-        }
-        else
-        {
-            pong.isBsFree = false;
-            pong.isMySlot = false;
-            pong.isConfigChanged = false;
-            SerialPrintlnF(P("Slot not synced"));
-        }
+            
+            if(currentNode -> deviceId == qry -> deviceId)
+            {
+            	pong.isBsFree = true;
+	            pong.isMySlot = true;
+	            
+            }
+            else
+            {
+            	pong.isBsFree = false;
+            	pong.isMySlot = false;
+            	if(tdmIsRegistered2(qry -> deviceId, qry-> slotId) != 255)
+            	{
+            		pong.isConfigChanged = true;
+            	}
+            }
+            
+        // }
+        // else
+        // {
+        //     pong.isBsFree = false;
+        //     pong.isMySlot = false;
+        //     pong.isConfigChanged = false;
+        //     SerialPrintlnF(P("Slot not synced"));
+        // }
         
     }
     pong.checksum = checksum(&pong, sizeof(pong_t)-1);
