@@ -42,11 +42,11 @@
 
 #define SERIAL_SPEED  250000UL
 /****************EEPROM MEMORY MAP*********************/
-#define MQ4_EEP_ADDR         0
-#define MQ135_EEPROM_ADDR   (MQ4_EEP_ADDR + 21)
-#define MAIN_CONFIG_EEPROM_ADDR  (MQ135_EEPROM_ADDR+ 21)
-#define NRF_CONFIG_ROM_ADDR     (MAIN_CONFIG_EEPROM_ADDR+20)
-#define RING_EEPROM_ADDR    (NRF_CONFIG_ROM_ADDR+ 20)
+#define MQ4_EEP_ADDR                0
+#define MQ135_EEPROM_ADDR           (MQ4_EEP_ADDR + 21)
+#define MAIN_CONFIG_EEPROM_ADDR     (MQ135_EEPROM_ADDR+ 21)
+#define NRF_CONFIG_ROM_ADDR         (MAIN_CONFIG_EEPROM_ADDR+20)
+#define RING_EEPROM_ADDR            (NRF_CONFIG_ROM_ADDR+ 20)
 
 
 /***************RING BUFFER PARAM**********************/

@@ -83,6 +83,10 @@ void memqSetMemPtr(struct memq_t *memq, ringFun_t reader, ringFun_t writer, uint
   memq->_ptrRead = reader;
   memq->_ptrWrite = writer;
   memq->_ptrRead(&(memq->ringPtr));
+  if(memq->ringPtr._head > memq->_lastAddr)
+  {
+    memqReset(memq);
+  }
   memq->_maxPtrEvent = maxPtrEvent;
 // #if defined(MEMQ_DEBUG)
 //   SerialPrintF(P("memq RingPtr Head : "));
@@ -97,7 +101,7 @@ void memqSetMemPtr(struct memq_t *memq, ringFun_t reader, ringFun_t writer, uint
 //Print memq  begin log 
 void memqPrintBeginLog(struct memq_t *memq)
 {
-	SerialPrintF(P("MEMQ->BEGIN->Start:"));SerialPrintU32(memq->_baseAddr);
+	SerialPrintF(P("MEMQ->BEGIN:"));SerialPrintU32(memq->_baseAddr);
   	SerialPrintF(P("|End:"));SerialPrintU32(memq->_lastAddr);
   	SerialPrintF(P("|H:")); SerialPrintU32(memq->ringPtr._head);
     SerialPrintF(P("|T:")); SerialPrintlnU32(memq->ringPtr._tail);

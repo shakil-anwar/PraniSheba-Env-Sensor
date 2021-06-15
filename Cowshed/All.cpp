@@ -34,7 +34,7 @@ void system_setup(void)
   Serial.begin(SERIAL_SPEED);
   SerialBegin(SERIAL_SPEED);  //supporting serial c library
   gpioBegin(); //This function has to call first to set sensitive pin like cs pin of spi
-  Serial.println("[pS Env Sensor v0.6.1]");
+  Serial.println("[pS Env Sensor v0.6.3]");
   radio_begin();
 #if defined(DEVICE_HAS_RTC)
   rtcBegin();
@@ -288,8 +288,8 @@ bool isHardwareOk()
   Serial.print(F("RTC: ")); Serial.println(rtcOk);
   Serial.print(F("Flash :")); Serial.println(true);
   Serial.print(F("Logic Power: ")); Serial.println(true);
-  Serial.println(F("<------------------->"));
-  return (nrfOk && rtcOk);
+  Serial.println(F("<------------->"));
+  return (nrfOk);
 }
 
 
@@ -303,6 +303,8 @@ void configSave(config_t *bootPtr)
   {
     EEPROM.update(MAIN_CONFIG_EEPROM_ADDR + i, *(ptr + i));
   }
+
+  // eepromUpdate(MAIN_CONFIG_EEPROM_ADDR, ptr, sizeof(config_t));
 }
 
 void configRead(config_t *bootPtr)
@@ -312,6 +314,8 @@ void configRead(config_t *bootPtr)
   {
     *(ptr + i) = EEPROM.read(MAIN_CONFIG_EEPROM_ADDR + i);
   }
+
+  // eepromRead(MAIN_CONFIG_EEPROM_ADDR, ptr, sizeof(config_t));
   //  return bootPtr;
 }
 

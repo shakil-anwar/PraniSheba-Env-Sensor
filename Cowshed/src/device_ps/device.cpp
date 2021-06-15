@@ -31,6 +31,7 @@ uint8_t pageBuf[256];
 
 /**********Async Server Objects*********************/
 payload_t pldBuf;
+struct sensor_t *pldBufPtr = (struct sensor_t *)&pldBuf;
 uint8_t payloadCount = 1;
 uint8_t *pldPtr; //This will keep track of  read memory until sent 
 
@@ -103,12 +104,16 @@ uint8_t *deviceMemRead()
     pldPtr = memqRead(&memq, (uint8_t*)&pldBuf);
     if (pldPtr != NULL)
     {
+      if(pldBufPtr->unixTime > second())
+      {
+        return NULL;
+      }
       // Serial.println(F("Read Mem : New"));
       printBuffer(pldPtr, sizeof(payload_t));
     }
     return pldPtr;
   }
-  Serial.println(F("----->Read Mem : Old"));
+  Serial.println("->Read Mem : Old");
   return pldPtr;
 }
 

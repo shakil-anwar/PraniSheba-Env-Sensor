@@ -51,7 +51,7 @@ void mqBegin()
 
 bool sensorCalibrate()
 {
-  mq4.setXY(1000, 5000, 1, 0.6);
+  mq4.setXY(1000, 3000, 1, 0.68);
 	mq4.setR(1000, MQ4_AIR_RS_R0_RATIO);
 	mq4.runCalib(saveMq4Calib);
 

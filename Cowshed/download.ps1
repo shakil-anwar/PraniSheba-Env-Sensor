@@ -15,7 +15,7 @@ cd ./lib
 
 git clone https://github.com/shuvangkar/FlashMemory.git
 git clone https://github.com/shuvangkar/realTime.git 
-git clone https://github.com/shuvangkar/RingEEPROM.git 
+git clone https://github.com/shakil-anwar/RingEEPROM.git
 git clone https://github.com/shuvangkar/MQSensor.git
 git clone https://github.com/shuvangkar/simple-json.git
 git clone https://github.com/shuvangkar/asyncXfer.git
