@@ -55,7 +55,7 @@ bool sensorCalibrate()
 	mq4.setR(1000, MQ4_AIR_RS_R0_RATIO);
 	mq4.runCalib(saveMq4Calib);
 
-	mq135.setXY(2.65, 1, 10, 100);
+	mq135.setXY( 10, 100, 2.65, 1);
 	mq135.setR(1000, MQ135_AIR_RS_R0_RATIO);
 	mq135.runCalib(saveMq135Calib);
 	return true;

@@ -1,6 +1,8 @@
 #include "IoT.h"
 #include "radio.h"
 
+struct gasSensorLog_t sensorLog;
+
 //RTC_DS1307 rtc;
 Scheduler scheduler;
 void objectsBegin()
@@ -24,6 +26,58 @@ void gpioBegin()
   pinMode(FLASH_CS,OUTPUT);
   digitalWrite(FLASH_CS,HIGH);
 }
+
+#if defined(DEVICE_HAS_LOG)
+
+void initiateLog()
+{
+
+  eepromRead(LOG_SAVE_ADDR, (uint8_t *)&sensorLog, sizeof(struct gasSensorLog_t));
+
+  uint8_t logChecksum = sensorLog.header.checksum;
+  sensorLog.header.checksum = 0;
+  if((sensorLog.header.type != SENSOR_LOG_TYPE) 
+      && (sensorLog.header.id != config.deviceId)
+      && (checksum((void *)&sensorLog,sizeof(struct gasSensorLog_t)) != logChecksum))
+  {
+    memset((uint8_t *)&sensorLog, '\0', sizeof(struct gasSensorLog_t));
+    sensorLog.header.type = SENSOR_LOG_TYPE;
+    sensorLog.header.id = config.deviceId;
+    sensorLog.restartCount = 0;
+  }
+  sensorLog.slotMissed = 1;
+  sensorLog.restartCount++;
+  eepromUpdate(LOG_SAVE_ADDR, (uint8_t *)&sensorLog, sizeof(struct gasSensorLog_t));
+}
+ 
+struct gasSensorLog_t *updateLog()
+{
+  struct gasSensorLog_t *senLogPtr = (struct gasSensorLog_t*)ramQHead();
+
+  sensorLog.header.type = SENSOR_LOG_TYPE;
+  sensorLog.header.id = config.deviceId;
+
+  sensorLog.errorCode = 200;
+  sensorLog.hardwareErrorCode = 200;
+  sensorLog.railVoltage = 3.3;
+  sensorLog.unixTime = second();
+  sensorLog.flashAvailablePackets = memqAvailable(&memq);
+  sensorLog.header.checksum = 0;
+  sensorLog.header.checksum  = checksum((void *)&sensorLog,sizeof(struct gasSensorLog_t)); 
+  
+  if(senLogPtr != NULL)
+  {
+    memset(senLogPtr, '\0',32);
+    memcpy(senLogPtr, &sensorLog, sizeof(struct gasSensorLog_t));
+    ramQUpdateHead();
+    memqSave();
+  }
+
+  
+  return senLogPtr;
+}
+
+#endif
   
 
 // void rtcBegin()

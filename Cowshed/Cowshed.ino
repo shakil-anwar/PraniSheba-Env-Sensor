@@ -60,9 +60,16 @@ void loop()
     case RUN_LOOP:
 #if defined(DEVICE_HAS_TDM)
       bsSendSm();
+
+#if defined(DEVICE_HAS_LOG)  
+      if((sensorLog.slotMissed % MAX_RF_DATA_SEND_RETRY) == 0)
+      {
+        sensorLog.slotMissed++;
+#else
       if(rfFailCount > MAX_RF_DATA_SEND_RETRY)
       {
         rfFailCount = 0;
+#endif
         mainState = SYNC_RF;
       }
 #else

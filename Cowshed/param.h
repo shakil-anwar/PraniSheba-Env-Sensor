@@ -12,12 +12,14 @@
 #define DEVICE_HAS_RTC
 //#define DO_CALIBRATION
 #define DEVICE_HAS_TDM
+// #define DEVICE_HAS_LOG
 
 
 
 
 /******************Device Identifier********************/
 #define SENSOR_TYPE 2
+#define SENSOR_LOG_TYPE 5
 #define SENSOR_ID   81
 
 /******************MEMORY and Buffer Param*********************/
@@ -46,7 +48,8 @@
 #define MQ135_EEPROM_ADDR           (MQ4_EEP_ADDR + 21)
 #define MAIN_CONFIG_EEPROM_ADDR     (MQ135_EEPROM_ADDR+ 21)
 #define NRF_CONFIG_ROM_ADDR         (MAIN_CONFIG_EEPROM_ADDR+20)
-#define RING_EEPROM_ADDR            (NRF_CONFIG_ROM_ADDR+ 20)
+#define LOG_SAVE_ADDR               (NRF_CONFIG_ROM_ADDR +32)
+#define RING_EEPROM_ADDR            (LOG_SAVE_ADDR + 20)
 
 
 /***************RING BUFFER PARAM**********************/

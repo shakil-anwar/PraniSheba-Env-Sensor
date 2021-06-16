@@ -43,6 +43,18 @@ struct sensor_t
   uint8_t reserve[4];
 };
 
+struct gasSensorLog_t
+{
+  struct header_t header;
+  uint8_t errorCode;
+  uint8_t hardwareErrorCode;
+  uint16_t restartCount;
+  uint16_t slotMissed;
+  float railVoltage;
+  uint32_t unixTime;
+  uint32_t flashAvailablePackets;
+};
+
 typedef union payload_t
 {
   struct sensor_t gasSensor;
@@ -99,6 +111,7 @@ struct sensor_t *getSensorsData(struct sensor_t *senPtr);
 void printSensor(struct sensor_t *sensor);
 
 void schemaReadSensors();
+void memqSave();
 
 extern volatile payload_t  payload[TOTAL_PAYLOAD_BUFFER];
 extern queryData_t queryBuffer;

@@ -24,17 +24,26 @@ volatile uint32_t _nowSec;
 uint32_t _nextSlotUnix;
 uint32_t _nextSlotEnd;
 bool _nrfSendOk;
+#if !defined(DEVICE_HAS_LOG)
 int16_t rfFailCount;
+#endif
 
 Task taskNrfStatus(5, &nrfWhichMode);
 void system_setup(void)
 {
+#if !defined(DEVICE_HAS_LOG)
   rfFailCount = 0;
+#endif
   tdmSyncState = TDM_UNSYNCED;
   Serial.begin(SERIAL_SPEED);
   SerialBegin(SERIAL_SPEED);  //supporting serial c library
   gpioBegin(); //This function has to call first to set sensitive pin like cs pin of spi
   Serial.println("[pS Env Sensor v0.6.3]");
+  
+#if defined(DEVICE_HAS_LOG)
+  initiateLog();
+#endif
+
   radio_begin();
 #if defined(DEVICE_HAS_RTC)
   rtcBegin();
@@ -137,17 +146,35 @@ void bsSendSm()
       break;
     case BS_IS_CONNECTED:
       Serial.println(F("run : BS_IS_CONNECTED"));
+      delay(500);
       if (isMySlot())
       {
+#if defined(DEVICE_HAS_LOG)
+        sensorLog.slotMissed = 1;
+#else
         rfFailCount = 0;
+#endif
+        
         // nrfTxReady(&nrfConfig);
+
+#if defined(DEVICE_HAS_LOG)
+        updateLog();
+#endif
         nrfTxSetModeClient(BS_DATA,&nrfConfig);
         xferReady();
         _bsSendState = BS_SEND;
       }
       else
       {
+#if defined(DEVICE_HAS_LOG)        
+        sensorLog.slotMissed++;
+        if(sensorLog.slotMissed == 0)
+        {
+          sensorLog.slotMissed = 1;
+        }
+#else
         rfFailCount++;
+#endif
         if(tdmSyncState == TDM_CONFIG_CHANGED)
         {
           mainState = SYNC_RF;

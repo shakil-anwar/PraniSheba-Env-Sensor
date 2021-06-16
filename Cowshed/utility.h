@@ -4,4 +4,8 @@
 
 
 extern bool deviceHasRtc;
+
+
+
+
 #endif

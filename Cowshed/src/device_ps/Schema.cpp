@@ -46,6 +46,7 @@ struct  sensor_t *getSensorsData(struct sensor_t *senPtr)
   sensor -> hum = getHum();
   sensor -> ammonia = getAmmonia();
   sensor -> methane = getMethane();
+  sensor -> header.checksum = 0;
 
   //calculate checksum
   sensor -> header.checksum = checksumCalc((uint8_t*)sensor,sizeof(struct sensor_t));

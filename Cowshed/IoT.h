@@ -64,10 +64,17 @@ void gpioBegin();
 // void rtcUpdateSec(uint32_t unix);
 void factoryReset();
 
+
 extern Flash flash;       
 //extern RingEEPROM myeepRom;
 //extern MemQ memQ;
 extern struct memq_t memq;
 extern Scheduler scheduler;
+
+#if defined(DEVICE_HAS_LOG)
+void initiateLog();
+struct gasSensorLog_t *updateLog();
+extern struct gasSensorLog_t sensorLog;
+#endif
 //extern AsyncServer server;
 #endif

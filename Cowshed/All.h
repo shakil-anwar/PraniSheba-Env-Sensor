@@ -54,7 +54,9 @@ extern mainState_t mainState;
 extern volatile uint32_t _nowSec;
 extern volatile uint32_t _prevRunSec;
 extern uint32_t _nextSlotUnix;
+#if !defined(DEVICE_HAS_LOG)
 extern int16_t rfFailCount;
+#endif
 extern enum tdmSyncState_t tdmSyncState;
 
 #endif 

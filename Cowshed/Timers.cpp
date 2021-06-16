@@ -143,7 +143,7 @@ void rtcUpdateSec(uint32_t unix)
     }
     else
     {
-      Serial.println(F("RTC time is updated"));
+      Serial.println(F("RTC is updated"));
     }
   }
 }
@@ -169,7 +169,7 @@ uint32_t calcNextSlotUnix(uint32_t uSec, nrfNodeConfig_t *conf)
     nexSlotSec = uSec + (conf->momentDuration - curMoment) + slotSec;
   }
   Serial.print(F("curMoment :")); Serial.println(curMoment);
-  Serial.print(F("======>>>>>next slot unix :")); Serial.println(nexSlotSec);
+  Serial.print(F("===>>>>>nextSlotUnix:")); Serial.println(nexSlotSec);
   return nexSlotSec;
 }
 
