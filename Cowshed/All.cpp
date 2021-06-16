@@ -39,7 +39,7 @@ void system_setup(void)
   SerialBegin(SERIAL_SPEED);  //supporting serial c library
   gpioBegin(); //This function has to call first to set sensitive pin like cs pin of spi
   Serial.println("[pS Env Sensor v0.6.3]");
-  
+
 #if defined(DEVICE_HAS_LOG)
   initiateLog();
 #endif
@@ -157,9 +157,6 @@ void bsSendSm()
         
         // nrfTxReady(&nrfConfig);
 
-#if defined(DEVICE_HAS_LOG)
-        updateLog();
-#endif
         nrfTxSetModeClient(BS_DATA,&nrfConfig);
         xferReady();
         _bsSendState = BS_SEND;
@@ -206,6 +203,9 @@ void bsSendSm()
       }
       break;
     case BS_SEND_END:
+#if defined(DEVICE_HAS_LOG)
+        updateLog();
+#endif
       _nextSlotSec = calcNextSlotUnix(second(), &nrfConfig);
       _bsSendState = BS_SEND_WAIT;
       break;
