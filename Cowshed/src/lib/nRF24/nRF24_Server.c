@@ -169,7 +169,7 @@ void PongHandler(query_t *qry)
             {
             	pong.isBsFree = false;
             	pong.isMySlot = false;
-            	if(tdmIsRegistered2(qry -> deviceId, qry-> slotId) != 255)
+            	if(tdmIsRegistered2(qry -> deviceId, qry-> slotId) == 255)
             	{
             		pong.isConfigChanged = true;
             	}

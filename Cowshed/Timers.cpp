@@ -156,16 +156,22 @@ bool rtcIsRunning()
 
 uint32_t calcNextSlotUnix(uint32_t uSec, nrfNodeConfig_t *conf)
 {
+  // Serial.print("uSec: ");Serial.println(uSec);
+
   uint16_t slotSec = (conf -> perNodeInterval) * (conf -> slotId);
+  // Serial.print("slotSec: ");Serial.println(slotSec);
   uint16_t curMoment = uSec % conf->momentDuration;
+  // Serial.print("momentDuration: ");Serial.println(conf->momentDuration);
 
   uint32_t nexSlotSec;
   if (curMoment < slotSec)
   {
     nexSlotSec = uSec + (slotSec - curMoment);
+    // Serial.println("..");
   }
   else
   {
+    // Serial.println("...");
     nexSlotSec = uSec + (conf->momentDuration - curMoment) + slotSec;
   }
   Serial.print(F("curMoment :")); Serial.println(curMoment);

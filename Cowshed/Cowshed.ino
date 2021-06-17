@@ -13,7 +13,7 @@ void setup()
 
 void loop()
 {
-  printMainState(mainState);
+  // printMainState(mainState);
   switch (mainState)
   {
     case CHECK_HARDWARE:

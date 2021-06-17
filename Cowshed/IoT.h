@@ -75,6 +75,7 @@ extern Scheduler scheduler;
 void initiateLog();
 struct gasSensorLog_t *updateLog();
 extern struct gasSensorLog_t sensorLog;
+void resetLog(void);
 #endif
 //extern AsyncServer server;
 #endif

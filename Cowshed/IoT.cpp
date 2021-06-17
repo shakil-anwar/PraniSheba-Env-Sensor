@@ -19,6 +19,9 @@ void factoryReset()
   memqReset(&memq); 
 //  nrfTxAddrReset(saveAddr); //reset tc addr
   nrfTxConfigReset(&nrfConfig, NRF_CONFIG_ROM_ADDR, eepromUpdate);
+#if defined(DEVICE_HAS_LOG)
+  resetLog();
+#endif
 }
 
 void gpioBegin()
@@ -37,16 +40,23 @@ void initiateLog()
   uint8_t logChecksum = sensorLog.header.checksum;
   sensorLog.header.checksum = 0;
   if((sensorLog.header.type != SENSOR_LOG_TYPE) 
-      && (sensorLog.header.id != config.deviceId)
-      && (checksum((void *)&sensorLog,sizeof(struct gasSensorLog_t)) != logChecksum))
+      || (sensorLog.header.id != config.deviceId)
+      || (checksum((void *)&sensorLog,sizeof(struct gasSensorLog_t)) != logChecksum))
   {
-    memset((uint8_t *)&sensorLog, '\0', sizeof(struct gasSensorLog_t));
-    sensorLog.header.type = SENSOR_LOG_TYPE;
-    sensorLog.header.id = config.deviceId;
-    sensorLog.restartCount = 0;
+    resetLog();
   }
   sensorLog.slotMissed = 1;
   sensorLog.restartCount++;
+  eepromUpdate(LOG_SAVE_ADDR, (uint8_t *)&sensorLog, sizeof(struct gasSensorLog_t));
+  
+}
+
+void resetLog(void)
+{
+  memset((uint8_t *)&sensorLog, '\0', sizeof(struct gasSensorLog_t));
+  sensorLog.header.type = SENSOR_LOG_TYPE;
+  sensorLog.header.id = config.deviceId;
+  sensorLog.restartCount = 0;
   eepromUpdate(LOG_SAVE_ADDR, (uint8_t *)&sensorLog, sizeof(struct gasSensorLog_t));
 }
  

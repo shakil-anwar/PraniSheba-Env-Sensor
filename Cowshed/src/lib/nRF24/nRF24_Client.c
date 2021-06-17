@@ -241,8 +241,8 @@ uint8_t *nrfQuery(query_t *qry,void *bufPtr, uint8_t len)
                 if(_nrfDebug)
                 {
                     SerialPrintlnF(P("<Qry Mismatch>"));
-                    SerialPrintF(P("Expected : ")); SerialPrintU8(queryPtr[len]);
-                    SerialPrintF(P(" | Received : ")); SerialPrintlnU8(calcCheckSum);
+                    // SerialPrintF(P("Expected : ")); SerialPrintU8(queryPtr[len]);
+                    // SerialPrintF(P(" | Received : ")); SerialPrintlnU8(calcCheckSum);
                 }
             }
             break;
@@ -266,7 +266,7 @@ pong_t *nrfping(query_t *qry,pong_t *ping)
   pong_t *pongPtr = (pong_t *)nrfQuery(qry,(void *)ping,sizeof(pong_t));
   if (pongPtr != NULL)
   {
-      printPing(pongPtr);
+      // printPing(pongPtr);
   }
   return pongPtr;
 }

@@ -145,8 +145,7 @@ void bsSendSm()
       }
       break;
     case BS_IS_CONNECTED:
-      Serial.println(F("run : BS_IS_CONNECTED"));
-      delay(500);
+      // Serial.println(F("run : BS_IS_CONNECTED"));
       if (isMySlot())
       {
 #if defined(DEVICE_HAS_LOG)
@@ -250,41 +249,82 @@ bool isBsConnected()
 
 bool isMySlot()
 {
+  
   int8_t tryCount = 5;
   uint32_t uTime;
   pong_t pong;
   do
   {
     uTime = nrfPingSlot(config.deviceId, nrfConfig.slotId, &pong);
-    if (uTime > 1)
+    int32_t delayTime = (int32_t)second();
+    delayTime = (int32_t)((uint32_t)delayTime-pong.second);
+    
+    
+    if(uTime)
     {
-      //update time 
-//      uTime = uTime-2;
-      tdmSyncState = TDM_SYNCED;
-      if(abs((int32_t)(second()-uTime))>1)
+      if(abs(delayTime)>1)
       {
-        Serial.println(F(">>>>>>>>>>>>>>>.Time gap"));
-        rtSync(uTime);
+        rtSync(pong.second);
       }
-      return true;
-    }
-    else if(uTime == 1)
-    {
-      if(pong.isConfigChanged == 1)
+      if (pong.isConfigChanged != 1)
       {
-        tdmSyncState = TDM_CONFIG_CHANGED;
+        if(abs(delayTime) < nrfConfig.perNodeInterval)
+        {
+          if(delayTime > 0)
+          {
+            delayTime = delayTime*1000;
+            delay((int16_t)delayTime);
+            return true;
+          }else{
+            Serial.println(F("SyncSlot>>Time gap"));
+          }
+          tdmSyncState = TDM_SYNCED;
+          
+          return true;
+        }
+        else
+        {
+          tdmSyncState = TDM_SLOT_MISSED;
+        }
       }
       else
       {
-        tdmSyncState = TDM_SYNCED;
-        rtSync(pong.second);
+        tdmSyncState = TDM_CONFIG_CHANGED;
+        return false;
       }
       return false;
     }
-    else{
-      tdmSyncState = TDM_SLOT_MISSED;
-    }
-    delay(100);
+    
+    
+//     if (uTime > 1)
+//     {
+//       //update time 
+// //      uTime = uTime-2;
+//       tdmSyncState = TDM_SYNCED;
+//       if(abs((int32_t)(second()-uTime))>1)
+//       {
+//         Serial.println(F(">>>>>>>>>>>>>>>.Time gap"));
+//         rtSync(uTime);
+//       }
+//       return true;
+//     }
+//     else if(uTime == 1)
+//     {
+//       if(pong.isConfigChanged == 1)
+//       {
+//         tdmSyncState = TDM_CONFIG_CHANGED;
+//       }
+//       else
+//       {
+//         tdmSyncState = TDM_SYNCED;
+//         rtSync(pong.second);
+//       }
+//       return false;
+//     }
+//     else{
+//       tdmSyncState = TDM_SLOT_MISSED;
+//     }
+    // delay(100);
   } while (--tryCount);
 
   return false;
@@ -298,10 +338,10 @@ void printRunState()
       //      Serial.println(F("runState : RUN_WAIT"));
       break;
     case RUN_CHK_BS_CONN:
-      Serial.println(F("runState : RUN_CHK_BS_CONN"));
+      Serial.println(F("runState : CHK_BS_CONN"));
       break;
     case RUN_TX_XFER:
-      Serial.println(F("runState : RUN_TX_XFER"));
+      Serial.println(F("runState : TX_XFER"));
       break;
   }
 }

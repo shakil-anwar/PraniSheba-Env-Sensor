@@ -109,7 +109,7 @@ uint8_t *deviceMemRead()
         return NULL;
       }
       // Serial.println(F("Read Mem : New"));
-      printBuffer(pldPtr, sizeof(payload_t));
+      // printBuffer(pldPtr, sizeof(payload_t));
     }
     return pldPtr;
   }
