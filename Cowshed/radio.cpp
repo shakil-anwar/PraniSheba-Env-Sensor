@@ -73,7 +73,7 @@ void eepromRead(uint32_t addr, uint8_t *buf, uint16_t len)
 
   uint16_t eepAddr = (uint16_t)addr;
   uint8_t *ptr = buf;
-  Serial.print(F("EEPROM Read Addr : ")); Serial.println(eepAddr);
+  Serial.print(F("EEPROM>R>: ")); Serial.println(eepAddr);
   for (uint16_t i = 0 ; i < len; i++)
   {
     *(ptr + i) = EEPROM.read(eepAddr + i);
@@ -87,7 +87,7 @@ void eepromUpdate(uint32_t addr, uint8_t *buf, uint16_t len)
 
   uint16_t eepAddr = (uint16_t)addr;
   uint8_t *ptr = buf;
-  Serial.print(F("EEPROM Update Addr : ")); Serial.println(eepAddr);
+  Serial.print(F("EEPROM>W>: ")); Serial.println(eepAddr);
   for (uint16_t i = 0; i < len; i++)
   {
     EEPROM.update(eepAddr + i, *(ptr + i));

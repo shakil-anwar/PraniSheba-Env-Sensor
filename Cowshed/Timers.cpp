@@ -109,11 +109,11 @@ void rtcBegin()
   if (!rtc.isrunning())
   {
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-    Serial.println(F("RTC Adjusted"));
+    // Serial.println(F("RTC Adjusted"));
   }
   else
   {
-    Serial.println(F("-->RTC is Running"));
+    // Serial.println(F("-->RTC is Running"));
   }
 }
 
@@ -174,8 +174,8 @@ uint32_t calcNextSlotUnix(uint32_t uSec, nrfNodeConfig_t *conf)
     // Serial.println("...");
     nexSlotSec = uSec + (conf->momentDuration - curMoment) + slotSec;
   }
-  Serial.print(F("curMoment :")); Serial.println(curMoment);
-  Serial.print(F("===>>>>>nextSlotUnix:")); Serial.println(nexSlotSec);
+  // Serial.print(F("curMoment :")); Serial.println(curMoment);
+  Serial.print(F("===>>nextSlot:")); Serial.println(nexSlotSec);
   return nexSlotSec;
 }
 
