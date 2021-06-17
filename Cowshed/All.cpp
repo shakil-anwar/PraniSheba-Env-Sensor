@@ -38,7 +38,7 @@ void system_setup(void)
   Serial.begin(SERIAL_SPEED);
   SerialBegin(SERIAL_SPEED);  //supporting serial c library
   gpioBegin(); //This function has to call first to set sensitive pin like cs pin of spi
-  Serial.println("[pS Env Sensor v0.6.3]");
+  Serial.println("[pS Env Sensor v0.6.4]");
 
 #if defined(DEVICE_HAS_LOG)
   initiateLog();
@@ -274,10 +274,11 @@ bool isMySlot()
           {
             delayTime = delayTime*1000;
             delay((int16_t)delayTime);
-            return true;
-          }else{
-            Serial.println(F("SyncSlot>>Time gap"));
+            // return true;
           }
+          // else{
+          //   Serial.println(F("SyncSlot>>Time gap"));
+          // }
           tdmSyncState = TDM_SYNCED;
           
           return true;

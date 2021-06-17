@@ -12,7 +12,7 @@
 #define DEVICE_HAS_RTC
 //#define DO_CALIBRATION
 #define DEVICE_HAS_TDM
-// #define DEVICE_HAS_LOG
+#define DEVICE_HAS_LOG
 
 
 
@@ -47,9 +47,9 @@
 #define MQ4_EEP_ADDR                0
 #define MQ135_EEPROM_ADDR           (MQ4_EEP_ADDR + 21)
 #define MAIN_CONFIG_EEPROM_ADDR     (MQ135_EEPROM_ADDR+ 21)
-#define NRF_CONFIG_ROM_ADDR         (MAIN_CONFIG_EEPROM_ADDR+20)
-#define LOG_SAVE_ADDR               (NRF_CONFIG_ROM_ADDR +32)
-#define RING_EEPROM_ADDR            (LOG_SAVE_ADDR + 20)
+#define NRF_CONFIG_ROM_ADDR         (MAIN_CONFIG_EEPROM_ADDR+32)
+#define RING_EEPROM_ADDR            (NRF_CONFIG_ROM_ADDR + 20)
+#define LOG_SAVE_ADDR               (RING_EEPROM_ADDR +16*MEMQ_RING_BUF_LEN+MEMQ_RING_BUF_LEN*2)
 
 
 /***************RING BUFFER PARAM**********************/

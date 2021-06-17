@@ -1,5 +1,6 @@
 #include "IoT.h"
 #include "radio.h"
+#include "All.h"
 
 struct gasSensorLog_t sensorLog;
 
@@ -67,7 +68,7 @@ struct gasSensorLog_t *updateLog()
   sensorLog.header.type = SENSOR_LOG_TYPE;
   sensorLog.header.id = config.deviceId;
 
-  sensorLog.errorCode = 200;
+  sensorLog.errorCode = tdmSyncState;
   sensorLog.hardwareErrorCode = 200;
   sensorLog.railVoltage = 3.3;
   sensorLog.unixTime = second();
