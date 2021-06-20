@@ -28,6 +28,8 @@ void rtAttachFastRTC(timeGetter_t getter, timeSetter_t setter,void (*StartRtc)(v
 void rtBegin(timeGetter_t getntp = NULL);
 RT_SYNC_STATUS_t rtSync(uint32_t uTime);
 RT_SYNC_STATUS_t rtsync();
+uint8_t rtSyncStatus();
+
 // uint32_t second();
 // uint32_t ms();
 tState_t rtLoop();

@@ -50,6 +50,7 @@ struct gasSensorLog_t
   uint8_t hardwareErrorCode;
   uint16_t restartCount;
   uint16_t slotMissed;
+  uint16_t samplingFreq;
   float railVoltage;
   uint32_t unixTime;
   uint32_t flashAvailablePackets;

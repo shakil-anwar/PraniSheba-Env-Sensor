@@ -104,10 +104,10 @@ uint8_t *deviceMemRead()
     pldPtr = memqRead(&memq, (uint8_t*)&pldBuf);
     if (pldPtr != NULL)
     {
-      // if(pldBufPtr->unixTime > second())
-      // {
-      //   return NULL;
-      // }
+      if(pldBufPtr->unixTime > second())
+      {
+        return NULL;
+      }
       // Serial.println(F("Read Mem : New"));
       printBuffer(pldPtr, sizeof(payload_t));
     }

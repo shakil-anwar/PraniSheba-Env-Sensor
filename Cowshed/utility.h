@@ -4,7 +4,7 @@
 
 
 extern bool deviceHasRtc;
-
+float getRailVoltage();
 
 
 

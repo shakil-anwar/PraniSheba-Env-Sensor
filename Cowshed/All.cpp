@@ -58,7 +58,7 @@ void system_setup(void)
   confSetting(CONFIG_BTN_PIN, configRead, configSave);
 
   scheduler.addTask(&taskNrfStatus);
-  wdtEnable(8000);
+  // wdtEnable(8000);
   BUZZER_ON();
   delay(1000);
   BUZZER_OFF();
@@ -70,7 +70,7 @@ void startDevice()
   runState = RUN_WAIT;
   _bsSendState = BS_SEND_WAIT;
   radioStart();
-  wdtStart();
+  // wdtStart();
 #if defined(FACTORY_RESET)
    nrfTxConfigReset(&nrfConfig, NRF_CONFIG_ROM_ADDR, eepromUpdate);
 #endif
@@ -203,7 +203,7 @@ void bsSendSm()
       break;
     case BS_SEND_END:
 #if defined(DEVICE_HAS_LOG)
-        updateLog();
+        saveLog();
 #endif
       _nextSlotSec = calcNextSlotUnix(second(), &nrfConfig);
       _bsSendState = BS_SEND_WAIT;

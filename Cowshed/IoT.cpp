@@ -2,6 +2,9 @@
 #include "radio.h"
 #include "All.h"
 
+
+void updateLog();
+
 struct gasSensorLog_t sensorLog;
 
 //RTC_DS1307 rtc;
@@ -40,15 +43,16 @@ void initiateLog()
 
   uint8_t logChecksum = sensorLog.header.checksum;
   sensorLog.header.checksum = 0;
-  if((sensorLog.header.type != SENSOR_LOG_TYPE) 
+  if((sensorLog.header.type != SENSOR_LOG_TYPE)
       || (sensorLog.header.id != config.deviceId)
       || (checksum((void *)&sensorLog,sizeof(struct gasSensorLog_t)) != logChecksum))
   {
+    Serial.println("log>reset.");
     resetLog();
   }
   sensorLog.slotMissed = 1;
   sensorLog.restartCount++;
-  eepromUpdate(LOG_SAVE_ADDR, (uint8_t *)&sensorLog, sizeof(struct gasSensorLog_t));
+  updateLog();
   
 }
 
@@ -57,20 +61,28 @@ void resetLog(void)
   memset((uint8_t *)&sensorLog, '\0', sizeof(struct gasSensorLog_t));
   sensorLog.header.type = SENSOR_LOG_TYPE;
   sensorLog.header.id = config.deviceId;
+  sensorLog.samplingFreq = config.sampInterval;
   sensorLog.restartCount = 0;
+  updateLog();
+  
+}
+void updateLog()
+{
+  sensorLog.header.checksum = 0;
+  sensorLog.header.checksum  = checksum((void *)&sensorLog,sizeof(struct gasSensorLog_t)); 
   eepromUpdate(LOG_SAVE_ADDR, (uint8_t *)&sensorLog, sizeof(struct gasSensorLog_t));
 }
  
-struct gasSensorLog_t *updateLog()
+struct gasSensorLog_t *saveLog()
 {
   struct gasSensorLog_t *senLogPtr = (struct gasSensorLog_t*)ramQHead();
 
   sensorLog.header.type = SENSOR_LOG_TYPE;
   sensorLog.header.id = config.deviceId;
-
-  sensorLog.errorCode = tdmSyncState;
-  sensorLog.hardwareErrorCode = 200;
-  sensorLog.railVoltage = 3.3;
+  
+  sensorLog.errorCode = (tdmSyncState<<2) | (memq.ringPtr._isLock<<1) | ramqIsLocked() ;
+  sensorLog.hardwareErrorCode = (nrfIsRunning()<<1) | (rtcIsRunning()<<2);
+  sensorLog.railVoltage = getRailVoltage();
   sensorLog.unixTime = second();
   sensorLog.flashAvailablePackets = memqAvailable(&memq);
   sensorLog.header.checksum = 0;

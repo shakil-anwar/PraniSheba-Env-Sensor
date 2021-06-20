@@ -89,7 +89,7 @@ void loop()
       mainState = CHECK_HARDWARE;
       break;
   }
-  wdtReset();
+  // wdtReset();
 }
 
 void printMainState(mainState_t mstate)

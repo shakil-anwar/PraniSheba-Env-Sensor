@@ -73,7 +73,7 @@ extern Scheduler scheduler;
 
 #if defined(DEVICE_HAS_LOG)
 void initiateLog();
-struct gasSensorLog_t *updateLog();
+struct gasSensorLog_t *saveLog();
 extern struct gasSensorLog_t sensorLog;
 void resetLog(void);
 #endif

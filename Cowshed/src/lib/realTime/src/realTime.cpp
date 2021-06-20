@@ -45,6 +45,8 @@ RT_SYNC_STATUS_t _rtSyncStatus;
 DateTime _dt;
 
 
+
+
 //start real time functionality.
 void rtBegin(timeGetter_t getntp)
 {
@@ -237,4 +239,9 @@ void printRtcSyncStatus(RT_SYNC_STATUS_t rtsync)
      Serial.println(F("UNSYNCED"));
   break;
   }
+}
+
+uint8_t rtSyncStatus()
+{
+  return (uint8_t)_rtSyncStatus;
 }
