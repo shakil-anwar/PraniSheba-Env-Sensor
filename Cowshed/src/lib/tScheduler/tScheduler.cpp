@@ -59,6 +59,7 @@ Task **Scheduler::getTaskQueue()
   do
   {
     task = ptr -> task;
+
     if ((currentTime - task -> _prevTime) >= task -> _interval)
     {
       // Serial.println(F("--->Task added into queue--->"));
@@ -69,6 +70,10 @@ Task **Scheduler::getTaskQueue()
     else
     {
       *qP = NULL;
+      if(task -> _prevTime > currentTime)
+      {
+        task -> _prevTime = currentTime;
+      }
     }
 
     ptr = ptr -> next;
