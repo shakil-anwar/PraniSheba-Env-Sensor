@@ -30,7 +30,9 @@ git clone https://github.com/shuvangkar/Timer1.git
 git clone https://github.com/shuvangkar/tScheduler.git
 git clone https://github.com/shuvangkar/Sensor_TDM.git
 # Clone arduino repository
-git clone https://github.com/adafruit/RTClib.git
+# git clone https://github.com/adafruit/RTClib.git
+git clone https://github.com/shakil-anwar/Time.git
+git clone https://github.com/shakil-anwar/DS1307RTC.git
 git clone https://github.com/Simsso/ShiftRegister74HC595.git
 git clone https://github.com/shuvangkar/SHT21-Arduino-Library.git
 
