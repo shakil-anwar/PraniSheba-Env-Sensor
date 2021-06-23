@@ -61,7 +61,6 @@ void resetLog(void)
   memset((uint8_t *)&sensorLog, '\0', sizeof(struct gasSensorLog_t));
   sensorLog.header.type = SENSOR_LOG_TYPE;
   sensorLog.header.id = config.deviceId;
-  sensorLog.samplingFreq = config.sampInterval;
   sensorLog.restartCount = 0;
   updateLog();
   
@@ -85,6 +84,7 @@ struct gasSensorLog_t *saveLog()
   sensorLog.railVoltage = getRailVoltage();
   sensorLog.unixTime = second();
   sensorLog.flashAvailablePackets = memqAvailable(&memq);
+  sensorLog.samplingFreq = config.sampInterval;
   sensorLog.header.checksum = 0;
   sensorLog.header.checksum  = checksum((void *)&sensorLog,sizeof(struct gasSensorLog_t)); 
   
