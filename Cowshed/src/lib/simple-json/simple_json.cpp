@@ -48,6 +48,30 @@ char *add_int(char *dest, int value)
   return temp;
 }
 
+char *add_uint(char *dest, uint16_t value)
+{
+  char *temp = dest;
+  char buffer[8];
+  int i=0;
+  do
+  {
+    buffer[i] =(char)(value%10 + 48);
+    i++;
+    value = value/10;
+  }while(value > 0);
+  // buffer[i] = '\0';
+  int len = i-1;
+  do{
+    i--;
+    temp[len-i] = buffer[i];
+  }while(i>0);
+  // strncpy(temp, buffer, i);
+  temp = temp + len + 1;
+  *temp = ',';
+  temp++;
+  return temp;
+}
+
 char *add_long(char *dest, long value)
 {
   char *temp = dest;

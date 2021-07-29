@@ -5,7 +5,10 @@
 
 void updateLog();
 
+RingEEPROM logRingObj(LOG_SAVE_ADDR);
+
 struct gasSensorLog_t sensorLog;
+struct gasSensorMetaLog_t sensorLogMeta;
 
 //RTC_DS1307 rtc;
 Scheduler scheduler;
@@ -14,6 +17,7 @@ void objectsBegin()
   scheduler.begin(&second);
   xferBegin(deviceMemRead, deviceRfSend, deviceRfAckWait, millis);
   xferReady();
+  
 }
 
 void factoryReset()
@@ -39,37 +43,67 @@ void gpioBegin()
 void initiateLog()
 {
 
-  eepromRead(LOG_SAVE_ADDR, (uint8_t *)&sensorLog, sizeof(struct gasSensorLog_t));
+  // eepromRead(LOG_SAVE_ADDR, (uint8_t *)&sensorLog, sizeof(struct gasSensorLog_t));
 
-  uint8_t logChecksum = sensorLog.header.checksum;
-  sensorLog.header.checksum = 0;
-  if((sensorLog.header.type != SENSOR_LOG_TYPE)
-      || (sensorLog.header.id != config.deviceId)
-      || (checksum((void *)&sensorLog,sizeof(struct gasSensorLog_t)) != logChecksum))
+  // uint8_t logChecksum = sensorLog.header.checksum;
+  // sensorLog.header.checksum = 0;
+
+  // if((sensorLog.header.type != SENSOR_LOG_TYPE)
+  //     || (sensorLog.header.id != config.deviceId)
+  //     || (checksum((void *)&sensorLog,sizeof(struct gasSensorLog_t)) != logChecksum))
+  // {
+  //   Serial.println("log>reset.");
+  //   resetLog();
+  // }
+  // sensorLog.slotMissed = 1;
+  // sensorLog.restartCount++;
+  logRingObj.begin(MEMQ_RING_BUF_LEN, sizeof(struct gasSensorMetaLog_t));
+  logRingObj.readPacket((byte *)&sensorLogMeta);
+  uint8_t csk = sensorLogMeta.checksum;
+  sensorLogMeta.checksum = 0;
+  sensorLogMeta.checksum = checksum((void *)&sensorLogMeta,sizeof(struct gasSensorMetaLog_t));
+  if(sensorLogMeta.checksum != csk)
   {
     Serial.println("log>reset.");
     resetLog();
   }
+  // sensorLog.slotMissed = 1;
+  // sensorLog.restartCount++;
   sensorLog.slotMissed = 1;
-  sensorLog.restartCount++;
+  sensorLogMeta.restartCount++;
+
   updateLog();
   
 }
 
 void resetLog(void)
 {
-  memset((uint8_t *)&sensorLog, '\0', sizeof(struct gasSensorLog_t));
-  sensorLog.header.type = SENSOR_LOG_TYPE;
-  sensorLog.header.id = config.deviceId;
-  sensorLog.restartCount = 0;
+  // memset((uint8_t *)&sensorLog, '\0', sizeof(struct gasSensorLog_t));
+  // sensorLog.header.type = SENSOR_LOG_TYPE;
+  // sensorLog.header.id = config.deviceId;
+  // sensorLog.restartCount = 0;
+  // memset((uint8_t *)&sensorLogMeta, '\0', sizeof(struct gasSensorMetaLog_t));
+  sensorLogMeta.restartCount = 0;
+  sensorLogMeta.lastUnixTime = 0;
   updateLog();
   
 }
 void updateLog()
 {
-  sensorLog.header.checksum = 0;
-  sensorLog.header.checksum  = checksum((void *)&sensorLog,sizeof(struct gasSensorLog_t)); 
-  eepromUpdate(LOG_SAVE_ADDR, (uint8_t *)&sensorLog, sizeof(struct gasSensorLog_t));
+  // sensorLog.header.checksum = 0;
+  // sensorLog.header.checksum  = checksum((void *)&sensorLog,sizeof(struct gasSensorLog_t)); 
+  // eepromUpdate(LOG_SAVE_ADDR, (uint8_t *)&sensorLog, sizeof(struct gasSensorLog_t));
+  sensorLogMeta.checksum = 0;
+  sensorLogMeta.checksum = checksum((void *)&sensorLogMeta,sizeof(struct gasSensorMetaLog_t));
+  logRingObj.savePacket((byte *)&sensorLogMeta);
+  // logRingObj.readPacket((byte *)&sensorLogMeta);
+  // uint8_t csk = sensorLogMeta.checksum;
+  // sensorLogMeta.checksum = 0;
+  // sensorLogMeta.checksum = checksum((void *)&sensorLogMeta,sizeof(struct gasSensorMetaLog_t));
+  // if(sensorLogMeta.checksum != csk)
+  // {
+  //   Serial.println("Log csk mismatched.");
+  // }
 }
  
 struct gasSensorLog_t *saveLog()
@@ -85,6 +119,7 @@ struct gasSensorLog_t *saveLog()
   sensorLog.unixTime = second();
   sensorLog.flashAvailablePackets = memqAvailable(&memq);
   sensorLog.samplingFreq = config.sampInterval;
+  sensorLog.restartCount =  sensorLogMeta.restartCount;
   sensorLog.header.checksum = 0;
   sensorLog.header.checksum  = checksum((void *)&sensorLog,sizeof(struct gasSensorLog_t)); 
   
@@ -94,6 +129,7 @@ struct gasSensorLog_t *saveLog()
     memcpy(senLogPtr, &sensorLog, sizeof(struct gasSensorLog_t));
     ramQUpdateHead();
     memqSave();
+    Serial.println(">>Log Saved");
   }
 
   

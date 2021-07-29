@@ -26,9 +26,9 @@ build_prod_v2: download
 	$(CC) compile -b $(FQBN_PCB_v2)  $(CFLAGS_PCB2_PROD)
 
 upload_v1:
-	$(CC) upload -b $(FQBN_PCB_V1)   -p $(SERIAL_PORT)  -v -t 
+	$(CC) upload -b $(FQBN_PCB_V1)   -p $(SERIAL_PORT)  -v -t
 upload_v2:
-	$(CC) upload -b $(FQBN_PCB_v2)   -p $(SERIAL_PORT)  -v -t 
+	$(CC) upload -b $(FQBN_PCB_v2)   -p $(SERIAL_PORT)  -v -t
 
 
 delete_lib:

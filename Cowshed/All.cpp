@@ -38,11 +38,9 @@ void system_setup(void)
   Serial.begin(SERIAL_SPEED);
   SerialBegin(SERIAL_SPEED);  //supporting serial c library
   gpioBegin(); //This function has to call first to set sensitive pin like cs pin of spi
-  Serial.println("[pS Env Sensor v0.6.4]");
+  Serial.println("[pS Env Sensor v0.6.5]");
 
-#if defined(DEVICE_HAS_LOG)
-  initiateLog();
-#endif
+
 
   radio_begin();
 #if defined(DEVICE_HAS_RTC)
@@ -53,6 +51,9 @@ void system_setup(void)
 
   deviceBegin();
   objectsBegin();
+#if defined(DEVICE_HAS_LOG)
+  initiateLog();
+#endif
 
   //confsetting has to call after deviceBegin, because it operate on flash and sensor
   confSetting(CONFIG_BTN_PIN, configRead, configSave);

@@ -183,13 +183,13 @@ void updateDataInterval(uint32_t time)
 
 	void memPtrReader(struct memqPtr_t *ptr)
 	{
-	  Serial.println(F("memqPtr Reader called"));
+	  Serial.println(F("memqPtr>Reader"));
 	  ringObj.readPacket((byte *)ptr);
 	}
 
 	void memPtrWriter(struct memqPtr_t *ptr)
 	{
-	  Serial.println(F("memqPtr Writer called"));
+	  Serial.println(F("memqPtr>Writer"));
 	  ringObj.savePacket((byte *)ptr);
 	}
 #endif

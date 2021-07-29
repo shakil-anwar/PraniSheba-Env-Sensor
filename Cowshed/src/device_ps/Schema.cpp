@@ -1,7 +1,7 @@
 #include "Sensors.h"
 
 volatile payload_t  payload[TOTAL_PAYLOAD_BUFFER];
-queryData_t queryBuffer;
+// queryData_t queryBuffer;
 
 struct sensor_t sensor;
 

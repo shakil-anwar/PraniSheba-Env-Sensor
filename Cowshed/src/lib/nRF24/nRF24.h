@@ -89,6 +89,8 @@ void nrfRestorToRxTx();
 void nrfStandby1();
 void nrfPowerDown();
 
+bool nrfCarrierDetect();
+
 // #define nrfPowerDown()  clear_reg_bit(RF24_CONFIG, PWR_UP)
 // #define nrfStandby1()   ({\
 //                         set_reg_bit(RF24_CONFIG, PWR_UP);\

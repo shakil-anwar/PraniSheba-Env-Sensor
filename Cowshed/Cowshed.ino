@@ -8,6 +8,7 @@ bool startRun = false;
 void setup()
 {
   system_setup();
+  delay(5000);
   mainState = CHECK_HARDWARE;
 }
 
@@ -22,6 +23,7 @@ void loop()
         if (confIsOk())
         {
           mainState = START_DEVICE;
+          delay(config.deviceId);
         }
         else
         {

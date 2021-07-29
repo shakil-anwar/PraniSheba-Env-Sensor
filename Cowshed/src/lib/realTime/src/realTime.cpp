@@ -239,6 +239,9 @@ tState_t rtLoop()
 
 void printDateTime(tmElements_t *dtPtr)
 {
+
+  // Serial.print("DateTime Ptr: ");
+  // Serial.println((uint32_t)dtPtr);
   char buf4[] = "DD/MM/YYYY-hh:mm:ss";
   Serial.print(F("|------------------------------------|\r\n|         "));
   Serial.print(dtPtr->Day);Serial.print("/");Serial.print(dtPtr->Month);Serial.print("/");Serial.print(tmYearToCalendar(dtPtr->Year));Serial.print("-");

@@ -539,6 +539,13 @@ void nrfRxTxToStandy1()
   nrf_ce_low();
 }
 
+bool nrfCarrierDetect()
+{
+  nrfRxStart();
+  delayMicroseconds(300);
+  return (read_register(RF24_CD) & 0x01);
+}
+
 
 /***********************************************************************************
  *                                         NRF Extended Feature
