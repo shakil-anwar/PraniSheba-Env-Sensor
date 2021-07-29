@@ -14,5 +14,6 @@
 
 #ignore
 .vscode/*
+Cowshed/.vscode/*
 *.ini
 *.json
