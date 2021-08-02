@@ -33,7 +33,7 @@ bool sensorBegin()
 {
   Wire.begin();    // begin Wire(I2C)
   sht.reset();
-  humSensorBegin();
+  // humSensorBegin();
   mqBegin();
 }
 

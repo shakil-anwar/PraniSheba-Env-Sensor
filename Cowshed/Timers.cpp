@@ -28,8 +28,8 @@ void TimersBegin()
   timer1.initialize(1);
   timer1.attachIntCompB(timerIsr);
 
-  // rtcBegin();
-  // rtAttachRTC(rtcGetSec, rtcUpdateSec);
+  rtcBegin();
+  rtAttachRTC(rtcGetSec, rtcUpdateSec);
   rtAttachFastRTC(second, updateSec, timer1Start);
   rtBegin();
 }
@@ -106,15 +106,15 @@ void rtcBegin()
   {
     Serial.println(F("RTC Found"));
   }
-  if (!RTC.isRunning())
-  {
-    // rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-    Serial.println(F("RTC Adjusted"));
-  }
-  else
-  {
-    // Serial.println(F("-->RTC is Running"));
-  }
+  // if (!RTC.isRunning())
+  // {
+  //   // rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  //   Serial.println(F("RTC Adjusted"));
+  // }
+  // else
+  // {
+  //   // Serial.println(F("-->RTC is Running"));
+  // }
 }
 
 uint32_t rtcGetSec()

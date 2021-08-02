@@ -34,18 +34,27 @@ bool nrfQueryBeginClient(volatile struct qryObj_t *qryObj)
 
 //This function handles sensor node configuration parameters
 bool nrfTxConfigHandler(uint16_t DeviceId, nrfNodeConfig_t *conf,
-                        uint32_t romAddr,nrfMemFun_t read,nrfMemFun_t save)
+                        uint32_t romAddr,nrfMemFun_t read,nrfMemFun_t save, bool getNewNftConfig)
 {
-    read((uint32_t)romAddr,(uint8_t*)conf,sizeof(nrfNodeConfig_t));
-    //match checksum to validate that data does erased in memory
-    uint8_t confChecksum = conf->checksum;
-    conf->checksum = 0;
-    uint8_t checksumCalc = checksum(conf, sizeof(nrfNodeConfig_t));
-    bool isConfOk = (checksumCalc == confChecksum) && 
-                    (conf -> type == PING_TYPE) &&
-                    (conf -> opcode == NRF_CONFIG_OPCODE);
+    bool isConfOk;
+    uint8_t confChecksum, checksumCalc;
+    if(getNewNftConfig)
+    {
+        isConfOk = false;
+    }
+    else{
+        read((uint32_t)romAddr,(uint8_t*)conf,sizeof(nrfNodeConfig_t));
+        //match checksum to validate that data does erased in memory
+        confChecksum = conf->checksum;
+        conf->checksum = 0;
+        checksumCalc = checksum(conf, sizeof(nrfNodeConfig_t));
+        isConfOk = (checksumCalc == confChecksum) && 
+                        (conf -> type == PING_TYPE) &&
+                        (conf -> opcode == NRF_CONFIG_OPCODE);
+    }
+    
 
-    if(isConfOk == false)
+    if(isConfOk != true)
     {
 
         nrfNodeConfig_t *conf_t_ptr;
@@ -60,25 +69,19 @@ bool nrfTxConfigHandler(uint16_t DeviceId, nrfNodeConfig_t *conf,
         // conf_t_ptr -> checksum = confChecksum;
         if(conf_t_ptr != NULL)
         {
-            if( conf_t_ptr -> checksum == checksumCalc)
+            confChecksum = conf_t_ptr -> checksum;
+            conf_t_ptr -> checksum = 0;
+            conf_t_ptr -> checksum = checksum(conf_t_ptr, sizeof(nrfNodeConfig_t));
+            if(confChecksum == conf_t_ptr -> checksum )
             {
-                SerialPrintlnF(P("[nRF24_Client]..old config"));
+                SerialPrintlnF(P("[nRF24_Client]..saving new config"));
+                save((uint32_t)romAddr,(uint8_t*)conf_t_ptr,sizeof(nrfNodeConfig_t));
             }
             else
             {
-                confChecksum = conf_t_ptr -> checksum;
-                conf_t_ptr -> checksum = 0;
-                conf_t_ptr -> checksum = checksum(conf_t_ptr, sizeof(nrfNodeConfig_t));
-                if(confChecksum == conf_t_ptr -> checksum )
-                {
-                    SerialPrintlnF(P("[nRF24_Client]..saving new config"));
-                    save((uint32_t)romAddr,(uint8_t*)conf_t_ptr,sizeof(nrfNodeConfig_t));
-                }
-                else
-                {
-                    SerialPrintlnF(P("[nRF24_Client] Invalid config"));
-                }
+                SerialPrintlnF(P("[nRF24_Client] Invalid config"));
             }
+            nrfTxSetModeClient(BS_PING,conf);
             
             return true;
         }
@@ -89,11 +92,11 @@ bool nrfTxConfigHandler(uint16_t DeviceId, nrfNodeConfig_t *conf,
         if(isConfOk)
         {
         	SerialPrintlnF(P("[nRF24_Client]...old config"));
+            nrfTxSetModeClient(BS_PING,conf);
             return isConfOk;
             // nrfTxSetModeClient(BS_PING,conf);
         }        
     }
-    nrfTxSetModeClient(BS_PING,conf);
     SerialPrintlnF(P("[nRF24_Client]..Device has no config"));
     return false;
     

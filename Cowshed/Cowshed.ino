@@ -72,6 +72,7 @@ void loop()
       {
         rfFailCount = 0;
 #endif
+        tdmSyncState = TDM_CONFIG_CHANGED;
         mainState = SYNC_RF;
       }
 #else
@@ -137,11 +138,13 @@ bool syncTime()
 
 bool rfConfig()
 {
-  bool conOk = nrfTxConfigHandler(config.deviceId, &nrfConfig, NRF_CONFIG_ROM_ADDR, eepromRead, eepromUpdate);
+  bool conOk = nrfTxConfigHandler(config.deviceId, &nrfConfig, NRF_CONFIG_ROM_ADDR, 
+                eepromRead, eepromUpdate, tdmSyncState == TDM_CONFIG_CHANGED);
   if (conOk)
   {
 
     _nextSlotSec = calcNextSlotUnix(second(), &nrfConfig);
+    tdmSyncState = TDM_SYNCED;
     //    setNextSlotSec(slotSec);
     return conOk;
   }
