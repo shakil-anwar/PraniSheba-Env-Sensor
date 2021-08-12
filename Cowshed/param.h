@@ -27,7 +27,7 @@
 #define MEMQ_RING_BUF_LEN  4
 #define MEMQ_FLASH_START_ADDR 0
 #define MEMQ_TOTAL_BUFFER   3600
-#define MEMQ_SECTOR_ERASE_SZ  4096
+#define MEMQ_SECTOR_ERASE_SZ  8192
 #define MEMQ_PTR_SAVE_AFTER   10  
 
 /****************Interval Parameter********************/
