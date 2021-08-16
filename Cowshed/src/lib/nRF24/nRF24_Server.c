@@ -1,3 +1,10 @@
+/*
+   nrf24_Server.c
+   Created on:  Unknown
+   Author: Shuvangkar Chandra Das & Shakil Anwar
+   Description : nrf upper layer api for handling client quaries 
+*/
+
 #include"nRF24_Server.h"
 
 
@@ -8,6 +15,7 @@ uint8_t _freeSlotId;
 // uint8_t *pipe0AddrPtr;
 
 
+//This function Configure query server and return true if successful 
 bool nrfQueryBeginServer(volatile struct qryObj_t *qryObj)
 {
     bool isOk;
@@ -35,7 +43,7 @@ bool nrfQueryBeginServer(volatile struct qryObj_t *qryObj)
     return isOk;
 }
 
-
+//Set the address mode for server. decide server will  send response in which addresses 
 void nrfTxSetModeServer(enum addrMode_t addrMode)
 {
     //  nrfTxBegin(conPtr -> node, true);
@@ -62,10 +70,11 @@ void nrfTxSetModeServer(enum addrMode_t addrMode)
     }
 }
 
-
+//End a particular query from server side.
+//call this function in txIrq and mxRtIrq
 void nrfQryServerEnd(query_t *qry)
 {
-    //call this function in txIrq and mxRtIrq
+    
     nrfTxSetModeServer(COMMON_PING);
     // SerialPrintF(P("Addr : ")); nrfPrintBuffer(nrfQryObj.addr, 5);
 
@@ -88,7 +97,7 @@ void nrfQryServerEnd(query_t *qry)
 }
 
 
-
+//This function handles all the quaries from the client. 
 void nrfQueryHandler(query_t *query)
 {
     // if (_nrfDebug)
@@ -130,6 +139,7 @@ void nrfQueryHandler(query_t *query)
 }
 
 
+//This is a general function for responding ping request from server
 void PongHandler(query_t *qry)
 {  
     pong_t pong;
@@ -143,20 +153,36 @@ void PongHandler(query_t *qry)
     if(qry->opcode == PING2_OPCODE)
     {
         struct node_t *currentNode = (struct node_t*)tdmGetCurrentNode();
-        if(currentNode != NULL)
-        {
+        // if(currentNode != NULL)
+        // {
             SerialPrintF(P("Slot id : "));SerialPrintlnU8(currentNode -> slotNo);
-            pong.isBsFree = true;
-            pong.isMySlot = currentNode -> slotNo == qry ->slotId;
+
             pong.isConfigChanged = false;
-        }
-        else
-        {
-            pong.isBsFree = false;
-            pong.isMySlot = false;
-            pong.isConfigChanged = false;
-            SerialPrintlnF(P("Slot not synced"));
-        }
+            
+            if(currentNode -> deviceId == qry -> deviceId)
+            {
+            	pong.isBsFree = true;
+	            pong.isMySlot = true;
+	            
+            }
+            else
+            {
+            	pong.isBsFree = false;
+            	pong.isMySlot = false;
+            	if(tdmIsRegistered2(qry -> deviceId, qry-> slotId) == 255)
+            	{
+            		pong.isConfigChanged = true;
+            	}
+            }
+            
+        // }
+        // else
+        // {
+        //     pong.isBsFree = false;
+        //     pong.isMySlot = false;
+        //     pong.isConfigChanged = false;
+        //     SerialPrintlnF(P("Slot not synced"));
+        // }
         
     }
     pong.checksum = checksum(&pong, sizeof(pong_t)-1);
@@ -165,7 +191,7 @@ void PongHandler(query_t *qry)
 
 }
 
-
+//client requests configuration at the starting. This function resolves client config query
 void nrfServerConfigResolver(query_t *qry)
 { 
     SerialPrintlnF(P("Resolving Config"));

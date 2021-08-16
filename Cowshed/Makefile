@@ -1,4 +1,4 @@
-SERIAL_PORT=COM5
+SERIAL_PORT=COM9
 
 
 FQBN_PCB_V1=arduino:avr:uno
@@ -10,7 +10,6 @@ FQBN_PCB_v2=arduino:avr:pro:cpu=8MHzatmega328
 CC=arduino-cli
 CFLAG_PCB1_DEV = --build-property  "build.extra_flags=-DDEV \"-DPCB_V_0_1_0 \""
 CFLAG_PCB2_DEV = --build-property  "build.extra_flags=-DDEV \"-DPCB_V_0_2_0 \""
-
 
 
 CFLAGS_PCB1_PROD =--build-property  "build.extra_flags=-DPROD_BUILD \"-DPCB_V_0_1_0 \""
@@ -27,9 +26,9 @@ build_prod_v2: download
 	$(CC) compile -b $(FQBN_PCB_v2)  $(CFLAGS_PCB2_PROD)
 
 upload_v1:
-	$(CC) upload -b $(FQBN_PCB_V1)   -p $(SERIAL_PORT)  -v -t 
+	$(CC) upload -b $(FQBN_PCB_V1)   -p $(SERIAL_PORT)  -v -t
 upload_v2:
-	$(CC) upload -b $(FQBN_PCB_v2)   -p $(SERIAL_PORT)  -v -t 
+	$(CC) upload -b $(FQBN_PCB_v2)   -p $(SERIAL_PORT)  -v -t
 
 
 delete_lib:

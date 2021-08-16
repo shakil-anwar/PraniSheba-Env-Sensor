@@ -1,6 +1,9 @@
 #include "TDM.h"
-
-
+/*
+Author : Shuvangkar Chandra Das 
+Contributor :  Shakil Anwar
+Description :  This library maintains all the functionlity of sensor scheduling.
+*/
 struct freeslotLog_t
 {
 	bool isRegtered;
@@ -12,7 +15,7 @@ struct freeslotLog_t
 void tdmPrintSlotReg(struct freeslotLog_t *fslotLog);
 
 void printTdmMeta();
-uint8_t tdmIsRegistered(uint16_t sensorId);
+
 void tdmPrintSlot(struct node_t *node, uint8_t slotNo);
 void tdmPrintSlotDetails();
 
@@ -31,14 +34,16 @@ tdmMemFun_t _nodeRead;
 tdmMemFun_t _nodeWrite;
 
 
+//enable of disable tdm internal debug
 void tdmDebug(bool debug)
 {
   _debug = debug;
 }
 
+//this function points the ram and perment memory address and read write function of eeprom 
 void tdmAttachMem(uint8_t *buf, uint32_t baseAddr, tdmMemFun_t nodeRead, tdmMemFun_t nodeWrite)
 {
-  _romBaseAddr = baseAddr;
+  _romBaseAddr = baseAddr; //perment memory base address pointer 
   _nodeRead = nodeRead;
   _nodeWrite = nodeWrite;
   tdmNode = (struct node_t*)buf;
@@ -47,6 +52,7 @@ void tdmAttachMem(uint8_t *buf, uint32_t baseAddr, tdmMemFun_t nodeRead, tdmMemF
   // SerialPrintlnU16((uint16_t)&tdmNode[0]);
 }
 
+//initialize tdm from user defined memory 
 void tdmInit(uint16_t durationMoment, uint8_t nodeMax, uint8_t slotReserve)
 {
 
@@ -74,6 +80,7 @@ void tdmInit(uint16_t durationMoment, uint8_t nodeMax, uint8_t slotReserve)
   
 }
 
+//tdm final begin function for user firmware api. 
 void tdmBegin(uint8_t *buf, uint32_t baseAddr, tdmMemFun_t nodeRead, tdmMemFun_t nodeWrite,
               uint16_t momentDuration, uint8_t maxNode, uint8_t reserveSlot)
 {
@@ -88,6 +95,7 @@ void tdmBegin(uint8_t *buf, uint32_t baseAddr, tdmMemFun_t nodeRead, tdmMemFun_t
   if(_debug){SerialPrintF(P("TDM->BEGIN->OK:"));SerialPrintlnU8(tdmOk);}
 }
 
+//this erases all the memory related to tdm
 void tdmReset()
 {
   // SerialPrintF(P("Resetting TDM : "));
@@ -104,6 +112,9 @@ void tdmReset()
   _nodeWrite(_romBaseAddr, (uint8_t*)tdmNode, nodeLen);
 }
 
+
+//This function is very cruital function for tdm. It sync tdm sheduling with the real time. 
+// if the nearest slot sync with the tdm returns true else returns false 
 bool tdmSync(uint32_t unixSec)
 {
   _MomentSec = (uint16_t)(unixSec % (uint32_t)tdmMeta->momentDuration);
@@ -111,6 +122,7 @@ bool tdmSync(uint32_t unixSec)
   return (syncRem == 0);   //starting of new slot returns true
 }
 
+//This function update tdm slot in timer interrupt 
 void tdmUpdateSlot(uint32_t unixSec)
 {
   if (_tdmIsSync)
@@ -155,6 +167,7 @@ void tdmUpdateSlot(uint32_t unixSec)
 
 }
 
+//print tdm current slot info in main loop 
 void tdmPrintCurrentSlot()
 {
   static uint8_t lastslot;
@@ -166,6 +179,7 @@ void tdmPrintCurrentSlot()
 
 }
 
+//return current node information if tdm is synced else return null 
 struct node_t *tdmGetCurrentNode()
 {
   if(_tdmIsSync)
@@ -175,11 +189,13 @@ struct node_t *tdmGetCurrentNode()
   return NULL;
 }
 
+//return pointer of tdm meta data 
 struct tdmMeta_t *tdmGetMetaData()
 {
   return tdmMeta;
 }
 
+//check whether a sensor node is registered before. if registered return slot id. 
 uint8_t tdmIsRegistered(uint16_t sensorId)
 {
   uint8_t i;
@@ -194,6 +210,18 @@ uint8_t tdmIsRegistered(uint16_t sensorId)
   return 255; //invalid 
 }
 
+uint8_t tdmIsRegistered2(uint16_t sensorId, uint8_t slotID)
+{
+
+  if(tdmNode[slotID].deviceId == sensorId)
+  {
+    return slotID;
+  }else
+  {
+    return 255;
+  }
+}
+
 
 void tdmPrintSlotReg(struct freeslotLog_t *fslotLog)
 {
@@ -203,7 +231,7 @@ void tdmPrintSlotReg(struct freeslotLog_t *fslotLog)
 	SerialPrintF(P("|devId:"));SerialPrintlnU16(tdmNode[fslotLog->slotId].deviceId);
 }
 
-
+//this function return free slot id for new registratino 
 uint8_t tdmGetFreeSlot(uint16_t sensorId)
 {
   uint8_t slotAvail = tdmIsRegistered(sensorId);
@@ -219,25 +247,25 @@ uint8_t tdmGetFreeSlot(uint16_t sensorId)
   {
   	slotAvail = tdmMeta->freeSlotId;
 	// if(_debug){SerialPrintF(P("slot Avail :")); SerialPrintlnU8(slotAvail);}
-	if (slotAvail < (tdmMeta->maxNode - tdmMeta->reserveSlot))
-	{
-	    //fill up node info for new sensor
-	    tdmNode[slotAvail].deviceId = sensorId;
-	    tdmNode[slotAvail].slotNo = slotAvail;
-	    // tdmPrintSlot(&tdmNode[slotAvail],slotAvail);
+  	if (slotAvail < (tdmMeta->maxNode - tdmMeta->reserveSlot))
+  	{
+  	    //fill up node info for new sensor
+  	    tdmNode[slotAvail].deviceId = sensorId;
+  	    tdmNode[slotAvail].slotNo = slotAvail;
+  	    // tdmPrintSlot(&tdmNode[slotAvail],slotAvail);
 
-	    slotLog.isRegtered = false;
-  		slotLog.isAvail = true;
-	    // return slotAvail;
-	}
-	else
-	{
-		slotAvail = 255; //invalid slot
+  	    slotLog.isRegtered = false;
+    		slotLog.isAvail = true;
+  	    // return slotAvail;
+  	}
+  	else
+  	{
+  		  slotAvail = 255; //invalid slot
 
-		slotLog.isRegtered = false;
-  		slotLog.isAvail = true;
-	    // if(_debug){SerialPrintF(P("Slot Not Available"));}
-	}
+  		  slotLog.isRegtered = false;
+    		slotLog.isAvail = true;
+  	    // if(_debug){SerialPrintF(P("Slot Not Available"));}
+  	}
   }
 
   slotLog.slotId = slotAvail;
@@ -246,6 +274,7 @@ uint8_t tdmGetFreeSlot(uint16_t sensorId)
   // return 255; //invalid slot
 }
 
+//this function confirms registration of current slot 
 bool tdmConfirmSlot(uint8_t slotNo)
 {
   bool isSlotConfirmed = false;
@@ -280,7 +309,7 @@ bool tdmConfirmSlot(uint8_t slotNo)
 }
 
 
-
+//print slot information 
 void tdmPrintSlot(struct node_t *node, uint8_t slotNo)
 {
   SerialPrintF(P("TDM->")); SerialPrintU8(slotNo);
@@ -290,6 +319,7 @@ void tdmPrintSlot(struct node_t *node, uint8_t slotNo)
   SerialPrintF(P("|losSlot:")); SerialPrintlnU8(node -> losSlot);
 }
 
+//print all details of slot 
 void tdmPrintSlotDetails()
 {
   printTdmMeta(tdmMeta);
@@ -302,6 +332,7 @@ void tdmPrintSlotDetails()
   }
 }
 
+//print metadata information 
 void printTdmMeta(struct tdmMeta_t *meta)
 {
   SerialPrintF(P("TDM->META->Node:")); SerialPrintU8(meta -> maxNode);

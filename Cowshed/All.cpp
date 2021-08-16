@@ -24,16 +24,24 @@ volatile uint32_t _nowSec;
 uint32_t _nextSlotUnix;
 uint32_t _nextSlotEnd;
 bool _nrfSendOk;
+#if !defined(DEVICE_HAS_LOG)
 int16_t rfFailCount;
+#endif
 
 Task taskNrfStatus(5, &nrfWhichMode);
 void system_setup(void)
 {
+#if !defined(DEVICE_HAS_LOG)
   rfFailCount = 0;
+#endif
   tdmSyncState = TDM_UNSYNCED;
   Serial.begin(SERIAL_SPEED);
   SerialBegin(SERIAL_SPEED);  //supporting serial c library
   gpioBegin(); //This function has to call first to set sensitive pin like cs pin of spi
+  Serial.println("[pS Env Sensor v0.6.5]");
+
+
+
   radio_begin();
 #if defined(DEVICE_HAS_RTC)
   rtcBegin();
@@ -43,12 +51,15 @@ void system_setup(void)
 
   deviceBegin();
   objectsBegin();
+#if defined(DEVICE_HAS_LOG)
+  initiateLog();
+#endif
 
   //confsetting has to call after deviceBegin, because it operate on flash and sensor
   confSetting(CONFIG_BTN_PIN, configRead, configSave);
 
   scheduler.addTask(&taskNrfStatus);
-  wdtEnable(8000);
+  // wdtEnable(8000);
   BUZZER_ON();
   delay(1000);
   BUZZER_OFF();
@@ -60,7 +71,7 @@ void startDevice()
   runState = RUN_WAIT;
   _bsSendState = BS_SEND_WAIT;
   radioStart();
-  wdtStart();
+  // wdtStart();
 #if defined(FACTORY_RESET)
    nrfTxConfigReset(&nrfConfig, NRF_CONFIG_ROM_ADDR, eepromUpdate);
 #endif
@@ -130,26 +141,37 @@ void bsSendSm()
     case BS_SEND_WAIT:
       if (second() >= _nextSlotSec)
       {
-        if(second() >= _nextSlotSec)
-        {
           _nextSlotEnd = _nextSlotSec+(uint32_t)nrfConfig.momentDuration;
           _bsSendState = BS_IS_CONNECTED;
-        }
       }
       break;
     case BS_IS_CONNECTED:
-      Serial.println(F("run : BS_IS_CONNECTED"));
+      // Serial.println(F("run : BS_IS_CONNECTED"));
       if (isMySlot())
       {
+#if defined(DEVICE_HAS_LOG)
+        sensorLog.slotMissed = 1;
+#else
         rfFailCount = 0;
+#endif
+        
         // nrfTxReady(&nrfConfig);
+
         nrfTxSetModeClient(BS_DATA,&nrfConfig);
         xferReady();
         _bsSendState = BS_SEND;
       }
       else
       {
+#if defined(DEVICE_HAS_LOG)        
+        sensorLog.slotMissed++;
+        if(sensorLog.slotMissed == 0)
+        {
+          sensorLog.slotMissed = 1;
+        }
+#else
         rfFailCount++;
+#endif
         if(tdmSyncState == TDM_CONFIG_CHANGED)
         {
           mainState = SYNC_RF;
@@ -181,6 +203,9 @@ void bsSendSm()
       }
       break;
     case BS_SEND_END:
+#if defined(DEVICE_HAS_LOG)
+        saveLog();
+#endif
       _nextSlotSec = calcNextSlotUnix(second(), &nrfConfig);
       _bsSendState = BS_SEND_WAIT;
       break;
@@ -225,41 +250,83 @@ bool isBsConnected()
 
 bool isMySlot()
 {
-  int8_t tryCount = 3;
+  
+  int8_t tryCount = 5;
   uint32_t uTime;
   pong_t pong;
   do
   {
     uTime = nrfPingSlot(config.deviceId, nrfConfig.slotId, &pong);
-    if (uTime > 1)
+    int32_t delayTime = (int32_t)second();
+    delayTime = (int32_t)((uint32_t)delayTime-pong.second);
+    
+    
+    if(uTime)
     {
-      //update time 
-//      uTime = uTime-2;
-      tdmSyncState = TDM_SYNCED;
-      if(abs((int32_t)(second()-uTime))>1)
+      if(abs(delayTime)>1)
       {
-        Serial.println(F(">>>>>>>>>>>>>>>>.Time gap"));
-        rtSync(uTime);
+        rtSync(pong.second);
       }
-      return true;
-    }
-    else if(uTime == 1)
-    {
-      if(pong.isConfigChanged == 1)
+      if (pong.isConfigChanged != 1)
       {
-        tdmSyncState = TDM_CONFIG_CHANGED;
+        if(abs(delayTime) < nrfConfig.perNodeInterval)
+        {
+          if(delayTime > 0)
+          {
+            delayTime = delayTime*1000;
+            delay((int16_t)delayTime);
+            // return true;
+          }
+          // else{
+          //   Serial.println(F("SyncSlot>>Time gap"));
+          // }
+          tdmSyncState = TDM_SYNCED;
+          
+          return true;
+        }
+        else
+        {
+          tdmSyncState = TDM_SLOT_MISSED;
+        }
       }
       else
       {
-        tdmSyncState = TDM_SYNCED;
-        rtSync(pong.second);
+        tdmSyncState = TDM_CONFIG_CHANGED;
+        return false;
       }
       return false;
     }
-    else{
-      tdmSyncState = TDM_SLOT_MISSED;
-    }
-    delay(100);
+    
+    
+//     if (uTime > 1)
+//     {
+//       //update time 
+// //      uTime = uTime-2;
+//       tdmSyncState = TDM_SYNCED;
+//       if(abs((int32_t)(second()-uTime))>1)
+//       {
+//         Serial.println(F(">>>>>>>>>>>>>>>.Time gap"));
+//         rtSync(uTime);
+//       }
+//       return true;
+//     }
+//     else if(uTime == 1)
+//     {
+//       if(pong.isConfigChanged == 1)
+//       {
+//         tdmSyncState = TDM_CONFIG_CHANGED;
+//       }
+//       else
+//       {
+//         tdmSyncState = TDM_SYNCED;
+//         rtSync(pong.second);
+//       }
+//       return false;
+//     }
+//     else{
+//       tdmSyncState = TDM_SLOT_MISSED;
+//     }
+    // delay(100);
   } while (--tryCount);
 
   return false;
@@ -273,10 +340,10 @@ void printRunState()
       //      Serial.println(F("runState : RUN_WAIT"));
       break;
     case RUN_CHK_BS_CONN:
-      Serial.println(F("runState : RUN_CHK_BS_CONN"));
+      Serial.println(F("runState : CHK_BS_CONN"));
       break;
     case RUN_TX_XFER:
-      Serial.println(F("runState : RUN_TX_XFER"));
+      Serial.println(F("runState : TX_XFER"));
       break;
   }
 }
@@ -286,11 +353,12 @@ bool isHardwareOk()
   Serial.println(F("<--Hardware Status-->"));
   bool nrfOk = nrfIsRunning();
   Serial.print(F("NRF :")); Serial.println(nrfOk);
-  Serial.print(F("RTC: ")); Serial.println(true);
+  bool rtcOk = rtcIsRunning();
+  Serial.print(F("RTC: ")); Serial.println(rtcOk);
   Serial.print(F("Flash :")); Serial.println(true);
   Serial.print(F("Logic Power: ")); Serial.println(true);
-  Serial.println(F("<------------------->"));
-  return true;
+  Serial.println(F("<------------->"));
+  return (nrfOk);
 }
 
 
@@ -304,6 +372,8 @@ void configSave(config_t *bootPtr)
   {
     EEPROM.update(MAIN_CONFIG_EEPROM_ADDR + i, *(ptr + i));
   }
+
+  // eepromUpdate(MAIN_CONFIG_EEPROM_ADDR, ptr, sizeof(config_t));
 }
 
 void configRead(config_t *bootPtr)
@@ -313,6 +383,8 @@ void configRead(config_t *bootPtr)
   {
     *(ptr + i) = EEPROM.read(MAIN_CONFIG_EEPROM_ADDR + i);
   }
+
+  // eepromRead(MAIN_CONFIG_EEPROM_ADDR, ptr, sizeof(config_t));
   //  return bootPtr;
 }
 

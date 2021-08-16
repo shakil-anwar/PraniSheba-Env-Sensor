@@ -1,0 +1,19 @@
+#ignore all files
+*.
+
+#don't ignore
+!.gitignore
+!*.ino
+!*.cpp
+!*.h
+!*.c
+!*.bin
+!*.hex
+!Makefile
+!*.ps1
+
+#ignore
+.vscode/*
+Cowshed/.vscode/*
+*.ini
+*.json

@@ -32,7 +32,8 @@ MQ mq135(MQ135_PIN);
 bool sensorBegin()
 {
   Wire.begin();    // begin Wire(I2C)
-  humSensorBegin();
+  sht.reset();
+  // humSensorBegin();
   mqBegin();
 }
 
@@ -50,11 +51,11 @@ void mqBegin()
 
 bool sensorCalibrate()
 {
-  mq4.setXY(1000, 5000, 1, 0.6);
+  mq4.setXY(1000, 3000, 1, 0.68);
 	mq4.setR(1000, MQ4_AIR_RS_R0_RATIO);
 	mq4.runCalib(saveMq4Calib);
 
-	mq135.setXY(2.65, 1, 10, 100);
+	mq135.setXY( 10, 100, 2.65, 1);
 	mq135.setR(1000, MQ135_AIR_RS_R0_RATIO);
 	mq135.runCalib(saveMq135Calib);
 	return true;
@@ -75,6 +76,7 @@ float sensorValidate(float value)
 void humSensorBegin()
 {
   Wire.begin();    // begin Wire(I2C)
+
 }
 
 float getHum()
@@ -119,7 +121,7 @@ float getAmmonia()
 #if !defined(PROD_BUILD)
    return config.deviceId;
 #else
-  return sensorValidate(mq4.getPPM());
+  return sensorValidate(mq135.getPPM());
 #endif
 }
 
@@ -135,7 +137,7 @@ float getMethane()
 #if !defined(PROD_BUILD)
    return config.deviceId;
 #else
-  return sensorValidate(mq135.getPPM());
+  return sensorValidate(mq4.getPPM());
 #endif
 }
 
@@ -159,7 +161,7 @@ void readMq4Calib(calib_t *cPtr)
   {
     *(ptr+i) = EEPROM.read(MQ4_EEP_ADDR+i);
   }
-  mq4.printCalib(cPtr);
+  // mq4.printCalib(cPtr);
 }
 
 void saveMq135Calib(calib_t *cPtr)
@@ -180,5 +182,5 @@ void readMq135Calib(calib_t *cPtr)
   {
     *(ptr+i) = EEPROM.read(MQ135_EEPROM_ADDR+i);
   }
-  mq4.printCalib(cPtr);
+  // mq4.printCalib(cPtr);
 }

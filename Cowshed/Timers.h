@@ -19,6 +19,7 @@ void rtcUpdateSec(uint32_t unix);
 uint32_t calcNextSlotUnix(uint32_t uSec, nrfNodeConfig_t *conf);
 void setNextSlotSec(uint32_t unix);
 bool *isTimeTosend();
+bool rtcIsRunning();
 
 extern volatile bool _readyToSend;
 extern volatile uint32_t _nextSlotSec;

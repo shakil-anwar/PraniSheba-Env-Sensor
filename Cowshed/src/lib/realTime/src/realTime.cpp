@@ -1,9 +1,19 @@
+/*
+Author  :  Shuvangkar Chandra Das
+Description:  This library mainly handles real time capability of rtc timer. 
+So the library takes input of two timer functioins. one is fast timer and other is slow timer
+and keep updated both of the timer. 
+*/
 #include "realTime.h"
 #if defined(PROD_BUILD)
-  #include "../../RTClib/RTClib.h"
+  #include "../../Time/TimeLib.h"
+  #include "../../DS1307RTC/DS1307RTC.h"
+  // #include "../../RTClib/RTClib.h"
   // #include "../../Timer1/src/AVR_Timer1.h"
 #else
-  #include "RTClib.h"
+  #include <TimeLib.h>
+  #include <DS1307RTC.h>
+  // #include "RTClib.h"
   // #include "AVR_Timer1.h"
 #endif
 #define PRINT_TIMEOUT 30  //second
@@ -13,7 +23,8 @@
 /********Function prototype*************/
 // void timerIsr(void);
 // void updateSec(uint32_t sec);
-void printDateTime(DateTime *dtPtr);
+// void printDateTime(DateTime *dtPtr);
+void printDateTime(tmElements_t *dtPtr);
 
 // void rtAttachRTC(timeSetter_t setter, timeGetter_t getter);
 void printRtcSyncStatus(RT_SYNC_STATUS_t rtsync);
@@ -36,10 +47,12 @@ uint8_t _prevHour;
 
 tState_t _timeState;
 RT_SYNC_STATUS_t _rtSyncStatus;
-DateTime _dt;
+tmElements_t tm;
 
 
 
+
+//start real time functionality.
 void rtBegin(timeGetter_t getntp)
 {
   _getNtpTime = getntp;
@@ -51,12 +64,14 @@ void rtBegin(timeGetter_t getntp)
   _prevHour = 0;
 }
 
+//attach slow rtc call back functions
 void rtAttachRTC( timeGetter_t getter, timeSetter_t setter)
 {
   _rtcGetSec = getter;
   _rtcUpdateSec = setter;
 }
 
+//attach fast rtc callback function 
 void rtAttachFastRTC(timeGetter_t getter, timeSetter_t setter,void (*StartRtc)(void))
 {
   second = getter;
@@ -64,9 +79,7 @@ void rtAttachFastRTC(timeGetter_t getter, timeSetter_t setter,void (*StartRtc)(v
   startFastRtc = StartRtc;
 }
 
-
-
-
+//sync rtc timer and return whoch timer is updated. 
 RT_SYNC_STATUS_t rtSync(uint32_t uTime)
 {
 	// I have to assume that utime is valid time. 
@@ -126,13 +139,15 @@ RT_SYNC_STATUS_t rtSync(uint32_t uTime)
   }
   printRtcSyncStatus(_rtSyncStatus);
 
-  _dt = DateTime(second());
-  _nowHour = _dt.hour();
+  // _dt = DateTime(second());
+  // _nowHour = _dt.hour();
+  breakTime(second(), tm);
+  _nowHour = tm.Hour;
   _prevHour = _nowHour;
   return _rtSyncStatus;
 }
 
-
+//rtc timer sync in callback fuction 
 RT_SYNC_STATUS_t rtsync()
 {
   // RT_SYNC_STATUS_t syncStatus = UNSYNCED;
@@ -148,6 +163,8 @@ RT_SYNC_STATUS_t rtsync()
   // return syncStatus;
 }
 
+//this function runs in main loop and keetp track of time and perform 
+//routine task 
 tState_t rtLoop()
 {
   switch (_timeState)
@@ -168,9 +185,13 @@ tState_t rtLoop()
         rtsync();
       }
 
-      _dt = DateTime(second());
-      printDateTime(&_dt);
-      _nowHour = _dt.hour();
+      // _dt = DateTime(second());
+      // printDateTime(&_dt);
+      // _nowHour = _dt.hour();
+
+      breakTime(second(), tm);
+      printDateTime(&tm);
+      _nowHour = tm.Hour;
       //      nowHour = 23;
 
       if (_nowHour > _prevHour)
@@ -204,15 +225,31 @@ tState_t rtLoop()
   return _timeState;
 }
 
-void printDateTime(DateTime *dtPtr)
+//print date time in humand readble format
+// void printDateTime(DateTime *dtPtr)
+// {
+
+//   Serial.print("DateTime Ptr: ");
+//   Serial.println((uint32_t)_dt);
+//   char buf4[] = "DD/MM/YYYY-hh:mm:ss";
+//   Serial.print(F("|------------------------------------|\r\n|         "));
+//   Serial.print(dtPtr->toString(buf4));
+//   Serial.println(F("        |\r\n|------------------------------------|"));
+// }
+
+void printDateTime(tmElements_t *dtPtr)
 {
+
+  // Serial.print("DateTime Ptr: ");
+  // Serial.println((uint32_t)dtPtr);
   char buf4[] = "DD/MM/YYYY-hh:mm:ss";
   Serial.print(F("|------------------------------------|\r\n|         "));
-  Serial.print(dtPtr->toString(buf4));
+  Serial.print(dtPtr->Day);Serial.print("/");Serial.print(dtPtr->Month);Serial.print("/");Serial.print(tmYearToCalendar(dtPtr->Year));Serial.print("-");
+  Serial.print(dtPtr->Hour);Serial.print(":");Serial.print(dtPtr->Minute);Serial.print(":");Serial.print(dtPtr->Second);
   Serial.println(F("        |\r\n|------------------------------------|"));
 }
 
-
+//print ptc sync status for debugging 
 void printRtcSyncStatus(RT_SYNC_STATUS_t rtsync)
 {
   Serial.print(F("RT_TIME->"));
@@ -228,4 +265,9 @@ void printRtcSyncStatus(RT_SYNC_STATUS_t rtsync)
      Serial.println(F("UNSYNCED"));
   break;
   }
+}
+
+uint8_t rtSyncStatus()
+{
+  return (uint8_t)_rtSyncStatus;
 }

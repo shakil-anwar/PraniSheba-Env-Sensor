@@ -1,8 +1,7 @@
 /*
    nrf_usr_conf.h
-
-    Created on: Sep 2, 2020
-        Author: sshuv
+   Created on: Sep 2, 2020
+   Author: Shuvangkar Chandra Das & Shakil Anwar
 */
 
 #ifndef NRF_USR_CONF_H_

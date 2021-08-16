@@ -31,6 +31,7 @@ uint8_t pageBuf[256];
 
 /**********Async Server Objects*********************/
 payload_t pldBuf;
+struct sensor_t *pldBufPtr = (struct sensor_t *)&pldBuf;
 uint8_t payloadCount = 1;
 uint8_t *pldPtr; //This will keep track of  read memory until sent 
 
@@ -56,7 +57,7 @@ void deviceBegin()
 #if defined(DEVICE_HAS_FLASH_MEMORY)
   flash.begin(SPI_SPEED);
   ringObj.begin(MEMQ_RING_BUF_LEN, sizeof(struct memqPtr_t));
-  memqBegin(&memq,0, sizeof(payload_t), MEMQ_TOTAL_BUFFER);
+  memqBegin(&memq, 0, sizeof(payload_t), MEMQ_TOTAL_BUFFER);
 
   memqSetMem(&memq, memReader, memWriter, memEraser, MEMQ_SECTOR_ERASE_SZ);
   memqSetMemPtr(&memq, memPtrReader, memPtrWriter, MEMQ_PTR_SAVE_AFTER);
@@ -103,12 +104,16 @@ uint8_t *deviceMemRead()
     pldPtr = memqRead(&memq, (uint8_t*)&pldBuf);
     if (pldPtr != NULL)
     {
+      if(pldBufPtr->unixTime > second())
+      {
+        return NULL;
+      }
       // Serial.println(F("Read Mem : New"));
       printBuffer(pldPtr, sizeof(payload_t));
     }
     return pldPtr;
   }
-  Serial.println(F("----->Read Mem : Old"));
+  Serial.println("->Read Mem : Old");
   return pldPtr;
 }
 
@@ -178,13 +183,13 @@ void updateDataInterval(uint32_t time)
 
 	void memPtrReader(struct memqPtr_t *ptr)
 	{
-	  Serial.println(F("memqPtr Reader called"));
+	  Serial.println(F("memqPtr>Reader"));
 	  ringObj.readPacket((byte *)ptr);
 	}
 
 	void memPtrWriter(struct memqPtr_t *ptr)
 	{
-	  Serial.println(F("memqPtr Writer called"));
+	  Serial.println(F("memqPtr>Writer"));
 	  ringObj.savePacket((byte *)ptr);
 	}
 #endif

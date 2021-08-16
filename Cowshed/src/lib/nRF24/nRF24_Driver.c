@@ -1,8 +1,8 @@
 /*
    NRF24_Driver.c
-
-    Created on: Aug 27, 2020
-        Author: Shuvangkar
+   Created on: Aug 27, 2020
+   Author: Shuvangkar & Shakil Anwar
+   Description: The hardware layer abstraction for interfacing nRf24L RF module 
 */
 #include "nRF24_Driver.h"
 
@@ -16,6 +16,7 @@ volatile bool _nrfDebug;
  volatile gpio_pin _csnPin;
 
 /***********************Driver Basic API************************/
+//Read a single byte from nrf24l at particular addr and return the value 
 uint8_t read_register(uint8_t addr)
 {
   uint16_t response;
@@ -28,6 +29,7 @@ uint8_t read_register(uint8_t addr)
   return (uint8_t) (response & 0x00FF);
 }
 
+//write single byte to the particular addr
 void write_register(uint8_t addr, uint8_t data)
 {
   uint16_t response;
@@ -38,6 +40,7 @@ void write_register(uint8_t addr, uint8_t data)
   _nrfStatusReg = (uint8_t) ((response & 0xFF00) >> 8);
 }
 
+//write few bytes in a particular register
 void write_bytes_in_register(uint8_t addr, uint8_t *payload, uint8_t len)
 {
   nrf_ce_low();
@@ -53,6 +56,7 @@ void write_bytes_in_register(uint8_t addr, uint8_t *payload, uint8_t len)
   nrf_csn_high();
 }
 
+//read few bytes from particular register
 uint8_t *read_bytes_in_register(uint8_t addr, uint8_t *bucket, uint8_t len)
 {
   uint8_t *ptr = bucket;
@@ -69,18 +73,23 @@ uint8_t *read_bytes_in_register(uint8_t addr, uint8_t *bucket, uint8_t len)
   return bucket;
 }
 
+//This function is very useful when you want to set a particular bit in a register 
+//without changing the whole register. 
 void set_reg_bit(uint8_t reg, uint8_t bitMask)
 {
 	uint8_t regValue = read_register(reg);
 	write_register(reg,regValue | bitMask);
 }
 
+//This function is very useful when you want to clear a particular bit in a register 
+//without changing the whole register. 
 void clear_reg_bit(uint8_t reg, uint8_t bitMask)
 {
 	uint8_t regValue = read_register(reg);
 	write_register(reg, regValue & ~bitMask);
 }
 
+//Clear nrf tx all buffer memory 
 void nrf_flush_tx()
 {
   nrf_csn_low();
@@ -88,6 +97,8 @@ void nrf_flush_tx()
   nrf_csn_high();
 
 }
+
+//clear nrf rx buffer memory 
 void nrf_flush_rx()
 {
   nrf_csn_low();
@@ -97,6 +108,7 @@ void nrf_flush_rx()
 
 /****************************Driver Extended API*********************/
 
+//This function sets the channel radio frequency. 
 void nrfSetRfChannel(uint8_t ch)
 {
   // set nrf channel
@@ -108,11 +120,14 @@ void nrfSetRfChannel(uint8_t ch)
   write_register(RF24_RF_CH, (ch & 0b01111111));  
 }
 
+//this function write the TX address. 
 void nrf_set_tx_addr(uint8_t *addr, uint8_t len)
 {
   write_bytes_in_register(RF24_TX_ADDR, addr, len);
 }
 
+//Write RX address in a particular pipe. For pipe 0-1 sets 5 bytes and for rest 
+// of the pipes set on LS byte 
 void nrf_set_rx_addr(uint8_t pipe, uint8_t *addr, uint8_t len)
 {
 
@@ -134,6 +149,7 @@ void nrf_set_rx_addr(uint8_t pipe, uint8_t *addr, uint8_t len)
   set_reg_bit(RF24_EN_RXADDR, (1 << pipe));
 }
 
+//Set nrf TX and RX address width for the system 
 void nrf_set_addr_width(uint8_t width)
 {
   // if (width < 3 || width > 5)
@@ -143,34 +159,38 @@ void nrf_set_addr_width(uint8_t width)
   write_register(RF24_SETUP_AW, (width - 2) & 0b00000011);
 }
 
-
+//Set RF power and Data transfer speed 
 void nrf_set_tx_dbm_speed(uint8_t power_speed)
 {
   write_register(RF24_RF_SETUP, (power_speed) & 0x2F);
 }
 
+//
 void dlp_enable()
 {
   write_register (RF24_FEATURE,EN_DLP);
 }
+
 
 void dlp_disable()
 {
   clear_reg_bit(RF24_FEATURE,EN_DLP);
 }
 
+//dynamic paylod disable 
 void dynpd_disable(uint8_t pipe)
 {
 	clear_reg_bit(RF24_DYNPD,1<<pipe);
 
 }
 
+//dynamic payload enable 
 void dynpd_enable(uint8_t pipe)
 {
 	set_reg_bit(RF24_DYNPD,1<<pipe);
 }
 
-
+//nrf serial print any buffer 
 void nrfPrintBuffer(void *ptr, uint8_t len)
 {
   uint8_t i;
@@ -187,6 +207,8 @@ void nrfPrintBuffer(void *ptr, uint8_t len)
 
 
 /*****************************Generic function**********************/
+
+//calculate checksum of the buffer and return 8 bit result 
 uint8_t checksum(void *buffer, uint8_t len)
 {
   uint8_t *p = (uint8_t*)buffer;

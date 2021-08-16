@@ -8,12 +8,13 @@ bool startRun = false;
 void setup()
 {
   system_setup();
+  delay(5000);
   mainState = CHECK_HARDWARE;
 }
 
 void loop()
 {
-  printMainState(mainState);
+  // printMainState(mainState);
   switch (mainState)
   {
     case CHECK_HARDWARE:
@@ -22,6 +23,7 @@ void loop()
         if (confIsOk())
         {
           mainState = START_DEVICE;
+          delay(config.deviceId);
         }
         else
         {
@@ -60,9 +62,17 @@ void loop()
     case RUN_LOOP:
 #if defined(DEVICE_HAS_TDM)
       bsSendSm();
+
+#if defined(DEVICE_HAS_LOG)  
+      if((sensorLog.slotMissed % MAX_RF_DATA_SEND_RETRY) == 0)
+      {
+        sensorLog.slotMissed++;
+#else
       if(rfFailCount > MAX_RF_DATA_SEND_RETRY)
       {
         rfFailCount = 0;
+#endif
+        tdmSyncState = TDM_CONFIG_CHANGED;
         mainState = SYNC_RF;
       }
 #else
@@ -82,7 +92,7 @@ void loop()
       mainState = CHECK_HARDWARE;
       break;
   }
-  wdtReset();
+  // wdtReset();
 }
 
 void printMainState(mainState_t mstate)
@@ -128,11 +138,13 @@ bool syncTime()
 
 bool rfConfig()
 {
-  bool conOk = nrfTxConfigHandler(config.deviceId, &nrfConfig, NRF_CONFIG_ROM_ADDR, eepromRead, eepromUpdate);
+  bool conOk = nrfTxConfigHandler(config.deviceId, &nrfConfig, NRF_CONFIG_ROM_ADDR, 
+                eepromRead, eepromUpdate, tdmSyncState == TDM_CONFIG_CHANGED);
   if (conOk)
   {
 
     _nextSlotSec = calcNextSlotUnix(second(), &nrfConfig);
+    tdmSyncState = TDM_SYNCED;
     //    setNextSlotSec(slotSec);
     return conOk;
   }
@@ -140,5 +152,6 @@ bool rfConfig()
   {
     delay(SYNC_PING_DELAY_MS);// ping after 2s interval
   }
+  return false;
 
 }

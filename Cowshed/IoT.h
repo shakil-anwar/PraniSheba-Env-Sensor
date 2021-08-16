@@ -19,7 +19,10 @@
     #include "./src/lib/RingEEPROM/src/RingEEPROM.h"
     #include "./src/lib/Timer1/src/AVR_Timer1.h"
 
-    #include "./src/lib/RTClib/RTClib.h"
+    // #include "./src/lib/RTClib/RTClib.h"
+    #include "./src/lib/Time/TimeLib.h"
+    #include "./src/lib/DS1307RTC/DS1307RTC.h"
+
     #include "./src/lib/ShiftRegister74HC595/src/ShiftRegister74HC595.h"
     #include "./src/lib/SHT21-Arduino-Library/SHT21.h"
 #else
@@ -37,7 +40,9 @@
     #include "RingEEPROM.h"
     #include "AVR_Timer1.h"
 
-    #include "RTClib.h"
+    // #include "RTClib.h"
+    #include <TimeLib.h>
+    #include <DS1307RTC.h>
     #include <ShiftRegister74HC595.h>
     #include <SHT21.h>
 #endif
@@ -64,10 +69,18 @@ void gpioBegin();
 // void rtcUpdateSec(uint32_t unix);
 void factoryReset();
 
+
 extern Flash flash;       
 //extern RingEEPROM myeepRom;
 //extern MemQ memQ;
 extern struct memq_t memq;
 extern Scheduler scheduler;
+
+#if defined(DEVICE_HAS_LOG)
+void initiateLog();
+struct gasSensorLog_t *saveLog();
+extern struct gasSensorLog_t sensorLog;
+void resetLog(void);
+#endif
 //extern AsyncServer server;
 #endif

@@ -1,3 +1,14 @@
+/*
+Filename : nRF24_Server.h
+Author: Shuvangkar Chandra Das & Shakil Anwar
+Description : This file handle all the query api for server mechanism. 
+Normally sensors nodes connect with server and server serves all the reques
+from sensor nodes. 
+
+*/
+
+
+
 #ifndef _NRF24_QUERY_SERVER_H_
 #define _NRF24_QUERY_SERVER_H_
 

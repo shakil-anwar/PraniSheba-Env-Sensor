@@ -175,10 +175,10 @@ void handleParamSetting()
 
 void printIntroText()
 {
-  Serial.println(F("|------------------------------------------------|"));
-  Serial.println(F("|                   Gas Sensor                   |"));
-  Serial.println(F("|        A Product of Adorsho Pranisheba         |"));
-  Serial.println(F("|------------------------------------------------|"));
+  Serial.println(("|--------------------------------------------|"));
+  Serial.println(("|                Gas Sensor                  |"));
+  Serial.println(("|     A Product of Adorsho Pranisheba        |"));
+  Serial.println(("|--------------------------------------------|"));
 }
 
 
@@ -229,13 +229,13 @@ bool confIsOk()
 
 void configPrint(config_t *configPtr)
 {
- Serial.println(F("----------------------"));
- Serial.println(F("| Device Config Param |\r\n----------------------"));
+ Serial.println(F("--------"));
+ Serial.println(F("| Device Config Param |\r\n--------"));
  Serial.print(F("Device Id: "));Serial.println(configPtr -> deviceId);
  Serial.print(F("Samp Interval: "));Serial.println(configPtr -> sampInterval);
  Serial.print(F("Debug Off: "));Serial.println(configPtr ->isDebugOff);
  Serial.print(F("Registration: "));Serial.println(configPtr ->isSetupDone); 
- Serial.println(F("----------------------"));
+ Serial.println(("------------"));
 }
 
 

@@ -1,8 +1,8 @@
 /*
    nrf24.c
-
-    Created on: Aug 31, 2020
-        Author: sshuv
+   Created on: Aug 31, 2020
+   Author: Shuvangkar Chandra Das & Shakil Anwar
+   Description :  This is the nrf base api for creating user codebase. 
 */
 
 #include "nRF24.h"
@@ -30,13 +30,16 @@ static isrPtr_t rx_isr;
 static isrPtr_t max_rt_isr;
 
 
-
+//This function sets millis() and second() function reference for 
+// proper operation. millis is mandatory second is optional. 
 void nrfSetTimers(uint32_t (*ms)(), uint32_t (*second)())
 {
   _Millis = ms;
   _seconds = second;
 }
 
+//This function set nrf ce and csn pin in port and pin format.
+//easy to set for microcontroller project 
 void nrfSetPin(volatile gpio_pin *cePort,volatile gpio_pin cePin,
               volatile gpio_pin *csnPort,volatile gpio_pin csnPin)
 {
@@ -65,6 +68,7 @@ void nrfSetPin(volatile gpio_pin *cePort,volatile gpio_pin cePin,
    
 }
 
+//reset registers. so that it can be configured from beginning 
 void nrfReset()
 {
     delay(100); //Power on reset 100ms
@@ -80,6 +84,7 @@ void nrfReset()
     write_register(RF24_DYNPD, 0x00);
 }
 
+//This function is the begin function for nrf24l01
 void nrfBegin(air_speed_t speed, power_t power, uint32_t spiSpeed)
 {
   _nrfIrqState = NRF_WAIT;
@@ -105,6 +110,7 @@ void nrfBegin(air_speed_t speed, power_t power, uint32_t spiSpeed)
 }
 
 
+//nrf enable acknowledgement in a particular pipe 
 void nrfEnableAck(uint8_t pipe)
 {
   // enable dynamic payload length in feature
@@ -115,11 +121,16 @@ void nrfEnableAck(uint8_t pipe)
   set_reg_bit(RF24_EN_AA, (1 << pipe));
 }
 
+
+//nrf to standby mode1. this functions is used before changing mode. 
+//From rx to tx or tx to rx 
 void nrfStandby1()
 {
    set_reg_bit(RF24_CONFIG, PWR_UP);
    delay(2);
 }
+
+//This function turn radio and power down chip optjmize power
 void nrfPowerDown()
 {
   clear_reg_bit(RF24_CONFIG, PWR_UP);
@@ -127,7 +138,9 @@ void nrfPowerDown()
 
 /***********************************************************************************
  *                                         RX Functions
- * *********************************************************************************/    
+ * *********************************************************************************/   
+
+//Set pipe address and acknowledgment option 
 void nrfSetPipe(uint8_t pipe, uint8_t *addr, bool ackFlag)
 {
    nrf_ce_low(); // if device is power up, this ensures standby-1
@@ -140,6 +153,7 @@ void nrfSetPipe(uint8_t pipe, uint8_t *addr, bool ackFlag)
   }
 }
 
+//start in rx mode 
 void nrfRxStart()
 {
   nrf_ce_low();
@@ -154,6 +168,7 @@ void nrfRxStart()
  *                                         TX Functions
  * *********************************************************************************/
 
+//configure nrf for tx mode and set address 
 void nrfTxBegin(uint8_t *addr, bool ackFlag)
 {
   nrf_ce_low();// if device is power up, this ensures standby-1
@@ -169,6 +184,7 @@ void nrfTxBegin(uint8_t *addr, bool ackFlag)
   }
 }
 
+//tx start operation after calling  this function 
 void nrfTxStart()
 {
   nrf_ce_low();
@@ -179,7 +195,7 @@ void nrfTxStart()
   // delay_us(130);
 }
 
-
+//When data in tx buffer and calling this function start transmission 
 void nrtTxStartTransmission()
 {
   nrf_ce_high(); 
@@ -192,6 +208,8 @@ void nrtTxStartTransmission()
 /***********************************************************************************
  *                                         NRF Status Functions
  * *********************************************************************************/
+//This function check whether nrf is responding or not. It has to call after nrfBegin()
+//Otherwise the functions will not work 
 bool nrfIsRunning()
 {
   uint8_t awReg = read_register(RF24_SETUP_AW);
@@ -199,6 +217,7 @@ bool nrfIsRunning()
   return ((awReg >= 1) && (awReg <=3));
 }
 
+//check nrf Rx FIFI buffer is full. 
 bool nrfRxFifiFull()
 {
   // check RXFULL pin RF24_FIFO_STATUS register
@@ -207,6 +226,7 @@ bool nrfRxFifiFull()
   
 }
 
+//read status register 
 uint8_t nrfReadStatus()
 {
   // send RF24_NOP return output
@@ -216,6 +236,7 @@ uint8_t nrfReadStatus()
   return reg;
 }
 
+//read nrf rx received payload length 
 uint8_t nrfPayloadLen()
 {
   uint16_t response;
@@ -225,6 +246,7 @@ uint8_t nrfPayloadLen()
   return (uint8_t)(response);
 }
 
+//check any pending inetrrupt status bit 
 bool nrfIntStatus(uint8_t bitPos)
 {
   nrf_csn_low();
@@ -233,7 +255,7 @@ bool nrfIntStatus(uint8_t bitPos)
   return ((reg >>bitPos) & 0x01);
 }
 
-
+//check payload available in which pipe 
 uint8_t pipeAvailable()
 {
   // check pipe no in RF24_STATUS register
@@ -243,12 +265,14 @@ uint8_t pipeAvailable()
   return ((reg>>1) & PIPE_MASK);
 }
 
+//fast  check payload available in which pipe 
 uint8_t pipeAvailFast()
 {
   //This functions return pipe availableif _nrfStatusReg is done reading already
   return ((_nrfStatusReg>>1) & PIPE_MASK);
 }
 
+//check whether rx payload is empty or not. 
 bool nrfIsRxEmpty()
 {
   //returns true if RX FIFO empty
@@ -256,12 +280,14 @@ bool nrfIsRxEmpty()
   return (read_register(RF24_FIFO_STATUS) & RX_EMPTY);
 }
 
+//check is tx fifi buffer is empty or not 
 bool nrfTxIsFifoEmpty()
 {
   return (read_register(RF24_FIFO_STATUS) & TX_EMPTY);
 }
 
 
+//print nrf working mode
 void nrfPrintMode(enum nrf_mode_t mode)
 {
   SerialPrintF(P("<NRF_ "));
@@ -288,6 +314,7 @@ void nrfPrintMode(enum nrf_mode_t mode)
   }
 }
 
+//determine nrf operating in which mode
 enum nrf_mode_t nrfWhichMode()
 {
   uint8_t config = read_register(RF24_CONFIG);
@@ -340,6 +367,7 @@ enum nrf_mode_t nrfWhichMode()
  *                                         NRF Basic Read/Write Functions
  * *********************************************************************************/
 
+//write payload to transmit 
 void nrfWrite(const uint8_t *data, uint8_t len)
 {
   nrf_ce_low();//Goes to Standby-1 before writing payload.
@@ -357,12 +385,14 @@ void nrfWrite(const uint8_t *data, uint8_t len)
 
 }
 
+//write and send payload 
 void nrfSend(const uint8_t *data, uint8_t len)
 {
   nrfWrite(data,len);
   nrtTxStartTransmission();
 }
 
+//change nrf mode to tx and send payload 
 void nrfToTxAndSend(uint8_t *addr,const uint8_t *data, uint8_t len)
 {
   //This function set NRF to TX mode send data
@@ -372,6 +402,7 @@ void nrfToTxAndSend(uint8_t *addr,const uint8_t *data, uint8_t len)
   nrtTxStartTransmission();
 }
 
+//nrf acknowledge wait function after data send 
 bool nrfAck()
 {
   uint32_t currentMs = _Millis();
@@ -391,6 +422,7 @@ bool nrfAck()
   return false; 
 }
 
+//nrf send data and return acknowledge 
 bool nrfAckSend(const uint8_t *data, uint8_t len)
 {
   nrfWrite(data,len);
@@ -398,7 +430,7 @@ bool nrfAckSend(const uint8_t *data, uint8_t len)
   return nrfAck();
 }
 
-
+//nrf read payload in rx mode 
 uint8_t *nrfRead(uint8_t *buffer, uint8_t len)
 {
   uint8_t *ptr = buffer;
@@ -420,6 +452,7 @@ uint8_t *nrfRead(uint8_t *buffer, uint8_t len)
  *                                         NRF IRQs
  * *********************************************************************************/
 
+//nrf set irq functions
 void nrfSetIrqs(isrPtr_t txIsr, isrPtr_t rxIsr, isrPtr_t maxRtIsr)
 {
   tx_isr = txIsr;
@@ -427,6 +460,7 @@ void nrfSetIrqs(isrPtr_t txIsr, isrPtr_t rxIsr, isrPtr_t maxRtIsr)
   max_rt_isr = maxRtIsr;
 }
 
+//nrf irq handler function
 void nrfIrq()
 {
   nrfClearIrq(); //This function clear IRQ bits and read the status in _nrfStatusReg
@@ -464,7 +498,7 @@ void nrfIrq()
   }
 }
 
-
+//return irq state 
 enum nrf_irq_state_t waitAck()
 {
   return _nrfIrqState;
@@ -479,6 +513,7 @@ void nrfSetPldAck()
   set_reg_bit(RF24_FEATURE,EN_ACK_PAY);
 }
 
+//Clear All type interrupt request flags
 void nrfClearIrq()
 {
   // clear all irq in flag = 0
@@ -486,6 +521,7 @@ void nrfClearIrq()
   write_register(RF24_STATUS, MAX_RT | TX_DS | RX_DR);
 }
 
+//if the nrf in rx/tx to standby mode it will reverse the action
 void nrfRestorToRxTx()
 // void nrfEnable()
 {
@@ -503,15 +539,25 @@ void nrfRxTxToStandy1()
   nrf_ce_low();
 }
 
+bool nrfCarrierDetect()
+{
+  nrfRxStart();
+  delayMicroseconds(300);
+  return (read_register(RF24_CD) & 0x01);
+}
+
 
 /***********************************************************************************
  *                                         NRF Extended Feature
  * *********************************************************************************/
 
+  //Enable of disable debug log in nrf 
   void nrfSetDebug(bool debugFlag)
   {
     _nrfDebug = debugFlag;
   }
+
+  //Print nrf basic registers 
  void nrfPrintRegisters()
  {
     //serial_print("\r\n");
@@ -527,34 +573,3 @@ void nrfRxTxToStandy1()
     }
  }
 
-
-
-
-
-
-
-
-
-
-
-// bool nrfSend(const uint8_t *data, uint8_t len)
-// {
-
-//   nrfWrite(data,len);
-//   nrtTxStartTransmission();
-//   uint32_t currentMs = _Millis();
-//   uint32_t prevMs = currentMs;
-//   do
-//   {
-//     if(_nrfIrqState == NRF_SUCCESS)
-//     {
-//       return true;
-//     }
-//     else if(_nrfIrqState == NRF_FAIL)
-//     {
-//       break;
-//     }
-//     currentMs = _Millis();
-//   }while((currentMs - prevMs) < NRF_TRANSMIT_TIMEOUT);
-//   return false; 
-// }

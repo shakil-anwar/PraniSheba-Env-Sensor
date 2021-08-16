@@ -14,10 +14,10 @@ cd ./lib
 # clone own repository
 
 git clone https://github.com/shuvangkar/FlashMemory.git
-git clone https://github.com/shuvangkar/realTime.git 
-git clone https://github.com/shuvangkar/RingEEPROM.git 
+git clone https://github.com/shakil-anwar/realTime.git 
+git clone https://github.com/shakil-anwar/RingEEPROM.git
 git clone https://github.com/shuvangkar/MQSensor.git
-git clone https://github.com/shuvangkar/simple-json.git
+git clone https://github.com/shakil-anwar/simple-json.git
 git clone https://github.com/shuvangkar/asyncXfer.git
 # git clone https://github.com/shuvangkar/MemQ.git
 git clone https://github.com/shuvangkar/memq.git
@@ -27,10 +27,12 @@ git clone https://github.com/shuvangkar/nRF24.git
 git clone https://github.com/shuvangkar/arduinoCwrapper.git
 git clone https://github.com/shuvangkar/AVR_Watchdog.git
 git clone https://github.com/shuvangkar/Timer1.git
-git clone https://github.com/shuvangkar/tScheduler.git
+git clone https://github.com/shakil-anwar/tScheduler.git
 git clone https://github.com/shuvangkar/Sensor_TDM.git
 # Clone arduino repository
-git clone https://github.com/adafruit/RTClib.git
+# git clone https://github.com/adafruit/RTClib.git
+git clone https://github.com/shakil-anwar/Time.git
+git clone https://github.com/shakil-anwar/DS1307RTC.git
 git clone https://github.com/Simsso/ShiftRegister74HC595.git
 git clone https://github.com/shuvangkar/SHT21-Arduino-Library.git
 

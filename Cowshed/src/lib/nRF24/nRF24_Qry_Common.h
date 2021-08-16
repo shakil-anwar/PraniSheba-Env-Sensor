@@ -75,7 +75,7 @@ typedef struct pong_t
     uint8_t node[5];
     uint8_t type;
     uint8_t opcode;
-    uint8_t dataPipeLsbByte; //for making the structure even byte
+    uint8_t dataPipeLsbByte;
     uint8_t checksum;
 } nrfNodeConfig_t;
 

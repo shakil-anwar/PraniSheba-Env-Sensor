@@ -1,8 +1,7 @@
 /*
     nrf24.h
-
     Created on: Aug 31, 2020
-    Author: sshuv
+    Author: Shuvangkar Chandra Das & Shakil Anwar
 */
 #ifndef _NRF24_H_
 #define _NRF24_H_
@@ -89,6 +88,8 @@ void nrfRestorToRxTx();
 
 void nrfStandby1();
 void nrfPowerDown();
+
+bool nrfCarrierDetect();
 
 // #define nrfPowerDown()  clear_reg_bit(RF24_CONFIG, PWR_UP)
 // #define nrfStandby1()   ({\

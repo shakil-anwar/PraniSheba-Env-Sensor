@@ -1,3 +1,8 @@
+/*
+Author : Shuvangkar Chandra Das 
+Description :  Fast Ring Queue buffer based on ram. 
+*/
+
 #include "ramQ.h"
 
 #if defined(ARDUINO_ARCH_AVR)
@@ -44,6 +49,7 @@ volatile bool _isRamQLock;
 
 enum ramqState_t ramqState;
 
+//This function begin ramq
 void ramQSet(void *bufPtr, uint8_t packetSz, uint8_t totalPacket)
 {
   _baseAddr = bufPtr;
@@ -65,6 +71,7 @@ void ramQSet(void *bufPtr, uint8_t packetSz, uint8_t totalPacket)
 
 }
 
+//return current head pointer and update head for next operation. 
 void *ramqGetHead()
 {
 	void *tempHead = NULL;
@@ -95,11 +102,13 @@ void *ramqGetHead()
 	return tempHead;
 }
 
+//return buffer lock status. 
 bool ramqIsLocked()
 {
 	return _isRamQLock;
 }
 
+//return number of available packets in ramq 
 uint16_t ramqAvailable()
 {
 	uint16_t len;
@@ -126,6 +135,7 @@ uint16_t ramqAvailable()
 	return len;
 }
 
+//return ramq head. old api 
 void *ramQHead()
 {
  // Serial.print(F("Count :")); Serial.println(ramQCounter);
@@ -133,6 +143,7 @@ void *ramQHead()
   return _ramQHead;
 }
 
+//update ramq head after writing buffer
 void *ramQUpdateHead()
 {
   ramQCounter ++;
@@ -157,6 +168,7 @@ void *ramQUpdateHead()
   return _ramQHead;
 }
 
+//return ramq tail address for reading operation and update tail to the next address
 void *ramqGetTail()
 {
 	void *tempTail = NULL;
@@ -193,7 +205,7 @@ void *ramqGetTail()
 
 
 
-
+//return ram tail address
 void *ramQRead()
 {
   if(_ramQTail<_ramQHead)
@@ -225,6 +237,7 @@ void *ramQRead()
 //   }
 }
 
+//update ramq tail address
 void *ramQUpdateTail()
 {
   if(_ramQTail != _ramQHead)
@@ -242,7 +255,7 @@ void *ramQUpdateTail()
   // return ramQRead();
 }
 
-
+//print ramq log for debug operation
 void ramqPrintLog()
 {
 	static void *prevHead = NULL;

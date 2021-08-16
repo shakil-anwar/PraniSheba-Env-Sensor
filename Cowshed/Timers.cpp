@@ -18,7 +18,7 @@ volatile uint32_t _tempSec;
 volatile uint32_t _nextSlotSec;
 volatile bool _readyToSend;
 
-RTC_DS1307 rtc;
+// RTC_DS1307 rtc;
 
 void TimersBegin()
 {
@@ -28,8 +28,8 @@ void TimersBegin()
   timer1.initialize(1);
   timer1.attachIntCompB(timerIsr);
 
-  // rtcBegin();
-  // rtAttachRTC(rtcGetSec, rtcUpdateSec);
+  rtcBegin();
+  rtAttachRTC(rtcGetSec, rtcUpdateSec);
   rtAttachFastRTC(second, updateSec, timer1Start);
   rtBegin();
 }
@@ -98,7 +98,7 @@ void updateSec(uint32_t sec)
 
 void rtcBegin()
 {
-  if (! rtc.begin())
+  if (! RTC.isRunning())
   {
     Serial.println(F("RTC Not Found"));
   }
@@ -106,32 +106,33 @@ void rtcBegin()
   {
     Serial.println(F("RTC Found"));
   }
-  if (!rtc.isrunning())
-  {
-    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-    Serial.println(F("RTC Adjusted"));
-  }
-  else
-  {
-    Serial.println(F("-->RTC is Running"));
-  }
+  // if (!RTC.isRunning())
+  // {
+  //   // rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  //   Serial.println(F("RTC Adjusted"));
+  // }
+  // else
+  // {
+  //   // Serial.println(F("-->RTC is Running"));
+  // }
 }
 
 uint32_t rtcGetSec()
 {
   uint32_t utime = 0;
-  if (rtc.isrunning())
+  if (RTC.isRunning())
   {
     Serial.println(F("Getting RTC time"));
-    DateTime now = rtc.now();
-    utime =  now.unixtime();
+    // DateTime now = rtc.now();
+    // utime =  now.unixtime();
+    utime = RTC.get();
   }
   return utime;
 }
 
 void rtcUpdateSec(uint32_t unix)
 {
-  if (rtc.isrunning())
+  if (RTC.isRunning())
   {
     uint32_t rtcSec = rtcGetSec();
     Serial.print(F("RTC Sec: ")); Serial.println(rtcSec);
@@ -139,31 +140,44 @@ void rtcUpdateSec(uint32_t unix)
     {
       //if difference is more than 1 sec, update rtc
       Serial.println(F("Updating RTC Time"));
-      rtc.adjust(DateTime(unix));
+      // rtc.adjust(DateTime(unix));
+      RTC.set(unix);
     }
     else
     {
-      Serial.println(F("RTC time is updated"));
+      Serial.println(F("RTC is updated"));
     }
   }
 }
 
+
+bool rtcIsRunning()
+{
+  return RTC.isRunning();
+}
+
 uint32_t calcNextSlotUnix(uint32_t uSec, nrfNodeConfig_t *conf)
 {
+  // Serial.print("uSec: ");Serial.println(uSec);
+
   uint16_t slotSec = (conf -> perNodeInterval) * (conf -> slotId);
+  // Serial.print("slotSec: ");Serial.println(slotSec);
   uint16_t curMoment = uSec % conf->momentDuration;
+  // Serial.print("momentDuration: ");Serial.println(conf->momentDuration);
 
   uint32_t nexSlotSec;
   if (curMoment < slotSec)
   {
     nexSlotSec = uSec + (slotSec - curMoment);
+    // Serial.println("..");
   }
   else
   {
+    // Serial.println("...");
     nexSlotSec = uSec + (conf->momentDuration - curMoment) + slotSec;
   }
-  Serial.print(F("curMoment :")); Serial.println(curMoment);
-  Serial.print(F("======>>>>>next slot unix :")); Serial.println(nexSlotSec);
+  // Serial.print(F("curMoment :")); Serial.println(curMoment);
+  Serial.print(F("===>>nextSlot:")); Serial.println(nexSlotSec);
   return nexSlotSec;
 }
 

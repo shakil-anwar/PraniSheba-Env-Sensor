@@ -1,7 +1,7 @@
 #include "Sensors.h"
 
 volatile payload_t  payload[TOTAL_PAYLOAD_BUFFER];
-queryData_t queryBuffer;
+// queryData_t queryBuffer;
 
 struct sensor_t sensor;
 
@@ -42,10 +42,11 @@ struct  sensor_t *getSensorsData(struct sensor_t *senPtr)
   sensor -> header.type = SENSOR_TYPE;
   sensor -> header.id = config.deviceId;
   sensor -> unixTime = second();
-  sensor -> temp = getTemp();
+  sensor -> temp = (getTemp() - 2);
   sensor -> hum = getHum();
   sensor -> ammonia = getAmmonia();
   sensor -> methane = getMethane();
+  sensor -> header.checksum = 0;
 
   //calculate checksum
   sensor -> header.checksum = checksumCalc((uint8_t*)sensor,sizeof(struct sensor_t));
@@ -54,14 +55,14 @@ struct  sensor_t *getSensorsData(struct sensor_t *senPtr)
 
 void printSensor(struct sensor_t *sensor)
 {
-  Serial.println(F("<---------Sensor Data----------------->"));
+  Serial.println(F("<-----Sensor Data----->"));
   Serial.print(F("Time : ")); Serial.println(sensor -> unixTime );
   Serial.print(F("ID : ")); Serial.println(sensor -> header.id );
-  Serial.print(F("Temperature : ")); Serial.print(sensor -> temp ); Serial.println(" C");
-  Serial.print(F("Humidity : ")); Serial.print(sensor -> hum ); Serial.println(" %Rh");
-  Serial.print(F("Ammonia : ")); Serial.print(sensor -> ammonia ); Serial.println(" ppm");
-  Serial.print(F("Methane : ")); Serial.print(sensor -> methane ); Serial.println(" ppm");
-  Serial.print(F("checksum : ")); Serial.println(sensor->header.checksum );
+  Serial.print(F("Temp: ")); Serial.print(sensor -> temp ); Serial.println(" C");
+  Serial.print(F("Hum: ")); Serial.print(sensor -> hum ); Serial.println(" %Rh");
+  Serial.print(F("NH3: ")); Serial.print(sensor -> ammonia ); Serial.println(" ppm");
+  Serial.print(F("CH4: ")); Serial.print(sensor -> methane ); Serial.println(" ppm");
+  Serial.print(F("cksum: ")); Serial.println(sensor->header.checksum );
 }
 
 

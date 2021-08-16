@@ -1,3 +1,11 @@
+/**********************************************************************
+Author : Shuvangkar Chandra Das
+Contributor : Shakil Anwar 
+Description:  This is generic Ring Queue buffer with locking mechanism. 
+The buffer can be used with any type of memory including flash memory, fram, 
+ram etc. 
+************************************************************************/
+
 #include "memq.h"
 
 #if defined(ARDUINO_ARCH_AVR)
@@ -28,6 +36,8 @@ uint8_t log2base(uint16_t n);
 void memqLockBus(struct memq_t *memq);
 void memqUnlockBus(struct memq_t *memq);
 
+
+//This function begin memq pointers and initialie valiable from user object structure
 void memqBegin(struct memq_t *memq,uint32_t baseAddr, uint32_t packetLen, uint32_t totalPacket)
 {
   memq->_baseAddr = baseAddr;
@@ -43,6 +53,8 @@ void memqBegin(struct memq_t *memq,uint32_t baseAddr, uint32_t packetLen, uint32
   //   SerialPrintlnU32(memq->_lastAddr);
   // #endif
 }
+
+//This function dynamically allocate memory and then begin memq. 
 struct memq_t *memqNew(uint32_t baseAddr, uint32_t packetLen, uint32_t totalPacket)
 {
   // SerialBegin(9600);
@@ -54,7 +66,7 @@ struct memq_t *memqNew(uint32_t baseAddr, uint32_t packetLen, uint32_t totalPack
   return memq;
 }
 
-
+//This function sets memory function pointers 
 void memqSetMem(struct memq_t *memq, memFun_t memReader, memFun_t memWriter, memEraser_t memEraser, uint16_t blobSz)
 {
   //SerialPrintlnF(P("setMem Called"));
@@ -64,11 +76,17 @@ void memqSetMem(struct memq_t *memq, memFun_t memReader, memFun_t memWriter, mem
   memq->_blobSize = blobSz;
 }
 
+//The memory pointer needs to keep track for proper operation. So this function keep track of memory 
+//pointer in eeprom. For doing that the corresponding function has to set. 
 void memqSetMemPtr(struct memq_t *memq, ringFun_t reader, ringFun_t writer, uint16_t maxPtrEvent)
 {
   memq->_ptrRead = reader;
   memq->_ptrWrite = writer;
   memq->_ptrRead(&(memq->ringPtr));
+  if(memq->ringPtr._head > memq->_lastAddr)
+  {
+    memqReset(memq);
+  }
   memq->_maxPtrEvent = maxPtrEvent;
 // #if defined(MEMQ_DEBUG)
 //   SerialPrintF(P("memq RingPtr Head : "));
@@ -79,21 +97,25 @@ void memqSetMemPtr(struct memq_t *memq, ringFun_t reader, ringFun_t writer, uint
   memqPrintBeginLog(memq);
 }
 
+
+//Print memq  begin log 
 void memqPrintBeginLog(struct memq_t *memq)
 {
-	SerialPrintF(P("MEMQ->BEGIN->Start:"));SerialPrintU32(memq->_baseAddr);
+	SerialPrintF(P("MEMQ->BEGIN:"));SerialPrintU32(memq->_baseAddr);
   	SerialPrintF(P("|End:"));SerialPrintU32(memq->_lastAddr);
   	SerialPrintF(P("|H:")); SerialPrintU32(memq->ringPtr._head);
     SerialPrintF(P("|T:")); SerialPrintlnU32(memq->ringPtr._tail);
 }
 
+//Where there are multiple spi devices in memory spi bus, The bus needs to lock before flash read or write operation, 
+//So this function attach two functions which lock and unlock the SPI bus for memory operation. 
 void memqAttachBusSafety(struct memq_t *memq, void (*enableOthers)(void), void (*disableOthers)(void))
 {
   memq->_enableOthers = enableOthers;
   memq->_disableOthers = disableOthers;
 }
 
-
+//log2base faster implementation 
 uint8_t log2base(uint16_t n)
 {
     uint8_t inc=0;
@@ -106,6 +128,7 @@ uint8_t log2base(uint16_t n)
     return inc;
 }
 
+//lock spi bus
 void memqLockBus(struct memq_t *memq)
 {
   if (memq->_disableOthers)
@@ -114,6 +137,7 @@ void memqLockBus(struct memq_t *memq)
   }
 }
 
+//unlock spi bus 
 void memqUnlockBus(struct memq_t *memq)
 {
   if(memq->_enableOthers)
@@ -122,6 +146,7 @@ void memqUnlockBus(struct memq_t *memq)
   }
 }
 
+//reset memq memory. So this function erase full memoery and reset pointer
 void memqReset(struct memq_t *memq)
 {
    uint8_t blobIndex = log2base(memq->_blobSize);
@@ -160,6 +185,7 @@ void memqReset(struct memq_t *memq)
 
 }
 
+//write a full  packet  into memory. So it will take only data pointer. 
 void memqWrite(struct memq_t *memq, uint8_t *buf)
 {
   if (memq->ringPtr._isLock == false)
@@ -196,7 +222,7 @@ void memqWrite(struct memq_t *memq, uint8_t *buf)
 }
 
 
-
+//Print log information while reading 
 void memqPrintReadLog(struct memq_t *memq,struct memqReadLog_t *log)
 {
   SerialPrintF(P("MEMQ->READ->dAvail:"));SerialPrintU8(log->isDataAvailable);
@@ -205,6 +231,8 @@ void memqPrintReadLog(struct memq_t *memq,struct memqReadLog_t *log)
   SerialPrintF(P("|isRst:"));SerialPrintlnU8(memq->ringPtr.qState == RESET);
 }
 
+
+//Read a full packet from memory, So it will take a buffer pointer where data will be written 
 uint8_t *memqRead(struct memq_t *memq, uint8_t *buf)
 {
   
@@ -295,6 +323,7 @@ uint8_t *memqRead(struct memq_t *memq, uint8_t *buf)
 
 }
 
+//This functions memory pointer data into flash memory or user defined memory space
 void memqSaveMemPtr(struct memq_t *memq)
 {
   if (memq->_ptrEventCounter >= memq->_maxPtrEvent)
@@ -307,6 +336,7 @@ void memqSaveMemPtr(struct memq_t *memq)
   }
 }
 
+//return number of available packet in the memory 
 uint32_t memqAvailable(struct memq_t *memq)
 {
    if (memq->ringPtr._tail == memq->ringPtr._head)
@@ -325,11 +355,13 @@ uint32_t memqAvailable(struct memq_t *memq)
   }
 }
 
+//return memq lock status 
 bool memqIsLock(struct memq_t *memq)
 {
   return memq->ringPtr._isLock;
 }
 
+//print memq basic log for debugging
 void memqPrintLog(struct memq_t *memq)
 {
   static uint16_t prevCounter;

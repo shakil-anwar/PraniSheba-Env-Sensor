@@ -7,19 +7,19 @@ void txIsr(void);
 void rxIsr(void);
 void maxRtIsr(void);
 
-uint8_t pipe0Addr[5] = {120, 122, 123, 124, 125};
+uint8_t pipe0Addr[5] = {120, 123, 123, 124, 125};
 uint8_t txLsByte;
 nrfNodeConfig_t nrfConfig;
 
-uint8_t pipeAddr[6][5] =
-{
-  {1, 2, 3, 4, 5},
-  {2, 2, 3, 4, 5},
-  {3, 2, 3, 4, 5},
-  {4, 2, 3, 4, 5},
-  {5, 2, 3, 4, 5},
-  {6, 2, 3, 4, 5}
-};
+// uint8_t pipeAddr[6][5] =
+// {
+//   {1, 2, 3, 4, 5},
+//   {2, 2, 3, 4, 5},
+//   {3, 2, 3, 4, 5},
+//   {4, 2, 3, 4, 5},
+//   {5, 2, 3, 4, 5},
+//   {6, 2, 3, 4, 5}
+// };
 void radio_begin()
 {
   nrfSetTimers(millis, second);
@@ -73,11 +73,11 @@ void eepromRead(uint32_t addr, uint8_t *buf, uint16_t len)
 
   uint16_t eepAddr = (uint16_t)addr;
   uint8_t *ptr = buf;
-  Serial.print(F("EEPROM Reading Addr : ")); Serial.println(eepAddr);
+  Serial.print(F("EEPROM>R>: ")); Serial.println(eepAddr);
   for (uint16_t i = 0 ; i < len; i++)
   {
     *(ptr + i) = EEPROM.read(eepAddr + i);
-    Serial.print( *(ptr + i)); Serial.print(F("  "));
+    // Serial.print( *(ptr + i)); Serial.print(F("  "));
   }
   Serial.println();
 }
@@ -87,11 +87,11 @@ void eepromUpdate(uint32_t addr, uint8_t *buf, uint16_t len)
 
   uint16_t eepAddr = (uint16_t)addr;
   uint8_t *ptr = buf;
-  Serial.print(F("EEPROM Update Addr : ")); Serial.println(eepAddr);
+  Serial.print(F("EEPROM>W>: ")); Serial.println(eepAddr);
   for (uint16_t i = 0; i < len; i++)
   {
     EEPROM.update(eepAddr + i, *(ptr + i));
-    Serial.print( *(ptr + i)); Serial.print(F("  "));
+    // Serial.print( *(ptr + i)); Serial.print(F("  "));
   }
   Serial.println();
 }
