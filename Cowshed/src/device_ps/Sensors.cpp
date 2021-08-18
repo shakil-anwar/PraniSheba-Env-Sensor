@@ -121,7 +121,15 @@ float getAmmonia()
 #if !defined(PROD_BUILD)
    return config.deviceId;
 #else
-  return sensorValidate(mq135.getPPM());
+  float sum = 0.0, val;
+  int i;
+  for(i = 0; i < 20; i++)
+  {
+    val = mq135.getPPM();
+    sum += val;
+
+  }
+  return sensorValidate((sum / 20));
 #endif
 }
 
@@ -137,7 +145,15 @@ float getMethane()
 #if !defined(PROD_BUILD)
    return config.deviceId;
 #else
-  return sensorValidate(mq4.getPPM());
+  float sum = 0.0, val;
+  int i;
+  for(i = 0; i < 20; i++)
+  {
+    val = mq4.getPPM();
+    sum += val;
+  }
+
+  return sensorValidate((sum / 20));
 #endif
 }
 
