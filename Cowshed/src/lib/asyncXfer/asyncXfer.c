@@ -161,7 +161,6 @@ bool xferSendLoop()
 }
 
 
-
 bool xferSendLoopV2()
 {
     static uint8_t *_ptr = NULL;
