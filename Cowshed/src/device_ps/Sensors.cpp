@@ -188,7 +188,7 @@ void saveMq135Calib(calib_t *cPtr)
   {
     EEPROM.update(MQ135_EEPROM_ADDR+i, *(ptr+i));
   }
-  mq4.printCalib(cPtr);
+  mq135.printCalib(cPtr);
 }
 void readMq135Calib(calib_t *cPtr)
 {

@@ -105,6 +105,8 @@ bool xferSendLoop()
                 }
                 sendState = SERVER_SEND;
                 _tryCount = 0; //resets try count
+            }else{
+                _isReady = false;
             }
             break;
         case SERVER_SEND:
@@ -155,8 +157,9 @@ bool xferSendLoop()
             break;
         }
     }
-    return _isReady;
+    return (_ptr != NULL || _isReady);
 }
+
 
 
 bool xferSendLoopV2()

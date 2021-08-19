@@ -111,7 +111,7 @@ void deviceRunSM()
       break;
     case RUN_TX_XFER:
       Serial.println(F("run : RUN_TX_XFER"));
-      _nrfSendOk = xferSendLoopV3();
+      _nrfSendOk = xferSendLoopV2();
       if (_nrfSendOk)
       {
         runState = RUN_WAIT;
@@ -181,10 +181,10 @@ void bsSendSm()
       }
       break;
     case BS_SEND:
-      Serial.println(F("run : BS_SEND"));
+      // Serial.println(F("run : BS_SEND"));
       if(second() <= _nextSlotEnd)
       {
-        _nrfSendOk = xferSendLoopV3();
+        _nrfSendOk = xferSendLoop();
       }
       else
       {
@@ -192,14 +192,15 @@ void bsSendSm()
         _nrfSendOk = false;
       }
       
-      _bsSendState = BS_SEND_END;
+      
       if (_nrfSendOk)
       {
-        Serial.println(F("All Send Ok"));
+        Serial.print(F(".."));
       }
       else
       {
         Serial.println(F("All Not Sent"));
+        _bsSendState = BS_SEND_END;
       }
       break;
     case BS_SEND_END:
