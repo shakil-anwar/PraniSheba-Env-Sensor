@@ -83,8 +83,6 @@ bool nrfTxConfigHandler(uint16_t DeviceId, nrfNodeConfig_t *conf,
         }
         return isConfOk;
     }
-
-
     // bool isConfOk;
     // uint8_t confChecksum, checksumCalc;
     // if(getNewNftConfig)
@@ -148,6 +146,34 @@ bool nrfTxConfigHandler(uint16_t DeviceId, nrfNodeConfig_t *conf,
     // }
     // SerialPrintlnF(P("[nRF24_Client]..Device has no config"));
     // return false;
+    
+
+    // if(isConfOk == false)                           
+    // {
+    //     //Device has no config, or erased, get the new config
+    //     if(_nrfDebug){ SerialPrintlnF(P("Getting New Config"));}
+    //     conf = nrfTxGetConfig(DeviceId,conf);
+    //     if(conf !=NULL)
+    //     {
+    //         nrfTxSetModeClient(BS_PING,conf);
+    //         save((uint32_t)romAddr,(uint8_t*)conf,sizeof(nrfNodeConfig_t));
+    //         return true;
+    //     }
+    //     else
+    //     {
+    //         //config qry failed
+    //         return false;
+    //     }
+    // }
+    // else
+    // {
+    //     if(_nrfDebug)
+    //     { 
+    //         SerialPrintlnF(P("Device has Config"));
+    //         nrfPrintConfig(conf);
+    //     }
+    // }
+    // return isConfOk;
 }
 
 
@@ -165,12 +191,6 @@ nrfNodeConfig_t *nrfTxGetConfig(uint16_t DeviceId, nrfNodeConfig_t *configPtr)
   configPtr = nrfQuery(&query,configPtr,sizeof(nrfNodeConfig_t));
   if (configPtr != NULL)
   {
-    uint16_t nodeTime = (uint16_t)configPtr -> slotId;
-    nodeTime = nodeTime* configPtr -> perNodeInterval;
-    if(nodeTime > configPtr->momentDuration)
-    {
-        return NULL;
-    }
     nrfPrintConfig(configPtr);
   }
    return configPtr;

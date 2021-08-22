@@ -111,10 +111,11 @@ void deviceRunSM()
       break;
     case RUN_TX_XFER:
       Serial.println(F("run : RUN_TX_XFER"));
-      _nrfSendOk = xferSendLoopV2();
+      // _nrfSendOk = xferSendLoopV3();
+      _nrfSendOk = xferSendLoop();
       if (_nrfSendOk)
       {
-        runState = RUN_WAIT;
+        // runState = RUN_WAIT;
         Serial.println(F("Done and RUN_END_TRANSFER"));
       }
       else
@@ -141,7 +142,7 @@ void bsSendSm()
     case BS_SEND_WAIT:
       if (second() >= _nextSlotSec)
       {
-          _nextSlotEnd = _nextSlotSec+(uint32_t)nrfConfig.momentDuration;
+          _nextSlotEnd = _nextSlotSec+(uint32_t)nrfConfig.perNodeInterval;
           _bsSendState = BS_IS_CONNECTED;
       }
       break;

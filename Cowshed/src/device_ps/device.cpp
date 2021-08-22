@@ -57,7 +57,7 @@ void deviceBegin()
 #if defined(DEVICE_HAS_FLASH_MEMORY)
   flash.begin(SPI_SPEED);
   ringObj.begin(MEMQ_RING_BUF_LEN, sizeof(struct memqPtr_t));
-  memqBegin(&memq, 0, sizeof(payload_t), MEMQ_TOTAL_BUFFER);
+  memqBegin(&memq, MEMQ_FLASH_START_ADDR, sizeof(payload_t), MEMQ_TOTAL_BUFFER);
 
   memqSetMem(&memq, memReader, memWriter, memEraser, MEMQ_SECTOR_ERASE_SZ);
   memqSetMemPtr(&memq, memPtrReader, memPtrWriter, MEMQ_PTR_SAVE_AFTER);
@@ -113,10 +113,9 @@ uint8_t *deviceMemRead()
         printSensor((struct sensor_t *)pldPtr);
       }else
       {
-        printSensor((struct sensor_t *)pldPtr);
         Serial.print("[MEMREAD]..Wrong Data");
       }
-
+      
       // Serial.println(F("Read Mem : New"));
       printBuffer(pldPtr, sizeof(payload_t));
     }

@@ -121,15 +121,7 @@ float getAmmonia()
 #if !defined(PROD_BUILD)
    return config.deviceId;
 #else
-  float sum = 0.0, val;
-  int i;
-  for(i = 0; i < 20; i++)
-  {
-    val = mq135.getPPM();
-    sum += val;
-
-  }
-  return sensorValidate((sum / 20));
+  return sensorValidate(mq135.getPPM());
 #endif
 }
 
@@ -145,15 +137,7 @@ float getMethane()
 #if !defined(PROD_BUILD)
    return config.deviceId;
 #else
-  float sum = 0.0, val;
-  int i;
-  for(i = 0; i < 20; i++)
-  {
-    val = mq4.getPPM();
-    sum += val;
-  }
-
-  return sensorValidate((sum / 20));
+  return sensorValidate(mq4.getPPM());
 #endif
 }
 
@@ -188,7 +172,7 @@ void saveMq135Calib(calib_t *cPtr)
   {
     EEPROM.update(MQ135_EEPROM_ADDR+i, *(ptr+i));
   }
-  mq135.printCalib(cPtr);
+  mq4.printCalib(cPtr);
 }
 void readMq135Calib(calib_t *cPtr)
 {

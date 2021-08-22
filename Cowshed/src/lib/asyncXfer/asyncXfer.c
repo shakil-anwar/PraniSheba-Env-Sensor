@@ -157,9 +157,8 @@ bool xferSendLoop()
             break;
         }
     }
-    return (_ptr != NULL || _isReady);
+    return ((_ptr != NULL) || _isReady);
 }
-
 
 
 bool xferSendLoopV2()

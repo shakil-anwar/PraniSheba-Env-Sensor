@@ -44,6 +44,10 @@ struct  sensor_t *getSensorsData(struct sensor_t *senPtr)
   sensor -> unixTime = second();
   sensor -> temp = (getTemp() - 2);
   sensor -> hum = getHum();
+  if(sensor -> hum >100)
+  {
+    sensor -> hum = 98.18;
+  }
   sensor -> ammonia = getAmmonia();
   sensor -> methane = getMethane();
   sensor -> header.checksum = 0;
