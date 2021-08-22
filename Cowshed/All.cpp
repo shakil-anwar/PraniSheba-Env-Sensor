@@ -38,7 +38,7 @@ void system_setup(void)
   Serial.begin(SERIAL_SPEED);
   SerialBegin(SERIAL_SPEED);  //supporting serial c library
   gpioBegin(); //This function has to call first to set sensitive pin like cs pin of spi
-  Serial.println("[pS Env Sensor v0.6.5]");
+  Serial.println("[pS Env Sensor v0.6.6]");
 
 
 
