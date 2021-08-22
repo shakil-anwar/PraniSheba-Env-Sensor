@@ -45,7 +45,7 @@ bool nrfTxConfigHandler(uint16_t DeviceId, nrfNodeConfig_t *conf,
                     (conf -> opcode == NRF_CONFIG_OPCODE);
 
     nrfNodeConfig_t *conf_t_ptr;
-    if(getNewNftConfig || isConfOk == false)
+    if(getNewNftConfig || (isConfOk == false))
     {
         SerialPrintlnF(P("Getting New Config"));
         nrfTxSetModeClient(COMMON_PING,conf);
