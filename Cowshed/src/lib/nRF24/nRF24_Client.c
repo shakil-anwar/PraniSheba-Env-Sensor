@@ -192,6 +192,12 @@ nrfNodeConfig_t *nrfTxGetConfig(uint16_t DeviceId, nrfNodeConfig_t *configPtr)
   if (configPtr != NULL)
   {
     nrfPrintConfig(configPtr);
+    uint16_t nodeTime = (uint16_t)configPtr -> slotId;
+    nodeTime = nodeTime* configPtr -> perNodeInterval;
+    if(nodeTime > configPtr->momentDuration)
+    {
+        return NULL;
+    }
   }
    return configPtr;
 }
