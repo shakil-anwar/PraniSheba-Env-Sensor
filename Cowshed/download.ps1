@@ -1,6 +1,7 @@
 # Before running this script please run following command in administrator mode in powershell
 # set-executionpolicy unrestricted
 # Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
+# Get-ChildItem -Filter *.ps1 | Unblock-File
 
 # Navigate to src directory
 cd  ./src  
