@@ -113,7 +113,14 @@ uint8_t *deviceMemRead()
         printSensor((struct sensor_t *)pldPtr);
       }else
       {
-        Serial.print("[MEMREAD]..Wrong Data");
+        if(pldPtr[0]==5)
+        {
+          Serial.print("[MEMREAD]..log");
+        }
+        else{
+          Serial.print("[MEMREAD]..Wrong Data");
+        }
+        
       }
       
       // Serial.println(F("Read Mem : New"));

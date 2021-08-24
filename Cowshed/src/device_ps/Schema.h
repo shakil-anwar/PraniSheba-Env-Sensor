@@ -40,7 +40,8 @@ struct sensor_t
   float temp;
   uint16_t logicVolt;
   uint16_t errorCode;
-  uint8_t reserve[4];
+  uint8_t isServerSynced;
+  uint8_t reserve[3];
 };
 
 struct gasSensorLog_t

@@ -200,7 +200,15 @@ void bsSendSm()
       }
       else
       {
-        Serial.println(F("All Not Sent"));
+        if(memqAvailable(&memq)>0)
+        {
+          Serial.println(F("All Not Sent"));
+        }
+        else
+        {
+          Serial.println(F("All Sent"));
+        }
+        
         _bsSendState = BS_SEND_END;
       }
       break;
