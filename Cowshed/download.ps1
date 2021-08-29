@@ -19,12 +19,12 @@ git clone https://github.com/shakil-anwar/realTime.git
 git clone https://github.com/shakil-anwar/RingEEPROM.git
 git clone https://github.com/shuvangkar/MQSensor.git
 git clone https://github.com/shakil-anwar/simple-json.git
-git clone https://github.com/shuvangkar/asyncXfer.git
+git clone https://github.com/shakil-anwar/asyncXfer.git
 # git clone https://github.com/shuvangkar/MemQ.git
-git clone https://github.com/shuvangkar/memq.git
+git clone https://github.com/shakil-anwar/memq.git
 git clone https://github.com/shuvangkar/ramQ.git
 git clone https://github.com/shuvangkar/SerialPipe.git
-git clone https://github.com/shuvangkar/nRF24.git
+git clone https://github.com/shakil-anwar/nRF24.git
 git clone https://github.com/shuvangkar/arduinoCwrapper.git
 git clone https://github.com/shuvangkar/AVR_Watchdog.git
 git clone https://github.com/shuvangkar/Timer1.git
