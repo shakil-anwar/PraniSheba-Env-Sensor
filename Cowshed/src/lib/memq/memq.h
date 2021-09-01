@@ -24,6 +24,7 @@ struct memqPtr_t
 {
   uint32_t _head;
   uint32_t _tail;
+  uint32_t _saveTail;
   uint32_t willEraseAddr;
   enum qState_t qState;
   bool _isLock;
@@ -75,6 +76,8 @@ uint32_t memqAvailable(struct memq_t *memq);
 bool memqIsLock(struct memq_t *memq);
 void memqPrintLog(struct memq_t *memq);
 
+void memqLockBus(struct memq_t *memq);
+void memqUnlockBus(struct memq_t *memq);
 
 
 #ifdef __cplusplus 

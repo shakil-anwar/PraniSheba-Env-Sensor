@@ -33,19 +33,22 @@ void memqPrintReadLog( struct memq_t *memq,struct memqReadLog_t *log);
 void memqPrintBeginLog(struct memq_t *memq);
 
 uint8_t log2base(uint16_t n);
-void memqLockBus(struct memq_t *memq);
-void memqUnlockBus(struct memq_t *memq);
+
 
 
 //This function begin memq pointers and initialie valiable from user object structure
 void memqBegin(struct memq_t *memq,uint32_t baseAddr, uint32_t packetLen, uint32_t totalPacket)
 {
-  memq->_baseAddr = baseAddr;
-  memq->_lastAddr = baseAddr + packetLen * totalPacket;
-  memq->_packetLen = packetLen;
-  memq->_ptrEventCounter = 0;
-  memq->_disableOthers = NULL;
-  memq->_enableOthers = NULL;
+  if (memq != NULL)
+  {
+    memq->_baseAddr = baseAddr;
+    memq->_lastAddr = baseAddr + packetLen * totalPacket;
+    memq->_packetLen = packetLen;
+    memq->_ptrEventCounter = 0;
+    memq->_disableOthers = NULL;
+    memq->_enableOthers = NULL;
+  }
+  
 
   // #if defined(MEMQ_DEBUG)
   //   SerialPrintF(P("Memq Start : "));
@@ -83,11 +86,37 @@ void memqSetMemPtr(struct memq_t *memq, ringFun_t reader, ringFun_t writer, uint
   memq->_ptrRead = reader;
   memq->_ptrWrite = writer;
   memq->_ptrRead(&(memq->ringPtr));
+  memq->_maxPtrEvent = maxPtrEvent;
+#if defined (BOARD_MEGA1284_V010)
+  memq->ringPtr._tail = memq->ringPtr._saveTail;
+#endif
   if(memq->ringPtr._head > memq->_lastAddr)
   {
     memqReset(memq);
   }
-  memq->_maxPtrEvent = maxPtrEvent;
+  uint16_t headCount = 0;
+  uint8_t data = 0;
+  uint32_t readAddr = 0; 
+  // SerialPrintF(P("|H:")); SerialPrintlnU32(memq->ringPtr._head);
+  memqLockBus(memq);
+  if(memq->_memReader)
+  {
+    do
+    {
+      readAddr = memq->ringPtr._head + headCount * memq->_packetLen;
+      if (memq->ringPtr._head >= memq->_lastAddr)
+      {
+        memq->ringPtr._head = memq->_baseAddr;
+        // memq->_ptrWrite(&(memq->ringPtr)); //saving pointer in edge conditions
+      }
+      memq->_memReader(readAddr,&data,1);
+      headCount++;
+    } while (data != 255);
+  }
+  memqUnlockBus(memq);
+
+  memq->ringPtr._head = memq->ringPtr._head + (headCount-1) *memq->_packetLen;
+  // SerialPrintF(P("|H:")); SerialPrintlnU32(memq->ringPtr._head);
 // #if defined(MEMQ_DEBUG)
 //   SerialPrintF(P("memq RingPtr Head : "));
 //   SerialPrintU32(memq->ringPtr._head);
@@ -104,7 +133,8 @@ void memqPrintBeginLog(struct memq_t *memq)
 	SerialPrintF(P("MEMQ->BEGIN:"));SerialPrintU32(memq->_baseAddr);
   	SerialPrintF(P("|End:"));SerialPrintU32(memq->_lastAddr);
   	SerialPrintF(P("|H:")); SerialPrintU32(memq->ringPtr._head);
-    SerialPrintF(P("|T:")); SerialPrintlnU32(memq->ringPtr._tail);
+    SerialPrintF(P("|T:")); SerialPrintU32(memq->ringPtr._tail);
+    SerialPrintF(P("|A:")); SerialPrintlnU32(memq->ringPtr._saveTail);
 }
 
 //Where there are multiple spi devices in memory spi bus, The bus needs to lock before flash read or write operation, 
@@ -175,6 +205,7 @@ void memqReset(struct memq_t *memq)
   //erase ringeeprom
   memq->ringPtr._head = memq->_baseAddr;
   memq->ringPtr._tail = memq->_baseAddr;
+  memq->ringPtr._saveTail = memq->_baseAddr;
   memq->ringPtr.willEraseAddr = memq->_baseAddr;
   memq->ringPtr.qState = RESET;
   memq->ringPtr._isLock = false;
