@@ -342,7 +342,7 @@ pong_t *nrfping(query_t *qry,pong_t *ping)
   pong_t *pongPtr = (pong_t *)nrfQuery(qry,(void *)ping,sizeof(pong_t));
   if (pongPtr != NULL)
   {
-      // printPing(pongPtr);
+    //   printPing(pongPtr);
   }
   return pongPtr;
 }
