@@ -118,7 +118,7 @@ uint8_t *deviceMemRead()
           Serial.print("[MEMREAD]..log");
         }
         else{
-          Serial.print("[MEMREAD]..Wrong Data");
+          Serial.print("[MEMREAD].Wrong Data");
         }
         
       }
@@ -166,7 +166,7 @@ void printBuffer(byte *buf, byte len)
 void updateDataInterval(uint32_t time)
 {
   task1.setInterval(time);
-  Serial.println(F("-------------->Sample Interval updated"));
+  Serial.println(F("------>Sample Interval updated"));
 }
 
 
@@ -174,23 +174,26 @@ void updateDataInterval(uint32_t time)
 #if defined(DEVICE_HAS_FLASH_MEMORY)
 	void memReader(uint32_t addr, uint8_t *buf, uint16_t len)
 	{
-	  Serial.print(F("<====Tail :"));
+	  Serial.print(F("<T:"));
 	  Serial.print(addr);
-	  Serial.println(F("====>"));
+	  Serial.println(F(">"));
 	  flash.read(addr, buf, sizeof(payload_t));
+    // printBuffer((byte *)buf, sizeof(payload_t));
 	}
 
 	void memWriter(uint32_t addr, uint8_t *buf, uint16_t len)
 	{
-	  Serial.print(F("<====Head :"));
+	  Serial.print(F("<H:"));
 	  Serial.print(addr);
-	  Serial.println(F("====>"));
+	  Serial.println(F(">"));
+    // printBuffer((byte *)buf, sizeof(payload_t));
 	  flash.write(addr, buf, sizeof(payload_t));
+    
 	}
 
 	void memEraser(uint32_t addr, uint16_t len)
 	{
-	  Serial.print(F("Erasing Addr : ")); Serial.println(addr);
+	  Serial.print(F("Erase Addr: ")); Serial.println(addr);
 	  flash.eraseSector(addr);
 	  uint32_t curPage = addr >> 8;
 	  flash.dumpPage(curPage, pageBuf);
@@ -198,13 +201,13 @@ void updateDataInterval(uint32_t time)
 
 	void memPtrReader(struct memqPtr_t *ptr)
 	{
-	  Serial.println(F("memqPtr>Reader"));
+	  Serial.println(F("memqPtr>Read"));
 	  ringObj.readPacket((byte *)ptr);
 	}
 
 	void memPtrWriter(struct memqPtr_t *ptr)
 	{
-	  Serial.println(F("memqPtr>Writer"));
+	  Serial.println(F("memqPtr>Write"));
 	  ringObj.savePacket((byte *)ptr);
 	}
 #endif

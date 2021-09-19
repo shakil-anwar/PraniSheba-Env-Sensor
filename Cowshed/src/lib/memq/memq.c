@@ -374,6 +374,7 @@ uint8_t *memqRead(struct memq_t *memq, uint8_t *buf)
         // #endif
         memq->ringPtr.qState = NO_DATA;
         memqReadLog.isDataAvailable = false;
+        memq->ringPtr._isLock = false;
       }
 
       memqPrintReadLog(memq, &memqReadLog);
