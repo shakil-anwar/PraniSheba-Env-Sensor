@@ -33,7 +33,7 @@ void col_one(uint8_t level)
 {
   for (uint8_t i = COL1_START; i >= COL1_END ; i--)
   {
-    if ((i > (COL1_START - level)))
+    if ((i < (COL1_END + level)))
     {
       sr.set(i, HIGH);
     }
@@ -55,7 +55,7 @@ void col_two(uint8_t level)
   //  led 4 -> 2
   for (uint8_t i = COL2_START; i >= COL2_END ; i--)
   {
-    if ((i > (COL2_START - level)))
+    if ((i < (COL2_END + level)))
     {
       sr.set(i, HIGH);
     }
@@ -70,7 +70,7 @@ void col_three(uint8_t level)
 {
   for (uint8_t i = COL3_START; i >= COL3_END ; i--)
   {
-    if ((i > (COL3_START - level)))
+    if ((i < (COL3_END + level)))
     {
       sr.set(i, HIGH);
     }
@@ -91,7 +91,7 @@ void col_four(uint8_t level)
   //  led 4 -> 8
   for (uint8_t i = COL4_START; i >= COL4_END ; i--)
   {
-    if ((i > (COL4_START - level)))
+    if ((i < (COL4_END + level)))
     {
       sr.set(i, HIGH);
     }

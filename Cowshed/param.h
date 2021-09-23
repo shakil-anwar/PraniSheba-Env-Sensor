@@ -14,6 +14,8 @@
 #define DEVICE_HAS_TDM
 #define DEVICE_HAS_LOG
 
+// #define LED_TEST
+
 
 
 

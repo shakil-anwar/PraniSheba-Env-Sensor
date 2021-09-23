@@ -320,7 +320,7 @@ uint8_t *memqRead(struct memq_t *memq, uint8_t *buf)
           memqReadLog.isLastBlobErased = false;
         }
       }
-      else
+      else if(memq->ringPtr._saveTail < memq->ringPtr.willEraseAddr)
       {
           if(memq->ringPtr._tail < (memq->ringPtr.willEraseAddr))
           {
