@@ -1,6 +1,10 @@
 #include "All.h"
 #include "EEPROM.h"
 
+volatile uint32_t task1Time = 0;
+volatile uint32_t task2Time = 0;
+volatile uint32_t task3Time = 0;
+
 enum bsSendState_t
 {
   BS_SEND_WAIT,
@@ -28,7 +32,7 @@ bool _nrfSendOk;
 int16_t rfFailCount;
 #endif
 
-Task taskNrfStatus(5, &nrfWhichMode);
+// Task taskNrfStatus(5, &nrfWhichMode);
 void system_setup(void)
 {
 #if !defined(DEVICE_HAS_LOG)
@@ -58,7 +62,7 @@ void system_setup(void)
   //confsetting has to call after deviceBegin, because it operate on flash and sensor
   confSetting(CONFIG_BTN_PIN, configRead, configSave);
 
-  scheduler.addTask(&taskNrfStatus);
+  // scheduler.addTask(&taskNrfStatus);
   // wdtEnable(8000);
   BUZZER_ON();
   delay(1000);
@@ -76,11 +80,11 @@ void startDevice()
    nrfTxConfigReset(&nrfConfig, NRF_CONFIG_ROM_ADDR, eepromUpdate);
 #endif
   
-#if defined(DATA_ACQUIRE_INTERVAL)
-  updateDataInterval(DATA_ACQUIRE_INTERVAL);
-#else
-  updateDataInterval(config.sampInterval);
-#endif
+// #if defined(DATA_ACQUIRE_INTERVAL)
+//   updateDataInterval(DATA_ACQUIRE_INTERVAL);
+// #else
+//   updateDataInterval(config.sampInterval);
+// #endif
 }
 
 void deviceRunSM()
@@ -306,40 +310,33 @@ bool isMySlot()
       }
       return false;
     }
-    
-    
-//     if (uTime > 1)
-//     {
-//       //update time 
-// //      uTime = uTime-2;
-//       tdmSyncState = TDM_SYNCED;
-//       if(abs((int32_t)(second()-uTime))>1)
-//       {
-//         Serial.println(F(">>>>>>>>>>>>>>>.Time gap"));
-//         rtSync(uTime);
-//       }
-//       return true;
-//     }
-//     else if(uTime == 1)
-//     {
-//       if(pong.isConfigChanged == 1)
-//       {
-//         tdmSyncState = TDM_CONFIG_CHANGED;
-//       }
-//       else
-//       {
-//         tdmSyncState = TDM_SYNCED;
-//         rtSync(pong.second);
-//       }
-//       return false;
-//     }
-//     else{
-//       tdmSyncState = TDM_SLOT_MISSED;
-//     }
-    // delay(100);
   } while (--tryCount);
 
   return false;
+}
+
+
+void scheduleTask()
+{
+  // Task 1
+  runTask(updateDisplay,10,&task1Time);
+  // Task 2
+  runTask(schemaReadSensors,config.sampInterval,&task2Time);
+  // Task 3
+  runTask(nrfWhichMode,5,&task3Time);
+}
+
+
+void runTask( void(*func)(void), uint32_t interval,volatile uint32_t *prevtime)
+{
+  if((second() - *prevtime)>interval)
+  {
+    if(func)
+    {
+      func();
+    }
+    *prevtime = second();   
+  }
 }
 
 void printRunState()
@@ -377,25 +374,12 @@ bool isHardwareOk()
 
 void configSave(config_t *bootPtr)
 {
-  uint8_t *ptr = (uint8_t*)bootPtr;
-  for (uint8_t i = 0 ; i < sizeof(config_t); i++)
-  {
-    EEPROM.update(MAIN_CONFIG_EEPROM_ADDR + i, *(ptr + i));
-  }
-
-  // eepromUpdate(MAIN_CONFIG_EEPROM_ADDR, ptr, sizeof(config_t));
+  eepromUpdate(MAIN_CONFIG_EEPROM_ADDR,(uint8_t*)bootPtr,sizeof(config_t));
 }
 
 void configRead(config_t *bootPtr)
 {
-  uint8_t *ptr = (uint8_t*)bootPtr;
-  for (uint8_t i = 0 ; i < sizeof(config_t); i++)
-  {
-    *(ptr + i) = EEPROM.read(MAIN_CONFIG_EEPROM_ADDR + i);
-  }
-
-  // eepromRead(MAIN_CONFIG_EEPROM_ADDR, ptr, sizeof(config_t));
-  //  return bootPtr;
+  eepromRead(MAIN_CONFIG_EEPROM_ADDR, (uint8_t*)bootPtr,sizeof(config_t));
 }
 
 //  if (millis() - prevModeMillis > 2000)

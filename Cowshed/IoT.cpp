@@ -11,10 +11,8 @@ struct gasSensorLog_t sensorLog;
 struct gasSensorMetaLog_t sensorLogMeta;
 
 //RTC_DS1307 rtc;
-Scheduler scheduler;
 void objectsBegin()
 {
-  scheduler.begin(&second);
   xferBegin(deviceMemRead, deviceRfSend, deviceRfAckWait, millis);
   xferReady();
   

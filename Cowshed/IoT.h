@@ -10,7 +10,7 @@
     #include "./src/lib/asyncXfer/asyncXfer.h"
     #include "./src/lib/nRF24/nRF24.h"
     #include "./src/lib/nRF24/nRF24_Client.h"
-    #include "./src/lib/tScheduler/tScheduler.h"
+    // #include "./src/lib/tScheduler/tScheduler.h"
     #include "./src/lib/AVR_Watchdog/watchdog.h"
     #include "./src/lib/realTime/src/realTime.h"
     #include "./src/lib/ramQ/src/ramQ.h"
@@ -74,7 +74,7 @@ extern Flash flash;
 //extern RingEEPROM myeepRom;
 //extern MemQ memQ;
 extern struct memq_t memq;
-extern Scheduler scheduler;
+// extern Scheduler scheduler;
 
 #if defined(DEVICE_HAS_LOG)
 void initiateLog();

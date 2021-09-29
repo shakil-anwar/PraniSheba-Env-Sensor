@@ -36,8 +36,8 @@ uint8_t payloadCount = 1;
 uint8_t *pldPtr; //This will keep track of  read memory until sent 
 
 
-Task task2(10, &updateDisplay);
-Task task1(DEFAULT_DATA_SAMPLE_SEC, &schemaReadSensors); //send payload triggers after 5 second interval
+// Task task2(10, &updateDisplay);
+// Task task1(DEFAULT_DATA_SAMPLE_SEC, &schemaReadSensors); //send payload triggers after 5 second interval
 
 
 // #define MEMQ_RING_BUF_LEN  4
@@ -49,8 +49,8 @@ void deviceBegin()
 {
   schemaBegin();
   led_begin();
-  scheduler.addTask(&task1);
-  scheduler.addTask(&task2);
+  // scheduler.addTask(&task1);
+  // scheduler.addTask(&task2);
 
   BUZZER_OUT_MODE();
   BUZZER_OFF();
@@ -163,11 +163,11 @@ void printBuffer(byte *buf, byte len)
   Serial.println();
 }
 
-void updateDataInterval(uint32_t time)
-{
-  task1.setInterval(time);
-  Serial.println(F("------>Sample Interval updated"));
-}
+// void updateDataInterval(uint32_t time)
+// {
+//   task1.setInterval(time);
+//   Serial.println(F("------>Sample Interval updated"));
+// }
 
 
 
@@ -177,7 +177,9 @@ void updateDataInterval(uint32_t time)
 	  Serial.print(F("<T:"));
 	  Serial.print(addr);
 	  Serial.println(F(">"));
+    memqLockBus(&memq);
 	  flash.read(addr, buf, sizeof(payload_t));
+    memqUnlockBus(&memq);
     // printBuffer((byte *)buf, sizeof(payload_t));
 	}
 
@@ -187,16 +189,19 @@ void updateDataInterval(uint32_t time)
 	  Serial.print(addr);
 	  Serial.println(F(">"));
     // printBuffer((byte *)buf, sizeof(payload_t));
+    memqLockBus(&memq);
 	  flash.write(addr, buf, sizeof(payload_t));
-    
+    memqUnlockBus(&memq);
 	}
 
 	void memEraser(uint32_t addr, uint16_t len)
 	{
 	  Serial.print(F("Erase Addr: ")); Serial.println(addr);
+    memqLockBus(&memq);
 	  flash.eraseSector(addr);
 	  uint32_t curPage = addr >> 8;
 	  flash.dumpPage(curPage, pageBuf);
+    memqUnlockBus(&memq);
 	}
 
 	void memPtrReader(struct memqPtr_t *ptr)

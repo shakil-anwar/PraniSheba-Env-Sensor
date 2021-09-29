@@ -5,7 +5,7 @@
 // #include "MQ.h"
 // #include <SHT21.h>
 /*****************Gas Sensor Parameter******************/
-#define MQ4_AIR_RS_R0_RATIO 		4.4f
+#define MQ4_AIR_RS_R0_RATIO 		  4.4f
 #define MQ135_AIR_RS_R0_RATIO 		3.7f
 
 
@@ -162,43 +162,28 @@ float getMethane()
 
 void saveMq4Calib(calib_t *cPtr)
 {
-  Serial.println(F("Calib Saving for mq4"));
-  uint8_t *ptr = (uint8_t*)cPtr;
-  for(uint8_t i = 0; i<sizeof(calib_t);i++)
-  {
-    EEPROM.update(MQ4_EEP_ADDR+i, *(ptr+i));
-  }
+  Serial.println(F("Saving for mq4"));
+  eepromUpdate(MQ4_EEP_ADDR, (uint8_t*)cPtr,sizeof(calib_t));
   mq4.printCalib(cPtr);
 }
 
 void readMq4Calib(calib_t *cPtr)
 {
-  Serial.println(F("Calib Rading for mq4"));
-  uint8_t *ptr = (uint8_t*)cPtr;
-  for(uint8_t i = 0 ; i< sizeof(calib_t); i++)
-  {
-    *(ptr+i) = EEPROM.read(MQ4_EEP_ADDR+i);
-  }
+  Serial.println(F("Rading for mq4"));
+  eepromRead(MQ4_EEP_ADDR,(uint8_t*)cPtr,sizeof(calib_t));
   // mq4.printCalib(cPtr);
 }
 
 void saveMq135Calib(calib_t *cPtr)
 {
-  Serial.println(F("Calib Saving for mq135"));
-  uint8_t *ptr = (uint8_t*)cPtr;
-  for(uint8_t i = 0; i<sizeof(calib_t);i++)
-  {
-    EEPROM.update(MQ135_EEPROM_ADDR+i, *(ptr+i));
-  }
+  Serial.println(F("Saving for mq135"));
+  eepromUpdate(MQ135_EEPROM_ADDR, (uint8_t*)cPtr,sizeof(calib_t));
   mq4.printCalib(cPtr);
 }
+
 void readMq135Calib(calib_t *cPtr)
 {
-  Serial.println(F("Calib Rading for mq135"));
-  uint8_t *ptr = (uint8_t*)cPtr;
-  for(uint8_t i = 0 ; i< sizeof(calib_t); i++)
-  {
-    *(ptr+i) = EEPROM.read(MQ135_EEPROM_ADDR+i);
-  }
+  Serial.println(F("Rading for mq135"));
+  eepromRead(MQ135_EEPROM_ADDR,(uint8_t*)cPtr,sizeof(calib_t));
   // mq4.printCalib(cPtr);
 }

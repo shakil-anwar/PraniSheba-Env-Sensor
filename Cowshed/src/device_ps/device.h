@@ -12,7 +12,7 @@ void deviceBegin();
 uint8_t *deviceMemRead();
 void deviceRfSend(uint8_t *data);
 int deviceRfAckWait();
-void updateDataInterval(uint32_t time);
+// void updateDataInterval(uint32_t time);
 
 // uint8_t *readMem();
 // void sendNrf(uint8_t *data);

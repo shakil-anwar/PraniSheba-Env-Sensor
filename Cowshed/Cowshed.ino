@@ -86,7 +86,8 @@ void loop()
       memqSaveMemPtr(&memq);
 #endif
       rtLoop();
-      scheduler.run();
+      // scheduler.run();
+      scheduleTask();
       break;
     case STOP:
       //      mainState = CHECK_HARDWARE;
