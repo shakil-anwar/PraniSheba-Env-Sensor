@@ -11,10 +11,8 @@ struct gasSensorLog_t sensorLog;
 struct gasSensorMetaLog_t sensorLogMeta;
 
 //RTC_DS1307 rtc;
-Scheduler scheduler;
 void objectsBegin()
 {
-  scheduler.begin(&second);
   xferBegin(deviceMemRead, deviceRfSend, deviceRfAckWait, millis);
   xferReady();
   
@@ -112,9 +110,10 @@ struct gasSensorLog_t *saveLog()
 
   sensorLog.header.type = SENSOR_LOG_TYPE;
   sensorLog.header.id = config.deviceId;
-  
-  sensorLog.errorCode = (tdmSyncState<<2) | (memq.ringPtr._isLock<<1) | ramqIsLocked() ;
-  sensorLog.hardwareErrorCode = (nrfIsRunning()<<1) | (rtcIsRunning()<<2);
+  sensorLog.errorCode = 0;
+  sensorLog.errorCode |= (tdmSyncState<<2) | (memq.ringPtr._isLock<<1) | ramqIsLocked() ;
+  sensorLog.hardwareErrorCode = 0;
+  sensorLog.hardwareErrorCode &= ~((nrfIsRunning()<<1) | (rtcIsRunning()<<2));
   sensorLog.railVoltage = getRailVoltage();
   sensorLog.unixTime = second();
   sensorLog.flashAvailablePackets = memqAvailable(&memq);
@@ -130,9 +129,7 @@ struct gasSensorLog_t *saveLog()
     ramQUpdateHead();
     memqSave();
     Serial.println(">>Log Saved");
-  }
-
-  
+  }  
   return senLogPtr;
 }
 

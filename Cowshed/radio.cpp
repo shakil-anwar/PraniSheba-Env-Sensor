@@ -1,5 +1,5 @@
 #include "radio.h"
-#include "EEPROM.h"
+
 #define TX_PIPE      5
 #define QUERY_PIPE   0
 
@@ -7,7 +7,7 @@ void txIsr(void);
 void rxIsr(void);
 void maxRtIsr(void);
 
-uint8_t pipe0Addr[5] = {120, 123, 123, 124, 125};
+uint8_t pipe0Addr[5] = {120,124,124,124,125};
 uint8_t txLsByte;
 nrfNodeConfig_t nrfConfig;
 
@@ -67,31 +67,3 @@ void maxRtIsr(void)
 
 }
 
-
-void eepromRead(uint32_t addr, uint8_t *buf, uint16_t len)
-{
-
-  uint16_t eepAddr = (uint16_t)addr;
-  uint8_t *ptr = buf;
-  Serial.print(F("EEPROM>R>: ")); Serial.println(eepAddr);
-  for (uint16_t i = 0 ; i < len; i++)
-  {
-    *(ptr + i) = EEPROM.read(eepAddr + i);
-    // Serial.print( *(ptr + i)); Serial.print(F("  "));
-  }
-  Serial.println();
-}
-
-void eepromUpdate(uint32_t addr, uint8_t *buf, uint16_t len)
-{
-
-  uint16_t eepAddr = (uint16_t)addr;
-  uint8_t *ptr = buf;
-  Serial.print(F("EEPROM>W>: ")); Serial.println(eepAddr);
-  for (uint16_t i = 0; i < len; i++)
-  {
-    EEPROM.update(eepAddr + i, *(ptr + i));
-    // Serial.print( *(ptr + i)); Serial.print(F("  "));
-  }
-  Serial.println();
-}

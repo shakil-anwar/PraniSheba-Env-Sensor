@@ -1,6 +1,10 @@
 #include "All.h"
 #include "EEPROM.h"
 
+volatile uint32_t task1Time = 0;
+volatile uint32_t task2Time = 0;
+volatile uint32_t task3Time = 0;
+
 enum bsSendState_t
 {
   BS_SEND_WAIT,
@@ -28,7 +32,7 @@ bool _nrfSendOk;
 int16_t rfFailCount;
 #endif
 
-Task taskNrfStatus(5, &nrfWhichMode);
+// Task taskNrfStatus(5, &nrfWhichMode);
 void system_setup(void)
 {
 #if !defined(DEVICE_HAS_LOG)
@@ -38,7 +42,7 @@ void system_setup(void)
   Serial.begin(SERIAL_SPEED);
   SerialBegin(SERIAL_SPEED);  //supporting serial c library
   gpioBegin(); //This function has to call first to set sensitive pin like cs pin of spi
-  Serial.println("[pS Env Sensor v0.6.5]");
+  Serial.println("[pS Env Sensor v0.6.6]");
 
 
 
@@ -58,7 +62,7 @@ void system_setup(void)
   //confsetting has to call after deviceBegin, because it operate on flash and sensor
   confSetting(CONFIG_BTN_PIN, configRead, configSave);
 
-  scheduler.addTask(&taskNrfStatus);
+  // scheduler.addTask(&taskNrfStatus);
   // wdtEnable(8000);
   BUZZER_ON();
   delay(1000);
@@ -76,11 +80,11 @@ void startDevice()
    nrfTxConfigReset(&nrfConfig, NRF_CONFIG_ROM_ADDR, eepromUpdate);
 #endif
   
-#if defined(DATA_ACQUIRE_INTERVAL)
-  updateDataInterval(DATA_ACQUIRE_INTERVAL);
-#else
-  updateDataInterval(config.sampInterval);
-#endif
+// #if defined(DATA_ACQUIRE_INTERVAL)
+//   updateDataInterval(DATA_ACQUIRE_INTERVAL);
+// #else
+//   updateDataInterval(config.sampInterval);
+// #endif
 }
 
 void deviceRunSM()
@@ -111,10 +115,11 @@ void deviceRunSM()
       break;
     case RUN_TX_XFER:
       Serial.println(F("run : RUN_TX_XFER"));
-      _nrfSendOk = xferSendLoopV3();
+      // _nrfSendOk = xferSendLoopV3();
+      _nrfSendOk = xferSendLoop();
       if (_nrfSendOk)
       {
-        runState = RUN_WAIT;
+        // runState = RUN_WAIT;
         Serial.println(F("Done and RUN_END_TRANSFER"));
       }
       else
@@ -141,7 +146,7 @@ void bsSendSm()
     case BS_SEND_WAIT:
       if (second() >= _nextSlotSec)
       {
-          _nextSlotEnd = _nextSlotSec+(uint32_t)nrfConfig.momentDuration;
+          _nextSlotEnd = _nextSlotSec+(uint32_t)nrfConfig.perNodeInterval;
           _bsSendState = BS_IS_CONNECTED;
       }
       break;
@@ -181,10 +186,10 @@ void bsSendSm()
       }
       break;
     case BS_SEND:
-      Serial.println(F("run : BS_SEND"));
+      // Serial.println(F("run : BS_SEND"));
       if(second() <= _nextSlotEnd)
       {
-        _nrfSendOk = xferSendLoopV3();
+        _nrfSendOk = xferSendLoop();
       }
       else
       {
@@ -192,14 +197,23 @@ void bsSendSm()
         _nrfSendOk = false;
       }
       
-      _bsSendState = BS_SEND_END;
+      
       if (_nrfSendOk)
       {
-        Serial.println(F("All Send Ok"));
+        Serial.print(F(".."));
       }
       else
       {
-        Serial.println(F("All Not Sent"));
+        if(memqAvailable(&memq)>0)
+        {
+          Serial.println(F("All Not Sent"));
+        }
+        else
+        {
+          Serial.println(F("All Sent"));
+        }
+        
+        _bsSendState = BS_SEND_END;
       }
       break;
     case BS_SEND_END:
@@ -296,40 +310,33 @@ bool isMySlot()
       }
       return false;
     }
-    
-    
-//     if (uTime > 1)
-//     {
-//       //update time 
-// //      uTime = uTime-2;
-//       tdmSyncState = TDM_SYNCED;
-//       if(abs((int32_t)(second()-uTime))>1)
-//       {
-//         Serial.println(F(">>>>>>>>>>>>>>>.Time gap"));
-//         rtSync(uTime);
-//       }
-//       return true;
-//     }
-//     else if(uTime == 1)
-//     {
-//       if(pong.isConfigChanged == 1)
-//       {
-//         tdmSyncState = TDM_CONFIG_CHANGED;
-//       }
-//       else
-//       {
-//         tdmSyncState = TDM_SYNCED;
-//         rtSync(pong.second);
-//       }
-//       return false;
-//     }
-//     else{
-//       tdmSyncState = TDM_SLOT_MISSED;
-//     }
-    // delay(100);
   } while (--tryCount);
 
   return false;
+}
+
+
+void scheduleTask()
+{
+  // Task 1
+  runTask(updateDisplay,10,&task1Time);
+  // Task 2
+  runTask(schemaReadSensors,config.sampInterval,&task2Time);
+  // Task 3
+  runTask(nrfWhichMode,5,&task3Time);
+}
+
+
+void runTask( void(*func)(void), uint32_t interval,volatile uint32_t *prevtime)
+{
+  if((second() - *prevtime)>interval)
+  {
+    if(func)
+    {
+      func();
+    }
+    *prevtime = second();   
+  }
 }
 
 void printRunState()
@@ -367,25 +374,12 @@ bool isHardwareOk()
 
 void configSave(config_t *bootPtr)
 {
-  uint8_t *ptr = (uint8_t*)bootPtr;
-  for (uint8_t i = 0 ; i < sizeof(config_t); i++)
-  {
-    EEPROM.update(MAIN_CONFIG_EEPROM_ADDR + i, *(ptr + i));
-  }
-
-  // eepromUpdate(MAIN_CONFIG_EEPROM_ADDR, ptr, sizeof(config_t));
+  eepromUpdate(MAIN_CONFIG_EEPROM_ADDR,(uint8_t*)bootPtr,sizeof(config_t));
 }
 
 void configRead(config_t *bootPtr)
 {
-  uint8_t *ptr = (uint8_t*)bootPtr;
-  for (uint8_t i = 0 ; i < sizeof(config_t); i++)
-  {
-    *(ptr + i) = EEPROM.read(MAIN_CONFIG_EEPROM_ADDR + i);
-  }
-
-  // eepromRead(MAIN_CONFIG_EEPROM_ADDR, ptr, sizeof(config_t));
-  //  return bootPtr;
+  eepromRead(MAIN_CONFIG_EEPROM_ADDR, (uint8_t*)bootPtr,sizeof(config_t));
 }
 
 //  if (millis() - prevModeMillis > 2000)

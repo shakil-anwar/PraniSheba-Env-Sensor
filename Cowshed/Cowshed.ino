@@ -14,6 +14,12 @@ void setup()
 
 void loop()
 {
+<<<<<<< HEAD
+=======
+#if defined(LED_TEST)
+  ledTestAll();
+#else
+>>>>>>> update_june
   // printMainState(mainState);
   switch (mainState)
   {
@@ -83,7 +89,8 @@ void loop()
       memqSaveMemPtr(&memq);
 #endif
       rtLoop();
-      scheduler.run();
+      // scheduler.run();
+      scheduleTask();
       break;
     case STOP:
       //      mainState = CHECK_HARDWARE;
@@ -93,6 +100,10 @@ void loop()
       break;
   }
   // wdtReset();
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> update_june
 }
 
 void printMainState(mainState_t mstate)

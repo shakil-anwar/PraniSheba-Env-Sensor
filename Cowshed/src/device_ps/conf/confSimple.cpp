@@ -53,7 +53,7 @@ void confSetting(uint8_t pin,memFcn_t read, memFcn_t save)
   configPrint(&config);
   if (btnLongPressed(pin))
   {
-    Serial.println(F("ENTERED SETUP"));
+    Serial.println(F("ENTER SETUP"));
     printIntroText();
     
     // printMainCmd();
@@ -72,10 +72,10 @@ void confSetting(uint8_t pin,memFcn_t read, memFcn_t save)
       }
       else
       {
-        Serial.println(F("Unknown main cmd"));
+        Serial.println(F("Unknown cmd"));
       }
     } while (maincmd);
-    Serial.println(F("---->Exit Config"));
+    Serial.println(F("-->Exit Config"));
     if(configValidate(&config))
     {
       save(&config);
@@ -142,10 +142,10 @@ void handleParamSetting()
     switch (subcmd)
     {
       case 1:
-        Serial.print(F("Device Id : "));
+        Serial.print(F("Device Id: "));
         break;
       case 2:
-        Serial.print(F("Sampling Interval : "));
+        Serial.print(F("Sampling Interval: "));
         break;
     }
     getSerialString(buf);
@@ -175,29 +175,29 @@ void handleParamSetting()
 
 void printIntroText()
 {
-  Serial.println(("|--------------------------------------------|"));
-  Serial.println(("|                Gas Sensor                  |"));
-  Serial.println(("|     A Product of Adorsho Pranisheba        |"));
-  Serial.println(("|--------------------------------------------|"));
+  Serial.println(("|--------------------------|"));
+  Serial.println(("|        Gas Sensor        |"));
+  Serial.println(("|    Adorsho Pranisheba    |"));
+  Serial.println(("|--------------------------|"));
 }
 
 
 void printMainCmd()
 {
-  Serial.println(F("1. Device Setting"));
-  Serial.println(F("2. Parameter Setting"));
-  Serial.println(F("0. Exit Config"));
+  Serial.println(F("1. Device"));
+  Serial.println(F("2. Parameter"));
+  Serial.println(F("0. Exit"));
   //  return getSerialCmd();
 }
 
 void printDeviceCmd()
 {
-  Serial.println(F("1. Reset Flash Mem"));
-  Serial.println(F("2. Factory Reset"));
-  Serial.println(F("3. Log On"));
-  Serial.println(F("4. Log Off"));
-  Serial.println(F("5. Calibrate Sensor"));
-  Serial.println(F("0. Exit Setup Menu"));
+  Serial.println("1. Reset Flash Data");
+  Serial.println("2. Factory Reset");
+  Serial.println("3. Log On");
+  Serial.println("4. Log Off");
+  Serial.println("5. Calib Sensor");
+  Serial.println("0. Exit Setup");
   //  return getSerialCmd();
 }
 
@@ -229,13 +229,13 @@ bool confIsOk()
 
 void configPrint(config_t *configPtr)
 {
- Serial.println(F("--------"));
- Serial.println(F("| Device Config Param |\r\n--------"));
+ Serial.print(F("----"));
+ Serial.println(F("| Config Param |----"));
  Serial.print(F("Device Id: "));Serial.println(configPtr -> deviceId);
  Serial.print(F("Samp Interval: "));Serial.println(configPtr -> sampInterval);
  Serial.print(F("Debug Off: "));Serial.println(configPtr ->isDebugOff);
  Serial.print(F("Registration: "));Serial.println(configPtr ->isSetupDone); 
- Serial.println(("------------"));
+ Serial.println((""));
 }
 
 

@@ -36,8 +36,8 @@ uint8_t payloadCount = 1;
 uint8_t *pldPtr; //This will keep track of  read memory until sent 
 
 
-Task task2(10, &updateDisplay);
-Task task1(DEFAULT_DATA_SAMPLE_SEC, &schemaReadSensors); //send payload triggers after 5 second interval
+// Task task2(10, &updateDisplay);
+// Task task1(DEFAULT_DATA_SAMPLE_SEC, &schemaReadSensors); //send payload triggers after 5 second interval
 
 
 // #define MEMQ_RING_BUF_LEN  4
@@ -49,15 +49,19 @@ void deviceBegin()
 {
   schemaBegin();
   led_begin();
-  scheduler.addTask(&task1);
-  scheduler.addTask(&task2);
+  // scheduler.addTask(&task1);
+  // scheduler.addTask(&task2);
 
   BUZZER_OUT_MODE();
   BUZZER_OFF();
 #if defined(DEVICE_HAS_FLASH_MEMORY)
   flash.begin(SPI_SPEED);
   ringObj.begin(MEMQ_RING_BUF_LEN, sizeof(struct memqPtr_t));
+<<<<<<< HEAD
   memqBegin(&memq, 0, sizeof(payload_t), MEMQ_TOTAL_BUFFER);
+=======
+  memqBegin(&memq, MEMQ_FLASH_START_ADDR, sizeof(payload_t), MEMQ_TOTAL_BUFFER);
+>>>>>>> update_june
 
   memqSetMem(&memq, memReader, memWriter, memEraser, MEMQ_SECTOR_ERASE_SZ);
   memqSetMemPtr(&memq, memPtrReader, memPtrWriter, MEMQ_PTR_SAVE_AFTER);
@@ -108,6 +112,21 @@ uint8_t *deviceMemRead()
       {
         return NULL;
       }
+      if(pldPtr[0]==2)
+      {
+        printSensor((struct sensor_t *)pldPtr);
+      }else
+      {
+        if(pldPtr[0]==5)
+        {
+          Serial.print("[MEMREAD]..log");
+        }
+        else{
+          Serial.print("[MEMREAD].Wrong Data");
+        }
+        
+      }
+      
       // Serial.println(F("Read Mem : New"));
       printBuffer(pldPtr, sizeof(payload_t));
     }
@@ -148,48 +167,64 @@ void printBuffer(byte *buf, byte len)
   Serial.println();
 }
 
-void updateDataInterval(uint32_t time)
-{
-  task1.setInterval(time);
-  Serial.println(F("-------------->Sample Interval updated"));
-}
+// void updateDataInterval(uint32_t time)
+// {
+//   task1.setInterval(time);
+//   Serial.println(F("------>Sample Interval updated"));
+// }
 
 
 
 #if defined(DEVICE_HAS_FLASH_MEMORY)
 	void memReader(uint32_t addr, uint8_t *buf, uint16_t len)
 	{
-	  Serial.print(F("<====Tail :"));
+	  Serial.print(F("<T:"));
 	  Serial.print(addr);
-	  Serial.println(F("====>"));
+	  Serial.println(F(">"));
+    memqLockBus(&memq);
 	  flash.read(addr, buf, sizeof(payload_t));
+    memqUnlockBus(&memq);
+    // printBuffer((byte *)buf, sizeof(payload_t));
 	}
 
 	void memWriter(uint32_t addr, uint8_t *buf, uint16_t len)
 	{
-	  Serial.print(F("<====Head :"));
+	  Serial.print(F("<H:"));
 	  Serial.print(addr);
-	  Serial.println(F("====>"));
+	  Serial.println(F(">"));
+    // printBuffer((byte *)buf, sizeof(payload_t));
+    memqLockBus(&memq);
 	  flash.write(addr, buf, sizeof(payload_t));
+    memqUnlockBus(&memq);
 	}
 
 	void memEraser(uint32_t addr, uint16_t len)
 	{
-	  Serial.print(F("Erasing Addr : ")); Serial.println(addr);
+	  Serial.print(F("Erase Addr: ")); Serial.println(addr);
+    memqLockBus(&memq);
 	  flash.eraseSector(addr);
 	  uint32_t curPage = addr >> 8;
 	  flash.dumpPage(curPage, pageBuf);
+    memqUnlockBus(&memq);
 	}
 
 	void memPtrReader(struct memqPtr_t *ptr)
 	{
+<<<<<<< HEAD
 	  Serial.println(F("memqPtr>Reader"));
+=======
+	  Serial.println(F("memqPtr>Read"));
+>>>>>>> update_june
 	  ringObj.readPacket((byte *)ptr);
 	}
 
 	void memPtrWriter(struct memqPtr_t *ptr)
 	{
+<<<<<<< HEAD
 	  Serial.println(F("memqPtr>Writer"));
+=======
+	  Serial.println(F("memqPtr>Write"));
+>>>>>>> update_june
 	  ringObj.savePacket((byte *)ptr);
 	}
 #endif

@@ -40,7 +40,29 @@ struct sensor_t
   float temp;
   uint16_t logicVolt;
   uint16_t errorCode;
-  uint8_t reserve[4];
+  uint8_t isServerSynced;
+  uint8_t reserve[3];
+};
+
+struct gasSensorLog_t
+{
+  struct header_t header;
+  uint8_t errorCode;
+  uint8_t hardwareErrorCode;
+  uint16_t restartCount;
+  uint16_t slotMissed;
+  uint16_t samplingFreq;
+  float railVoltage;
+  uint32_t unixTime;
+  uint32_t flashAvailablePackets;
+};
+
+struct gasSensorMetaLog_t
+{
+  uint16_t restartCount;
+  uint32_t lastUnixTime;
+  uint8_t reserve;
+  uint8_t checksum;
 };
 
 struct gasSensorLog_t
