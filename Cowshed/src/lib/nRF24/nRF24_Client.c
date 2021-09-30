@@ -104,7 +104,7 @@ nrfNodeConfig_t *nrfTxGetConfig(uint16_t DeviceId, nrfNodeConfig_t *configPtr)
     nrfPrintConfig(configPtr);
     uint16_t nodeTime = (uint16_t)configPtr -> slotId;
     nodeTime = nodeTime* configPtr -> perNodeInterval;
-    if(nodeTime > configPtr->momentDuration)
+    if((nodeTime > configPtr->momentDuration) && (configPtr->slotId != 255))
     {
         return NULL;
     }
@@ -273,7 +273,7 @@ uint32_t nrfPing()
     return 0;
 }
 
-uint32_t nrfPingSlot(uint16_t deviceId, uint8_t slotId, struct pong_t *pong)
+uint32_t nrfPingSlot(uint16_t deviceId, uint16_t bsID, uint8_t slotId, struct pong_t *pong)
 {
     query_t query;
     // pong_t pong;

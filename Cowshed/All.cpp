@@ -270,7 +270,7 @@ bool isMySlot()
   pong_t pong;
   do
   {
-    uTime = nrfPingSlot(config.deviceId, nrfConfig.slotId, &pong);
+    uTime = nrfPingSlot(config.deviceId,nrfConfig.bsId, nrfConfig.slotId, &pong);
     int32_t delayTime = (int32_t)second();
     delayTime = (int32_t)((uint32_t)delayTime-pong.second);
     

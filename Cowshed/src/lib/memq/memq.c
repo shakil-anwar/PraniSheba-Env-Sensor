@@ -31,31 +31,17 @@ struct memqReadLog_t
 
 void memqPrintReadLog( struct memq_t *memq,struct memqReadLog_t *log);
 void memqPrintBeginLog(struct memq_t *memq);
-<<<<<<< HEAD
 
-uint8_t log2base(uint16_t n);
-void memqLockBus(struct memq_t *memq);
-void memqUnlockBus(struct memq_t *memq);
-=======
 void eraseMemBlob(struct memq_t *memq);
 
 uint8_t log2base(uint16_t n);
 struct memqReadLog_t memqReadLog;
 
->>>>>>> update_june
-
 
 //This function begin memq pointers and initialie valiable from user object structure
 void memqBegin(struct memq_t *memq,uint32_t baseAddr, uint32_t packetLen, uint32_t totalPacket)
 {
-<<<<<<< HEAD
-  memq->_baseAddr = baseAddr;
-  memq->_lastAddr = baseAddr + packetLen * totalPacket;
-  memq->_packetLen = packetLen;
-  memq->_ptrEventCounter = 0;
-  memq->_disableOthers = NULL;
-  memq->_enableOthers = NULL;
-=======
+
   if (memq != NULL)
   {
     memq->_baseAddr = baseAddr;
@@ -66,7 +52,6 @@ void memqBegin(struct memq_t *memq,uint32_t baseAddr, uint32_t packetLen, uint32
     memq->_enableOthers = NULL;
   }
   
->>>>>>> update_june
 
   // #if defined(MEMQ_DEBUG)
   //   SerialPrintF(P("Memq Start : "));
@@ -160,12 +145,8 @@ void memqPrintBeginLog(struct memq_t *memq)
 	SerialPrintF(P("MEMQ->BEGIN:"));SerialPrintU32(memq->_baseAddr);
   	SerialPrintF(P("|End:"));SerialPrintU32(memq->_lastAddr);
   	SerialPrintF(P("|H:")); SerialPrintU32(memq->ringPtr._head);
-<<<<<<< HEAD
-    SerialPrintF(P("|T:")); SerialPrintlnU32(memq->ringPtr._tail);
-=======
     SerialPrintF(P("|T:")); SerialPrintU32(memq->ringPtr._tail);
     SerialPrintF(P("|A:")); SerialPrintlnU32(memq->ringPtr._saveTail);
->>>>>>> update_june
 }
 
 //Where there are multiple spi devices in memory spi bus, The bus needs to lock before flash read or write operation, 
@@ -236,10 +217,6 @@ void memqReset(struct memq_t *memq)
   //erase ringeeprom
   memq->ringPtr._head = memq->_baseAddr;
   memq->ringPtr._tail = memq->_baseAddr;
-<<<<<<< HEAD
-=======
-  memq->ringPtr._saveTail = memq->_baseAddr;
->>>>>>> update_june
   memq->ringPtr.willEraseAddr = memq->_baseAddr;
   memq->ringPtr.qState = RESET;
   memq->ringPtr._isLock = false;
@@ -255,26 +232,15 @@ void memqWrite(struct memq_t *memq, uint8_t *buf)
 {
   if (memq->ringPtr._isLock == false)
   {
-<<<<<<< HEAD
-    memqLockBus(memq);
-    memq->_memWriter(memq->ringPtr._head, buf, memq->_packetLen);
-    memqUnlockBus(memq);
-=======
     // memqLockBus(memq);
     memq->_memWriter(memq->ringPtr._head, buf, memq->_packetLen);
     // memqUnlockBus(memq);
->>>>>>> update_june
-
     memq->ringPtr._head += memq->_packetLen;
     memq->ringPtr.qState = RUNNING;
     memq->_ptrEventCounter++;
 
     //Reset buffer logic
-<<<<<<< HEAD
-    if (memq->ringPtr._head == memq->_lastAddr)
-=======
     if (memq->ringPtr._head >= memq->_lastAddr)
->>>>>>> update_june
     {
       memq->ringPtr._head = memq->_baseAddr;
       memq->_ptrWrite(&(memq->ringPtr)); //saving pointer in edge conditions
@@ -284,11 +250,8 @@ void memqWrite(struct memq_t *memq, uint8_t *buf)
     {
       memq->ringPtr._isLock = true;
       memq->_ptrWrite(&(memq->ringPtr)); //saving pointer in edge conditions
-<<<<<<< HEAD
-      memqLockBus(memq);
-=======
       // memqLockBus(memq);
->>>>>>> update_june
+
 // #if defined(MEMQ_DEBUG)
 //       SerialPrintlnF(P("memq lock condition"));
 // #endif
@@ -311,8 +274,7 @@ void memqPrintReadLog(struct memq_t *memq,struct memqReadLog_t *log)
 }
 
 
-<<<<<<< HEAD
-=======
+
 void eraseMemBlob(struct memq_t *memq)
 {
   // memqLockBus(memq);
@@ -326,8 +288,6 @@ void eraseMemBlob(struct memq_t *memq)
   memqReadLog.isLastBlobErased = false;      
 }
 
-
->>>>>>> update_june
 //Read a full packet from memory, So it will take a buffer pointer where data will be written 
 uint8_t *memqRead(struct memq_t *memq, uint8_t *buf)
 {
@@ -336,32 +296,15 @@ uint8_t *memqRead(struct memq_t *memq, uint8_t *buf)
   {
     if (memq->ringPtr.qState != NO_DATA)
     {
-<<<<<<< HEAD
-      struct memqReadLog_t memqReadLog;
-
-      if(memq->ringPtr._isLock == false)
-      {
-        memqLockBus(memq);
-      }
-      memq->_memReader(memq->ringPtr._tail, buf, memq->_packetLen); //read from flash
-      if(memq->ringPtr._isLock == false)
-      {
-        memqUnlockBus(memq);
-      }
-=======
 
       // memqLockBus(memq);
       memq->_memReader(memq->ringPtr._tail, buf, memq->_packetLen); //read from flash
       // memqUnlockBus(memq);
 
->>>>>>> update_june
 
 
       memq->ringPtr._tail += memq->_packetLen;
       memq->_ptrEventCounter++;
-<<<<<<< HEAD
-
-=======
 #if defined (BOARD_MEGA1284_V010)
   //pointer reset logic
       if (memq->ringPtr._tail == memq->_lastAddr)
@@ -392,7 +335,6 @@ uint8_t *memqRead(struct memq_t *memq, uint8_t *buf)
       }
 
 #else
->>>>>>> update_june
       //pointer reset logic
       if (memq->ringPtr._tail == memq->_lastAddr)
       {
@@ -402,15 +344,9 @@ uint8_t *memqRead(struct memq_t *memq, uint8_t *buf)
         // SerialPrintF(P("Erasing Last Addr :"));
         // SerialPrintlnU32(memq->ringPtr.willEraseAddr);
         // #endif
-<<<<<<< HEAD
-        memqLockBus(memq);
-        memq->_memBlobEraser(memq->ringPtr.willEraseAddr, memq->_blobSize);
-        memqUnlockBus(memq);
-=======
         // memqLockBus(memq);
         memq->_memBlobEraser(memq->ringPtr.willEraseAddr, memq->_blobSize);
         // memqUnlockBus(memq);
->>>>>>> update_june
         memq->ringPtr._isLock = false; //lock open after each blob erase
         memq->ringPtr.willEraseAddr = memq->_baseAddr;
         memq->_ptrWrite(&(memq->ringPtr)); //saving pointer in edge condition
@@ -420,19 +356,7 @@ uint8_t *memqRead(struct memq_t *memq, uint8_t *buf)
       }
       else if (memq->ringPtr._tail >= (memq->ringPtr.willEraseAddr + memq->_blobSize)) //4 is blob size
       {
-<<<<<<< HEAD
-        memqLockBus(memq);
-        memq->_memBlobEraser(memq->ringPtr.willEraseAddr, memq->_blobSize);
-        memqUnlockBus(memq);
-        memq->ringPtr._isLock = false; //lock open after each blob erase
-        memq->ringPtr.willEraseAddr += memq->_blobSize;
-        memq->_ptrWrite(&(memq->ringPtr)); //saving pointer in edge condition
-
-        memqReadLog.isBlobErased = true;
-        memqReadLog.isLastBlobErased = false;
-=======
         eraseMemBlob(memq);
->>>>>>> update_june
       }
       else
       {
@@ -440,10 +364,7 @@ uint8_t *memqRead(struct memq_t *memq, uint8_t *buf)
         memqReadLog.isLastBlobErased = false;
         // SerialPrintlnF(P("No action on memory"));
       }
-<<<<<<< HEAD
-=======
 #endif
->>>>>>> update_june
 
       memqReadLog.isDataAvailable = true;
       //check data availability
@@ -454,10 +375,7 @@ uint8_t *memqRead(struct memq_t *memq, uint8_t *buf)
         // #endif
         memq->ringPtr.qState = NO_DATA;
         memqReadLog.isDataAvailable = false;
-<<<<<<< HEAD
-=======
         memq->ringPtr._isLock = false;
->>>>>>> update_june
       }
 
       memqPrintReadLog(memq, &memqReadLog);
@@ -474,11 +392,7 @@ uint8_t *memqRead(struct memq_t *memq, uint8_t *buf)
     //SerialPrintlnF(P("RESET: Data NULL"));
     return NULL;
   }
-<<<<<<< HEAD
 
-
-=======
->>>>>>> update_june
 }
 
 //This functions memory pointer data into flash memory or user defined memory space

@@ -18,7 +18,7 @@ uint8_t *nrfQuery(struct query_t *qry, void *bufPtr, uint8_t len);
 
 struct pong_t *nrfping(struct query_t *qry, struct pong_t *ping);
 uint32_t nrfPing();
-uint32_t nrfPingSlot(uint16_t deviceId, uint8_t slotId,struct pong_t *pong);
+uint32_t nrfPingSlot(uint16_t deviceId, uint16_t bsID, uint8_t slotId, struct pong_t *pong);
 
 bool nrfTxConfigHandler(uint16_t DeviceId,struct nrfNodeConfig_t *conf, uint32_t romAddr, nrfMemFun_t read, nrfMemFun_t save,bool getNewNftConfig);
 void nrfTxConfigReset(struct nrfNodeConfig_t *conf, uint16_t romAddr, nrfMemFun_t save);

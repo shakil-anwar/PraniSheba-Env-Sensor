@@ -24,8 +24,8 @@ extern "C"
 
 #define QUERY_TIMEOUT_MS 1000
 #define PING_TYPE 200
-#define PING_OPCODE 201
-#define PING2_OPCODE 203
+#define PING_OPCODE 201     // register opcode
+#define PING2_OPCODE 203    // data send ping opcode
 #define ADDR_OPCODE 221
 #define NRF_CONFIG_OPCODE 225
 
@@ -43,10 +43,13 @@ extern "C"
 
 typedef struct query_t
 {
+    uint16_t bsId;
     uint16_t deviceId;
     uint8_t slotId;
+    uint8_t flag;
     uint8_t type;
     uint8_t opcode;
+    uint8_t reserve;
     uint8_t checksum;
 } query_t;
 
@@ -54,11 +57,14 @@ typedef struct pong_t
 {
     uint32_t second;
     uint32_t ms;
+    uint16_t bsId;
+    uint16_t deviceId;
 
     uint8_t type;
+    uint8_t flag;
     uint8_t opcode;
 
-    bool isConfigChanged;  
+    uint8_t isConfigChanged;
     bool isBsFree;
     bool isMySlot;
     
@@ -66,22 +72,28 @@ typedef struct pong_t
 } pong_t;
 
 
- typedef struct nrfNodeConfig_t
+typedef struct nrfNodeConfig_t
 {
-    // uint16_t deviceId;
-    uint16_t momentDuration;
-    uint16_t perNodeInterval;
-    uint8_t slotId;
-    uint8_t node[5];
-    uint8_t type;
+    uint16_t bsId;
+    uint16_t deviceId;
+    uint16_t dataFreq;      // sampling frequncy
+    uint16_t momentDuration;        // Time period
+    uint16_t perNodeInterval;       // per slot time
+
     uint8_t opcode;
+    uint8_t slotId;
+    uint8_t flag;
+    uint8_t type;
+    uint8_t node[5];
     uint8_t dataPipeLsbByte;
+    uint8_t xPipe[3];
     uint8_t checksum;
 } nrfNodeConfig_t;
 
 struct qryObj_t
 {
     //common param
+    uint16_t bsId;
     uint8_t pipe;  //query pipe no
     uint8_t *activePingAddr; //query common addr
     //Base station param

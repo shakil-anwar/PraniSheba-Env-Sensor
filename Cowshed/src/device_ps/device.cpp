@@ -57,11 +57,8 @@ void deviceBegin()
 #if defined(DEVICE_HAS_FLASH_MEMORY)
   flash.begin(SPI_SPEED);
   ringObj.begin(MEMQ_RING_BUF_LEN, sizeof(struct memqPtr_t));
-<<<<<<< HEAD
-  memqBegin(&memq, 0, sizeof(payload_t), MEMQ_TOTAL_BUFFER);
-=======
+
   memqBegin(&memq, MEMQ_FLASH_START_ADDR, sizeof(payload_t), MEMQ_TOTAL_BUFFER);
->>>>>>> update_june
 
   memqSetMem(&memq, memReader, memWriter, memEraser, MEMQ_SECTOR_ERASE_SZ);
   memqSetMemPtr(&memq, memPtrReader, memPtrWriter, MEMQ_PTR_SAVE_AFTER);
@@ -210,21 +207,13 @@ void printBuffer(byte *buf, byte len)
 
 	void memPtrReader(struct memqPtr_t *ptr)
 	{
-<<<<<<< HEAD
-	  Serial.println(F("memqPtr>Reader"));
-=======
 	  Serial.println(F("memqPtr>Read"));
->>>>>>> update_june
 	  ringObj.readPacket((byte *)ptr);
 	}
 
 	void memPtrWriter(struct memqPtr_t *ptr)
 	{
-<<<<<<< HEAD
-	  Serial.println(F("memqPtr>Writer"));
-=======
 	  Serial.println(F("memqPtr>Write"));
->>>>>>> update_june
 	  ringObj.savePacket((byte *)ptr);
 	}
 #endif

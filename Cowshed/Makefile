@@ -1,5 +1,5 @@
 
-SERIAL_PORT=COM3
+SERIAL_PORT=COM9
 
 
 FQBN_PCB_V1=arduino:avr:uno

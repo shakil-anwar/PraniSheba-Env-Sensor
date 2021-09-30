@@ -50,10 +50,7 @@ struct  sensor_t *getSensorsData(struct sensor_t *senPtr)
   }
   sensor -> ammonia = getAmmonia();
   sensor -> methane = getMethane();
-<<<<<<< HEAD
-=======
   sensor -> isServerSynced = 255;
->>>>>>> update_june
   sensor -> header.checksum = 0;
 
   //calculate checksum

@@ -24,10 +24,7 @@ struct memqPtr_t
 {
   uint32_t _head;
   uint32_t _tail;
-<<<<<<< HEAD
-=======
   uint32_t _saveTail;
->>>>>>> update_june
   uint32_t willEraseAddr;
   enum qState_t qState;
   bool _isLock;

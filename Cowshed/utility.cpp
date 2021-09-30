@@ -1,9 +1,5 @@
 #include "utility.h"
 
-<<<<<<< HEAD
-=======
-
->>>>>>> update_june
 #define REF_VOLTAGE 1.1
 
 

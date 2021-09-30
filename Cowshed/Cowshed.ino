@@ -14,12 +14,9 @@ void setup()
 
 void loop()
 {
-<<<<<<< HEAD
-=======
 #if defined(LED_TEST)
   ledTestAll();
 #else
->>>>>>> update_june
   // printMainState(mainState);
   switch (mainState)
   {
@@ -100,10 +97,8 @@ void loop()
       break;
   }
   // wdtReset();
-<<<<<<< HEAD
-=======
+
 #endif
->>>>>>> update_june
 }
 
 void printMainState(mainState_t mstate)
