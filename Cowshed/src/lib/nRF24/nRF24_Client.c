@@ -45,11 +45,7 @@ bool nrfTxConfigHandler(uint16_t DeviceId, nrfNodeConfig_t *conf,
                     (conf -> opcode == NRF_CONFIG_OPCODE);
 
     nrfNodeConfig_t *conf_t_ptr;
-<<<<<<< HEAD
-    if(getNewNftConfig || isConfOk == false)
-=======
     if(getNewNftConfig || (isConfOk == false))
->>>>>>> update_june
     {
         SerialPrintlnF(P("Getting New Config"));
         nrfTxSetModeClient(COMMON_PING,conf);
@@ -87,105 +83,7 @@ bool nrfTxConfigHandler(uint16_t DeviceId, nrfNodeConfig_t *conf,
         }
         return isConfOk;
     }
-<<<<<<< HEAD
 
-
-=======
->>>>>>> update_june
-    // bool isConfOk;
-    // uint8_t confChecksum, checksumCalc;
-    // if(getNewNftConfig)
-    // {
-    //     isConfOk = false;
-    // }
-    // else{
-    //     read((uint32_t)romAddr,(uint8_t*)conf,sizeof(nrfNodeConfig_t));
-    //     //match checksum to validate that data does erased in memory
-    //     confChecksum = conf->checksum;
-    //     conf->checksum = 0;
-    //     checksumCalc = checksum(conf, sizeof(nrfNodeConfig_t));
-    //     isConfOk = (checksumCalc == confChecksum) && 
-    //                     (conf -> type == PING_TYPE) &&
-    //                     (conf -> opcode == NRF_CONFIG_OPCODE);
-    // }
-    
-
-    // if(isConfOk != true)
-    // {
-
-    //     nrfNodeConfig_t *conf_t_ptr;
-    //     SerialPrintlnF(P("Getting New Config"));
-    //     nrfTxSetModeClient(COMMON_PING,conf);
-    //     conf_t_ptr = nrfTxGetConfig(DeviceId,conf);
-        
-    //     // SerialPrintlnF(P("[nRF24_Client]..Device saves new config"));
-    //     // confChecksum = conf_t_ptr -> checksum;
-    //     // conf_t_ptr -> checksum = 0;
-    //     // uint8_t checksumCalc_t = checksum(conf_t_ptr, sizeof(nrfNodeConfig_t));
-    //     // conf_t_ptr -> checksum = confChecksum;
-    //     if(conf_t_ptr != NULL)
-    //     {
-    //         confChecksum = conf_t_ptr -> checksum;
-    //         conf_t_ptr -> checksum = 0;
-    //         conf_t_ptr -> checksum = checksum(conf_t_ptr, sizeof(nrfNodeConfig_t));
-    //         if(confChecksum == conf_t_ptr -> checksum )
-    //         {
-    //             SerialPrintlnF(P("[nRF24_Client]..saving new config"));
-    //             save((uint32_t)romAddr,(uint8_t*)conf_t_ptr,sizeof(nrfNodeConfig_t));
-    //         }
-    //         else
-    //         {
-    //             SerialPrintlnF(P("[nRF24_Client] Invalid config"));
-    //         }
-    //         nrfTxSetModeClient(BS_PING,conf);
-            
-    //         return true;
-    //     }
-    // }
-    // else
-    // {
-    //     //config qry failed
-    //     if(isConfOk)
-    //     {
-    //     	SerialPrintlnF(P("[nRF24_Client]...old config"));
-    //         nrfTxSetModeClient(BS_PING,conf);
-    //         return isConfOk;
-    //         // nrfTxSetModeClient(BS_PING,conf);
-    //     }        
-    // }
-    // SerialPrintlnF(P("[nRF24_Client]..Device has no config"));
-    // return false;
-<<<<<<< HEAD
-=======
-    
-
-    // if(isConfOk == false)                           
-    // {
-    //     //Device has no config, or erased, get the new config
-    //     if(_nrfDebug){ SerialPrintlnF(P("Getting New Config"));}
-    //     conf = nrfTxGetConfig(DeviceId,conf);
-    //     if(conf !=NULL)
-    //     {
-    //         nrfTxSetModeClient(BS_PING,conf);
-    //         save((uint32_t)romAddr,(uint8_t*)conf,sizeof(nrfNodeConfig_t));
-    //         return true;
-    //     }
-    //     else
-    //     {
-    //         //config qry failed
-    //         return false;
-    //     }
-    // }
-    // else
-    // {
-    //     if(_nrfDebug)
-    //     { 
-    //         SerialPrintlnF(P("Device has Config"));
-    //         nrfPrintConfig(conf);
-    //     }
-    // }
-    // return isConfOk;
->>>>>>> update_june
 }
 
 
@@ -203,20 +101,13 @@ nrfNodeConfig_t *nrfTxGetConfig(uint16_t DeviceId, nrfNodeConfig_t *configPtr)
   configPtr = nrfQuery(&query,configPtr,sizeof(nrfNodeConfig_t));
   if (configPtr != NULL)
   {
-<<<<<<< HEAD
-=======
     nrfPrintConfig(configPtr);
->>>>>>> update_june
     uint16_t nodeTime = (uint16_t)configPtr -> slotId;
     nodeTime = nodeTime* configPtr -> perNodeInterval;
     if(nodeTime > configPtr->momentDuration)
     {
         return NULL;
     }
-<<<<<<< HEAD
-    nrfPrintConfig(configPtr);
-=======
->>>>>>> update_june
   }
    return configPtr;
 }
@@ -361,11 +252,7 @@ pong_t *nrfping(query_t *qry,pong_t *ping)
   pong_t *pongPtr = (pong_t *)nrfQuery(qry,(void *)ping,sizeof(pong_t));
   if (pongPtr != NULL)
   {
-<<<<<<< HEAD
-      // printPing(pongPtr);
-=======
     //   printPing(pongPtr);
->>>>>>> update_june
   }
   return pongPtr;
 }
