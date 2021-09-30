@@ -282,9 +282,10 @@ uint32_t nrfPingSlot(uint16_t deviceId, uint16_t bsID, uint8_t slotId, struct po
     query.opcode = PING2_OPCODE;
     query.deviceId = deviceId;
     query.slotId = slotId;
+    query.bsId = bsID;
 
     pong_t *ponPtr = nrfping(&query,pong);
-    if(ponPtr != NULL)
+    if((ponPtr != NULL) && (bsID == pong->bsId))
     {
          /*
         ==========================================
