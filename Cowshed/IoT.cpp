@@ -24,10 +24,15 @@ void factoryReset()
   //   memQ.reset();  //erase full flash mem
   memqReset(&memq); 
 //  nrfTxAddrReset(saveAddr); //reset tc addr
-  nrfTxConfigReset(&nrfConfig, NRF_CONFIG_ROM_ADDR, eepromUpdate);
+  nrfConfReset();
 #if defined(DEVICE_HAS_LOG)
   resetLog();
 #endif
+}
+
+void nrfConfReset()
+{
+  nrfTxConfigReset(&nrfConfig, NRF_CONFIG_ROM_ADDR, eepromUpdate);
 }
 
 void gpioBegin()

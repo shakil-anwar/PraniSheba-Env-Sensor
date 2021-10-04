@@ -68,6 +68,7 @@ void gpioBegin();
 // uint32_t rtcGetSec();
 // void rtcUpdateSec(uint32_t unix);
 void factoryReset();
+void nrfConfReset();
 
 
 extern Flash flash;       

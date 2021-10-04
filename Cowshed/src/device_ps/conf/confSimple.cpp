@@ -105,17 +105,24 @@ void handlleDeviceCmd()
         config.isSetupDone = 0;//setup done flag is clearing
         break;
       case 3:
-        Serial.println(F("Log On"));
-        config.isDebugOff = false;
+        // Serial.println(F("Factory Resetting Device.."));
+        nrfConfReset();
         break;
       case 4:
-        Serial.println(F("Log Off"));
-        config.isDebugOff = true;;
+        // Serial.println(F("Log On"));
+        config.isDebugOff = false;
         break;
       case 5:
+        // Serial.println(F("Log Off"));
+        config.isDebugOff = true;;
+        break;
+      case 6:
         Serial.println(F("Calibrating Sensor.."));
         sensorCalibrate();
-      break;
+        break;
+      case 7:
+        ledTestAll();
+        break;
       default:
         if (subcmd == 0)
         {
@@ -194,9 +201,11 @@ void printDeviceCmd()
 {
   Serial.println("1. Reset Flash Data");
   Serial.println("2. Factory Reset");
-  Serial.println("3. Log On");
-  Serial.println("4. Log Off");
-  Serial.println("5. Calib Sensor");
+  Serial.println("3. Reset TDM");
+  Serial.println("4. Log On");
+  Serial.println("5. Log Off");
+  Serial.println("6. Calib Sensor");
+  Serial.println("7. Check LED");
   Serial.println("0. Exit Setup");
   //  return getSerialCmd();
 }
