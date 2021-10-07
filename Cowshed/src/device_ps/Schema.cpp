@@ -4,6 +4,8 @@ volatile payload_t  payload[TOTAL_PAYLOAD_BUFFER];
 // queryData_t queryBuffer;
 
 struct sensor_t sensor;
+sensorTh_t sensorTh;
+float *sersorValue[4];
 
 uint8_t checksumCalc(uint8_t *buf,uint8_t len);
 
@@ -18,6 +20,54 @@ void schemaBegin()
   //Initialise sensor constant parameter
 //  sensor.type  = SENSOR_TYPE;
 //  sensor.id = COWSHED_ID;
+}
+
+void setSensorTh(float am, float mt, float hum, float temp, uint16_t num)
+{
+  sersorValue[0] = &sensor.ammonia;
+  sersorValue[1] = &sensor.methane;
+  sersorValue[2] = &sensor.hum;
+  sersorValue[3] = &sensor.temp;
+
+  sensorTh.sensorTh[0]   = am;
+  sensorTh.sensorTh[1]   = mt;
+  sensorTh.sensorTh[2]   = hum;
+  sensorTh.sensorTh[3]   = temp;
+  sensorTh.count         = num;
+  for(int i =0 ;i<4;i++)
+  {
+    sensorTh.thresholdCount[i]  = 0;
+    sensorTh.flag[i]            = false;
+  }
+}
+
+bool checkSensorth()
+{
+   for(int i =0 ;i<4; i++)
+   {
+     if(*sersorValue[i] > sensorTh.sensorTh[i] )
+     {
+       sensorTh.thresholdCount[i]++;
+       if(sensorTh.flag[i]  == false)
+       {
+          if(sensorTh.thresholdCount[i] > sensorTh.count)
+          {
+            schemaReadSensors();
+            schemaReadSensors();
+            sensorTh.flag[i] = true;
+            Serial.print("Th exceeded: ");
+            Serial.println(i);
+            return true;
+          }
+        }
+        else
+        {
+          sensorTh.thresholdCount[i]  = 0;
+          sensorTh.flag[i] = false;
+        }
+     }
+   }
+   return false;
 }
 
 uint8_t checksumCalc(uint8_t *buf,uint8_t len)

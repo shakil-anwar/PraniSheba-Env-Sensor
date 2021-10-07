@@ -51,6 +51,8 @@ void configRead(config_t *bootPtr);
 void scheduleTask();
 void runTask( void(*func)(void), uint32_t interval,volatile uint32_t *prevtime);
 
+void fireAlert();
+
 
 extern mainState_t mainState;
 extern volatile uint32_t _nowSec;

@@ -4,6 +4,8 @@
 volatile uint32_t task1Time = 0;
 volatile uint32_t task2Time = 0;
 volatile uint32_t task3Time = 0;
+volatile uint32_t task4Time = 0;
+
 
 enum bsSendState_t
 {
@@ -64,6 +66,8 @@ void system_setup(void)
 
   // scheduler.addTask(&taskNrfStatus);
   // wdtEnable(8000);
+  setSensorTh(25, 35, 60, 99, 3);
+
   BUZZER_ON();
   delay(1000);
   BUZZER_OFF();
@@ -324,6 +328,8 @@ void scheduleTask()
   runTask(schemaReadSensors,config.sampInterval,&task2Time);
   // Task 3
   runTask(nrfWhichMode,5,&task3Time);
+  // Task 4: fire alert
+  runTask(fireAlert,1,&task4Time);
 }
 
 
@@ -336,6 +342,21 @@ void runTask( void(*func)(void), uint32_t interval,volatile uint32_t *prevtime)
       func();
     }
     *prevtime = second();   
+  }
+
+  if(*prevtime > second())
+  {
+    *prevtime = second();
+  }
+}
+
+void fireAlert()
+{
+  if(checkSensorth())
+  {
+    nrfTxSetModeClient(BS_DATA,&nrfConfig);
+    xferReady();
+    _bsSendState = BS_SEND;
   }
 }
 

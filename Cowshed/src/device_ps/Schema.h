@@ -43,6 +43,13 @@ struct sensor_t
   uint8_t isServerSynced;
   uint8_t reserve[3];
 };
+struct sensorTh_t
+{
+  float sensorTh[4];
+  uint16_t thresholdCount[4];
+  uint16_t count;
+  bool flag[4];
+};
 
 struct gasSensorLog_t
 {
@@ -73,49 +80,6 @@ typedef union payload_t
 /*************************Query Schema*****************************/
 
 
-// typedef struct confPacket_t
-// {
-//   uint8_t type;
-//   uint8_t opCode;
-//   uint8_t txAddrByte;
-//   uint32_t uTime;
-// };
-
-
-// typedef struct unixTime_t
-// {
-//   uint8_t type;
-//   uint8_t opCode;
-//   uint32_t utime;
-// };
-
-// typedef struct shedulePacket_t
-// {
-//   uint8_t type; //device type
-//   uint8_t opCode;//device op code
-//   uint8_t slotNo;
-//   uint32_t unixTime;
-  
-// };
-
-// typedef struct bolus_config_t
-// {
-//   uint8_t type; //device type
-//   uint8_t opCode;//device opcode
-//   uint16_t interval;
-//   uint32_t dataStartTime;
-//    uint32_t test;
-// };
-
-// typedef union queryData_t
-// {
-//   confPacket_t confPacket;
-//   unixTime_t unixTime;
-//   shedulePacket_t schedulePacket;
-//   bolus_config_t bolusConfig;
-// };
-
-
 void schemaBegin();
 struct sensor_t *getSensorsData(struct sensor_t *senPtr);
 void printSensor(struct sensor_t *sensor);
@@ -123,8 +87,13 @@ void printSensor(struct sensor_t *sensor);
 void schemaReadSensors();
 void memqSave();
 
+
+void setSensorTh(float am, float mt, float hum, float temp, uint16_t num);
+bool checkSensorth();
+
 extern volatile payload_t  payload[TOTAL_PAYLOAD_BUFFER];
 // extern queryData_t queryBuffer;
 extern struct sensor_t sensor;
+extern sensorTh_t sensorTh;
 
 #endif 
