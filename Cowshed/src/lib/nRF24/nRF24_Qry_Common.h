@@ -107,7 +107,8 @@ enum addrMode_t
 {
     COMMON_PING,
     BS_PING,
-    BS_DATA
+    BS_DATA,
+    BROADCAST
 };
 
 

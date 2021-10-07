@@ -7,7 +7,7 @@
 
 #include "nRF24_Client.h"
 
-void setBsDataMode(nrfNodeConfig_t *conPt);
+void setBsDataMode(nrfNodeConfig_t *conPt, uint8_t pipeNo);
 uint8_t *pipe0AddrPtr;
 
 nrfNodeConfig_t *nrfTxGetConfig(uint16_t DeviceId, nrfNodeConfig_t *configPtr);
@@ -140,7 +140,10 @@ void nrfTxSetModeClient(enum addrMode_t addrMode,nrfNodeConfig_t *conPt)
         break;
     case BS_DATA:
         //concatenate pipe 2 addr
-        setBsDataMode(conPt);
+        setBsDataMode(conPt, 2);
+        break;
+    case BROADCAST:
+        setBsDataMode(conPt, 5);
         break;
     default:
         break;
@@ -148,13 +151,32 @@ void nrfTxSetModeClient(enum addrMode_t addrMode,nrfNodeConfig_t *conPt)
 }
 
 //Set the data send mode in tx address
-void setBsDataMode(nrfNodeConfig_t *conPt)
+void setBsDataMode(nrfNodeConfig_t *conPt, uint8_t pipeNo)
 {
+    bool ack_flag = true;
     uint8_t dataPipeAddr[5];
     strncpy((char *)dataPipeAddr,(char *)conPt -> node,5);
-    dataPipeAddr[0]= conPt -> dataPipeLsbByte;
+    if(pipeNo == 2)
+    {
+        dataPipeAddr[0]= conPt -> dataPipeLsbByte;
+    }
+    else if(pipeNo == 3)
+    {
+        dataPipeAddr[0]= conPt -> xPipe[0];
+    }
+    else if(pipeNo == 4)
+    {
+        dataPipeAddr[0]= conPt -> xPipe[1];
+    }
+    else if(pipeNo == 5)
+    {
+        ack_flag = false;
+        dataPipeAddr[0]= conPt -> xPipe[2];
+    }
+    
     // SerialPrintF(P("Data Send Addr : ")); nrfPrintBuffer(dataPipeAddr, 5);
-    nrfTxBegin(dataPipeAddr, true);
+    nrfTxBegin(dataPipeAddr, ack_flag);
+    
     nrfStandby1();
     nrfTxStart();
     if(_nrfDebug)
