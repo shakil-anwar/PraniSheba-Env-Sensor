@@ -26,8 +26,8 @@ void setSensorTh(float am, float mt, float hum, float temp, uint16_t num)
 {
   sersorValue[0] = &sensor.ammonia;
   sersorValue[1] = &sensor.methane;
-  sersorValue[2] = &sensor.hum;
-  sersorValue[3] = &sensor.temp;
+  sersorValue[2] = &sensor.temp;
+  sersorValue[3] = &sensor.hum;
 
   sensorTh.sensorTh[0]   = am;
   sensorTh.sensorTh[1]   = mt;
@@ -43,6 +43,7 @@ void setSensorTh(float am, float mt, float hum, float temp, uint16_t num)
 
 bool checkSensorth()
 {
+  getSensorsData(&sensor);
    for(int i =0 ;i<4; i++)
    {
      if(*sersorValue[i] > sensorTh.sensorTh[i] )
@@ -60,11 +61,11 @@ bool checkSensorth()
             return true;
           }
         }
-        else
-        {
-          sensorTh.thresholdCount[i]  = 0;
-          sensorTh.flag[i] = false;
-        }
+     }
+     else
+     {
+        sensorTh.thresholdCount[i]  = 0;
+        sensorTh.flag[i] = false;
      }
    }
    return false;

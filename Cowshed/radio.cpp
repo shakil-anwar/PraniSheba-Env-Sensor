@@ -7,7 +7,8 @@ void txIsr(void);
 void rxIsr(void);
 void maxRtIsr(void);
 
-uint8_t pipe0Addr[5] = {120,124,124,124,125};
+// uint8_t pipe0Addr[5] = {120,124,124,124,125};
+uint8_t pipe0Addr[5] = {129,139,149,159,169};
 uint8_t txLsByte;
 nrfNodeConfig_t nrfConfig;
 

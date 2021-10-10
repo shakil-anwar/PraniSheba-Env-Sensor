@@ -126,6 +126,7 @@ void printMainState(mainState_t mstate)
 bool syncTime()
 {
   _nowSec = nrfPing();
+  // _nowSec = 1633598338;
   Serial.print(F("NTP Time: ")); Serial.println(_nowSec);
   RT_SYNC_STATUS_t rtStatus = rtSync(_nowSec);
   if (rtStatus != UNSYNCED)

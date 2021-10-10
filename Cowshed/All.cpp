@@ -66,7 +66,7 @@ void system_setup(void)
 
   // scheduler.addTask(&taskNrfStatus);
   // wdtEnable(8000);
-  setSensorTh(25, 35, 60, 99, 3);
+  setSensorTh(30, 35, 60, 99, 3);
 
   BUZZER_ON();
   delay(1000);
@@ -329,7 +329,7 @@ void scheduleTask()
   // Task 3
   runTask(nrfWhichMode,5,&task3Time);
   // Task 4: fire alert
-  runTask(fireAlert,1,&task4Time);
+  runTask(fireAlert,2,&task4Time);
 }
 
 
@@ -357,6 +357,7 @@ void fireAlert()
     nrfTxSetModeClient(BS_DATA,&nrfConfig);
     xferReady();
     _bsSendState = BS_SEND;
+    _nextSlotEnd = second() + 5;
   }
 }
 

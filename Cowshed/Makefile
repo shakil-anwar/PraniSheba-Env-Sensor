@@ -1,4 +1,4 @@
-SERIAL_PORT=COM3
+SERIAL_PORT=COM10
 
 
 FQBN_PCB_V1=arduino:avr:uno
@@ -23,7 +23,7 @@ build_v2:
 build_prod_v1: download
 	$(CC) compile -b $(FQBN_PCB_V1)  $(CFLAGS_PCB1_PROD)
 build_prod_v2: download
-	$(CC) compile -b $(FQBN_PCB_v2)  $(CFLAGS_PCB2_PROD)
+	$(CC) compile -b $(FQBN_PCB_v2)  $(CFLAGS_PCB2_PROD) -v -t
 
 upload_v1:
 	$(CC) upload -b $(FQBN_PCB_V1)   -p $(SERIAL_PORT)  -v -t
