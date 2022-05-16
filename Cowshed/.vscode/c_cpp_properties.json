@@ -19,7 +19,8 @@
             "cppStandard": "c++17",
             "defines": [
                 "USBCON"
-            ]
+            ],
+            "configurationProvider": "ms-vscode.makefile-tools"
         },
         {
             "name": "Arduino",

@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "nrf24.h": "c"
+        "nrf24.h": "c",
+        "memq.h": "c",
+        "*.tpp": "cpp"
     }
 }
